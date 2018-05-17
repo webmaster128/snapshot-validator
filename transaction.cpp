@@ -3,7 +3,7 @@
 #include <algorithm>
 #include <sodium.h>
 
-Transaction::Transaction(//std::uint64_t id,
+Transaction::Transaction(
         std::uint8_t type,
         std::uint32_t timestamp,
         const unsigned char* senderPublicKeyBegin,

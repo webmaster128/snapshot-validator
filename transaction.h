@@ -9,7 +9,6 @@ class Transaction {
 
 public:
     Transaction(
-        //std::uint64_t id,
         std::uint8_t type,
         std::uint32_t timestamp,
         const unsigned char* senderPublicKeyBegin,
@@ -27,7 +26,6 @@ public:
     friend std::ostream& operator<<(std::ostream& os, const Transaction& transaction);
 
 private:
-    //std::uint64_t id_;
     std::uint8_t type_;
     std::uint32_t timestamp_;
     const unsigned char* senderPublicKeyBegin_;
