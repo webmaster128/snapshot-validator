@@ -5,6 +5,7 @@
 #include <unordered_map>
 
 #include "blockheader.h"
+#include "lisk.h"
 #include "payload.h"
 #include "state.h"
 #include "transaction.h"
@@ -273,10 +274,13 @@ int main()
                     validateState(blockchainState);
                 }
 
+                blockchainState.balances[addressFromPubkey(bh.generatorPublicKey)] += bh.reward;
+
                 //std::cout << "Block: " << id << std::endl;
             }
         }
 
+        validateState(blockchainState);
 
         transaction.commit();
     }
