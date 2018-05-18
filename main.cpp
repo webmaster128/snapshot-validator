@@ -237,7 +237,7 @@ int main()
                     std::cout << "ID: " << dbId << std::endl;
                     std::cout << "Pubkey: " << bytes2Hex(generatorPublicKey) << std::endl;
                     std::cout << "Signature: " << bytes2Hex(signature) << std::endl;
-                    throw std::runtime_error("Invalid signature");
+                    throw std::runtime_error("Invalid block signature");
                 }
 
                 Payload payload(blockToTransactions[dbId]);
