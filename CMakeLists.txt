@@ -13,6 +13,7 @@ message(${PQ_LIBRARIES} ${PQXX_LIBRARIES})
 
 add_executable(${PROJECT_NAME}
     blockheader.cpp
+    lisk.cpp
     main.cpp
     payload.cpp
     state.cpp
