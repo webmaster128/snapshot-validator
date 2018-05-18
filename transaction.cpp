@@ -6,8 +6,7 @@
 Transaction::Transaction(
         std::uint8_t type,
         std::uint32_t timestamp,
-        const unsigned char* senderPublicKeyBegin,
-        std::size_t senderPublicKeyLength,
+        std::vector<unsigned char> senderPublicKey,
         std::uint64_t recipientId,
         std::uint64_t amount,
         const unsigned char* assetDataBegin,
@@ -15,8 +14,7 @@ Transaction::Transaction(
         )
     : type_(type)
     , timestamp_(timestamp)
-    , senderPublicKeyBegin_(senderPublicKeyBegin)
-    , senderPublicKeyLength_(senderPublicKeyLength)
+    , senderPublicKey_(senderPublicKey)
     , recipientId_(recipientId)
     , amount_(amount)
     , assetDataBegin_(assetDataBegin)
@@ -24,7 +22,7 @@ Transaction::Transaction(
 {
 }
 
-std::vector<unsigned char> Transaction::serialize()
+std::vector<unsigned char> Transaction::serialize() const
 {
     std::size_t size = 1 // type
             + 4 // timestamp
@@ -39,8 +37,8 @@ std::vector<unsigned char> Transaction::serialize()
     out[2] = (timestamp_ >> 8) & 0xFF;
     out[3] = (timestamp_ >> 16) & 0xFF;
     out[4] = (timestamp_ >> 24) & 0xFF;
-    for (int i = 0; i < senderPublicKeyLength_; ++i) {
-        out[5+i] = *(senderPublicKeyBegin_ + i);
+    for (int i = 0; i < senderPublicKey_.size(); ++i) {
+        out[5+i] = senderPublicKey_[i];
     }
 
     for (int i = 0; i < 8; ++i) {
@@ -58,7 +56,7 @@ std::vector<unsigned char> Transaction::serialize()
     return out;
 }
 
-std::vector<unsigned char> Transaction::hash(std::vector<unsigned char> signature)
+std::vector<unsigned char> Transaction::hash(std::vector<unsigned char> signature) const
 {
     auto out = std::vector<unsigned char>(crypto_hash_sha256_BYTES);
 
@@ -69,7 +67,7 @@ std::vector<unsigned char> Transaction::hash(std::vector<unsigned char> signatur
     return out;
 }
 
-std::uint64_t Transaction::id(std::vector<unsigned char> signature)
+std::uint64_t Transaction::id(std::vector<unsigned char> signature) const
 {
     auto hashBytes = hash(signature);
     auto firstBytes = std::vector<unsigned char>{hashBytes.cbegin(), hashBytes.cbegin()+8};
@@ -91,7 +89,7 @@ std::ostream& operator<<(std::ostream& os, const Transaction& trx)
 {
     os << std::to_string(trx.type_)
        << "/" << trx.timestamp_
-       << "/" << trx.senderPublicKeyLength_
+       << "/" << trx.senderPublicKey_.size()
        << "/" << trx.recipientId_ << "L"
        << "/" << trx.amount_
     ;
