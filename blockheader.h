@@ -4,9 +4,7 @@
 #include <string>
 #include <vector>
 
-class BlockHeader {
-
-public:
+struct BlockHeader {
     BlockHeader(
         std::uint32_t version,
         std::uint32_t timestamp,
@@ -20,19 +18,18 @@ public:
         std::vector<unsigned char> generatorPublicKey
     );
 
+    const std::uint32_t version;
+    const std::uint32_t timestamp;
+    const std::uint64_t previousBlock;
+    const std::uint32_t numberOfTransactions;
+    const std::uint64_t totalAmount;
+    const std::uint64_t totalFee;
+    const std::uint64_t reward;
+    const std::uint32_t payloadLength;
+    const std::vector<unsigned char> payloadHash;
+    const std::vector<unsigned char> generatorPublicKey;
+
     std::vector<unsigned char> serialize();
     std::vector<unsigned char> hash(std::vector<unsigned char> signature = {});
     std::uint64_t id(std::vector<unsigned char> signature);
-
-private:
-    std::uint32_t version_;
-    std::uint32_t timestamp_;
-    std::uint64_t previousBlock_;
-    std::uint32_t numberOfTransactions_;
-    std::uint64_t totalAmount_;
-    std::uint64_t totalFee_;
-    std::uint64_t reward_;
-    std::uint32_t payloadLength_;
-    std::vector<unsigned char> payloadHash_;
-    std::vector<unsigned char> generatorPublicKey_;
 };

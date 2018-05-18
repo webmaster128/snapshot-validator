@@ -6,26 +6,26 @@
 #include <sodium.h>
 
 BlockHeader::BlockHeader(
-        std::uint32_t version,
-        std::uint32_t timestamp,
-        std::uint64_t previousBlock,
-        std::uint32_t numberOfTransactions,
-        std::uint64_t totalAmount,
-        std::uint64_t totalFee,
-        std::uint64_t reward,
-        std::uint32_t payloadLength,
-        std::vector<unsigned char> payloadHash,
-        std::vector<unsigned char> generatorPublicKey)
-    : version_(version)
-    , timestamp_(timestamp)
-    , previousBlock_(previousBlock)
-    , numberOfTransactions_(numberOfTransactions)
-    , totalAmount_(totalAmount)
-    , totalFee_(totalFee)
-    , reward_(reward)
-    , payloadLength_(payloadLength)
-    , payloadHash_(payloadHash)
-    , generatorPublicKey_(generatorPublicKey)
+        std::uint32_t _version,
+        std::uint32_t _timestamp,
+        std::uint64_t _previousBlock,
+        std::uint32_t _numberOfTransactions,
+        std::uint64_t _totalAmount,
+        std::uint64_t _totalFee,
+        std::uint64_t _reward,
+        std::uint32_t _payloadLength,
+        std::vector<unsigned char> _payloadHash,
+        std::vector<unsigned char> _generatorPublicKey)
+    : version(_version)
+    , timestamp(_timestamp)
+    , previousBlock(_previousBlock)
+    , numberOfTransactions(_numberOfTransactions)
+    , totalAmount(_totalAmount)
+    , totalFee(_totalFee)
+    , reward(_reward)
+    , payloadLength(_payloadLength)
+    , payloadHash(_payloadHash)
+    , generatorPublicKey(_generatorPublicKey)
 {
 }
 
@@ -45,59 +45,59 @@ std::vector<unsigned char> BlockHeader::serialize()
             ;
     auto out = std::vector<unsigned char>(size);
     int index = 0;
-    out[index++] = (version_ >> 0*8) & 0xFF;
-    out[index++] = (version_ >> 1*8) & 0xFF;
-    out[index++] = (version_ >> 2*8) & 0xFF;
-    out[index++] = (version_ >> 3*8) & 0xFF;
-    out[index++] = (timestamp_ >> 0*8) & 0xFF;
-    out[index++] = (timestamp_ >> 1*8) & 0xFF;
-    out[index++] = (timestamp_ >> 2*8) & 0xFF;
-    out[index++] = (timestamp_ >> 3*8) & 0xFF;
-    out[index++] = (previousBlock_ >> 7*8) & 0xFF;
-    out[index++] = (previousBlock_ >> 6*8) & 0xFF;
-    out[index++] = (previousBlock_ >> 5*8) & 0xFF;
-    out[index++] = (previousBlock_ >> 4*8) & 0xFF;
-    out[index++] = (previousBlock_ >> 3*8) & 0xFF;
-    out[index++] = (previousBlock_ >> 2*8) & 0xFF;
-    out[index++] = (previousBlock_ >> 1*8) & 0xFF;
-    out[index++] = (previousBlock_ >> 0*8) & 0xFF;
-    out[index++] = (numberOfTransactions_ >> 0*8) & 0xFF;
-    out[index++] = (numberOfTransactions_ >> 1*8) & 0xFF;
-    out[index++] = (numberOfTransactions_ >> 2*8) & 0xFF;
-    out[index++] = (numberOfTransactions_ >> 3*8) & 0xFF;
-    out[index++] = (totalAmount_ >> 0*8) & 0xFF;
-    out[index++] = (totalAmount_ >> 1*8) & 0xFF;
-    out[index++] = (totalAmount_ >> 2*8) & 0xFF;
-    out[index++] = (totalAmount_ >> 3*8) & 0xFF;
-    out[index++] = (totalAmount_ >> 4*8) & 0xFF;
-    out[index++] = (totalAmount_ >> 5*8) & 0xFF;
-    out[index++] = (totalAmount_ >> 6*8) & 0xFF;
-    out[index++] = (totalAmount_ >> 7*8) & 0xFF;
-    out[index++] = (totalFee_ >> 0*8) & 0xFF;
-    out[index++] = (totalFee_ >> 1*8) & 0xFF;
-    out[index++] = (totalFee_ >> 2*8) & 0xFF;
-    out[index++] = (totalFee_ >> 3*8) & 0xFF;
-    out[index++] = (totalFee_ >> 4*8) & 0xFF;
-    out[index++] = (totalFee_ >> 5*8) & 0xFF;
-    out[index++] = (totalFee_ >> 6*8) & 0xFF;
-    out[index++] = (totalFee_ >> 7*8) & 0xFF;
-    out[index++] = (reward_ >> 0*8) & 0xFF;
-    out[index++] = (reward_ >> 1*8) & 0xFF;
-    out[index++] = (reward_ >> 2*8) & 0xFF;
-    out[index++] = (reward_ >> 3*8) & 0xFF;
-    out[index++] = (reward_ >> 4*8) & 0xFF;
-    out[index++] = (reward_ >> 5*8) & 0xFF;
-    out[index++] = (reward_ >> 6*8) & 0xFF;
-    out[index++] = (reward_ >> 7*8) & 0xFF;
-    out[index++] = (payloadLength_ >> 0*8) & 0xFF;
-    out[index++] = (payloadLength_ >> 1*8) & 0xFF;
-    out[index++] = (payloadLength_ >> 2*8) & 0xFF;
-    out[index++] = (payloadLength_ >> 3*8) & 0xFF;
-    for (int i = 0; i < payloadHash_.size(); ++i) {
-        out[index++] = payloadHash_[i];
+    out[index++] = (version >> 0*8) & 0xFF;
+    out[index++] = (version >> 1*8) & 0xFF;
+    out[index++] = (version >> 2*8) & 0xFF;
+    out[index++] = (version >> 3*8) & 0xFF;
+    out[index++] = (timestamp >> 0*8) & 0xFF;
+    out[index++] = (timestamp >> 1*8) & 0xFF;
+    out[index++] = (timestamp >> 2*8) & 0xFF;
+    out[index++] = (timestamp >> 3*8) & 0xFF;
+    out[index++] = (previousBlock >> 7*8) & 0xFF;
+    out[index++] = (previousBlock >> 6*8) & 0xFF;
+    out[index++] = (previousBlock >> 5*8) & 0xFF;
+    out[index++] = (previousBlock >> 4*8) & 0xFF;
+    out[index++] = (previousBlock >> 3*8) & 0xFF;
+    out[index++] = (previousBlock >> 2*8) & 0xFF;
+    out[index++] = (previousBlock >> 1*8) & 0xFF;
+    out[index++] = (previousBlock >> 0*8) & 0xFF;
+    out[index++] = (numberOfTransactions >> 0*8) & 0xFF;
+    out[index++] = (numberOfTransactions >> 1*8) & 0xFF;
+    out[index++] = (numberOfTransactions >> 2*8) & 0xFF;
+    out[index++] = (numberOfTransactions >> 3*8) & 0xFF;
+    out[index++] = (totalAmount >> 0*8) & 0xFF;
+    out[index++] = (totalAmount >> 1*8) & 0xFF;
+    out[index++] = (totalAmount >> 2*8) & 0xFF;
+    out[index++] = (totalAmount >> 3*8) & 0xFF;
+    out[index++] = (totalAmount >> 4*8) & 0xFF;
+    out[index++] = (totalAmount >> 5*8) & 0xFF;
+    out[index++] = (totalAmount >> 6*8) & 0xFF;
+    out[index++] = (totalAmount >> 7*8) & 0xFF;
+    out[index++] = (totalFee >> 0*8) & 0xFF;
+    out[index++] = (totalFee >> 1*8) & 0xFF;
+    out[index++] = (totalFee >> 2*8) & 0xFF;
+    out[index++] = (totalFee >> 3*8) & 0xFF;
+    out[index++] = (totalFee >> 4*8) & 0xFF;
+    out[index++] = (totalFee >> 5*8) & 0xFF;
+    out[index++] = (totalFee >> 6*8) & 0xFF;
+    out[index++] = (totalFee >> 7*8) & 0xFF;
+    out[index++] = (reward >> 0*8) & 0xFF;
+    out[index++] = (reward >> 1*8) & 0xFF;
+    out[index++] = (reward >> 2*8) & 0xFF;
+    out[index++] = (reward >> 3*8) & 0xFF;
+    out[index++] = (reward >> 4*8) & 0xFF;
+    out[index++] = (reward >> 5*8) & 0xFF;
+    out[index++] = (reward >> 6*8) & 0xFF;
+    out[index++] = (reward >> 7*8) & 0xFF;
+    out[index++] = (payloadLength >> 0*8) & 0xFF;
+    out[index++] = (payloadLength >> 1*8) & 0xFF;
+    out[index++] = (payloadLength >> 2*8) & 0xFF;
+    out[index++] = (payloadLength >> 3*8) & 0xFF;
+    for (int i = 0; i < payloadHash.size(); ++i) {
+        out[index++] = payloadHash[i];
     }
-    for (int i = 0; i < generatorPublicKey_.size(); ++i) {
-        out[index++] = generatorPublicKey_[i];
+    for (int i = 0; i < generatorPublicKey.size(); ++i) {
+        out[index++] = generatorPublicKey[i];
     }
 
     assert(index == size);
