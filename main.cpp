@@ -81,7 +81,8 @@ int main()
 
             pqxx::result R = transaction.exec(R"SQL(
                 SELECT
-                    id, "blockId", type, timestamp, "senderPublicKey", "recipientId", amount, fee, signature,
+                    id, "blockId", type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0'),
+                    amount, fee, signature,
                     transfer.data AS type0Asset,
                     multisignatures.keysgroup AS type1Asset,
                     delegates.username AS type2Asset
@@ -99,7 +100,7 @@ int main()
                 auto dbType = row[index++].as<int>();
                 auto dbTimestamp = row[index++].as<std::uint32_t>();
                 auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
-                auto dbRecipientIdString = row[index++].get<std::string>();
+                auto dbRecipientId = row[index++].as<std::uint64_t>();
                 auto dbAmount = row[index++].as<std::uint64_t>();
                 auto dbFee = row[index++].as<std::uint64_t>();
                 auto dbSignature = pqxx::binarystring(row[index++]);
@@ -127,14 +128,6 @@ int main()
                     }
                     break;
                 }
-                std::uint64_t recipientId;
-                if (dbRecipientIdString) {
-                    std::istringstream iss(dbRecipientIdString->substr(0, dbRecipientIdString->size()-1));
-                    iss >> recipientId;
-                }
-                else {
-                    recipientId = 0;
-                }
 
                 //if (type == 2 && timestamp == 0) {
                 //    amount = 25;
@@ -145,7 +138,7 @@ int main()
                     dbType,
                     dbTimestamp,
                     senderPublicKey,
-                    recipientId,
+                    dbRecipientId,
                     dbAmount,
                     dbFee,
                     assetData
