@@ -1,6 +1,4 @@
 #include <iostream>
-#include <iomanip>
-#include <sstream>
 #include <pqxx/pqxx>
 #include <sodium.h>
 #include <chrono>
@@ -9,27 +7,7 @@
 #include "blockheader.h"
 #include "payload.h"
 #include "transaction.h"
-
-inline std::vector<unsigned char> hex2Bytes(std::string hex) {
-    std::vector<unsigned char> out(hex.size() / 2);
-    for (int i = 0; i < hex.size(); i += 2)
-    {
-        std::istringstream iss(hex.substr(i, 2));
-        int temp;
-        iss >> std::hex >> temp;
-        out[i/2] = static_cast<unsigned char>(temp);
-    }
-    return out;
-}
-
-std::string bytes2Hex(std::vector<unsigned char> data) {
-    std::stringstream out;
-    out << std::setfill('0') << std::hex;
-    for(size_t i = 0; i < data.size(); ++i) {
-        out << std::setw(2) << static_cast<int>(data[i]);
-    }
-    return out.str();
-}
+#include "utils.h"
 
 inline std::vector<unsigned char> asVector(const pqxx::binarystring &binstr) {
     return std::vector<unsigned char>(
