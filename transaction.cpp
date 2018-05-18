@@ -14,13 +14,13 @@ Transaction::Transaction(
         std::size_t _assetDataLength
         )
     : type(_type)
-    , timestamp_(_timestamp)
+    , timestamp(_timestamp)
     , senderAddress(addressFromPubkey(_senderPublicKey))
-    , senderPublicKey_(_senderPublicKey)
+    , senderPublicKey(_senderPublicKey)
     , recipientAddress(_recipientId)
     , amount(_amount)
-    , assetDataBegin_(_assetDataBegin)
-    , assetDataLength_(_assetDataLength)
+    , assetDataBegin(_assetDataBegin)
+    , assetDataLength(_assetDataLength)
 {
 }
 
@@ -31,16 +31,16 @@ std::vector<unsigned char> Transaction::serialize() const
             + 32 // sender pubkey
             + 8 // recipient
             + 8 // amount
-            + assetDataLength_
+            + assetDataLength
             ;
     auto out = std::vector<unsigned char>(size);
     out[0] = type;
-    out[1] = (timestamp_ >> 0) & 0xFF;
-    out[2] = (timestamp_ >> 8) & 0xFF;
-    out[3] = (timestamp_ >> 16) & 0xFF;
-    out[4] = (timestamp_ >> 24) & 0xFF;
-    for (int i = 0; i < senderPublicKey_.size(); ++i) {
-        out[5+i] = senderPublicKey_[i];
+    out[1] = (timestamp >> 0) & 0xFF;
+    out[2] = (timestamp >> 8) & 0xFF;
+    out[3] = (timestamp >> 16) & 0xFF;
+    out[4] = (timestamp >> 24) & 0xFF;
+    for (int i = 0; i < senderPublicKey.size(); ++i) {
+        out[5+i] = senderPublicKey[i];
     }
 
     for (int i = 0; i < 8; ++i) {
@@ -51,8 +51,8 @@ std::vector<unsigned char> Transaction::serialize() const
         out[45+i] = (amount >> i*8) & 0xFF;
     }
 
-    for (int i = 0; i < assetDataLength_; ++i) {
-        out[53+i] = *(assetDataBegin_ + i);
+    for (int i = 0; i < assetDataLength; ++i) {
+        out[53+i] = *(assetDataBegin + i);
     }
 
     return out;
@@ -77,8 +77,8 @@ std::uint64_t Transaction::id(std::vector<unsigned char> signature) const
 std::ostream& operator<<(std::ostream& os, const Transaction& trx)
 {
     os << std::to_string(trx.type)
-       << "/" << trx.timestamp_
-       << "/" << trx.senderPublicKey_.size()
+       << "/" << trx.timestamp
+       << "/" << trx.senderPublicKey.size()
        << "/" << trx.recipientAddress << "L"
        << "/" << trx.amount
     ;
