@@ -6,6 +6,7 @@
 
 #include "blockheader.h"
 #include "payload.h"
+#include "state.h"
 #include "transaction.h"
 #include "utils.h"
 
@@ -62,6 +63,7 @@ int main()
 
 
         std::unordered_map<std::uint64_t, std::vector<std::pair<Transaction, std::vector<unsigned char>>>> blockToTransactions;
+        State blockchainState;
 
         {
             std::cout << "Reading transactions ..." << std::endl;
@@ -254,6 +256,17 @@ int main()
                 auto id = bh.id(signature);
                 if (id != dbId) {
                     throw std::runtime_error("id mismatch");
+                }
+
+                for (auto &t : payload.transactions()) {
+                    switch(t.type) {
+                    case 0:
+                        blockchainState.balances[t.senderAddress] -= (t.amount + 10000000 /* 0.1 LSK fee */);
+                        blockchainState.balances[t.recipientAddress] += t.amount;
+                        break;
+                    }
+
+                    validateState(blockchainState);
                 }
 
                 //std::cout << "Block: " << id << std::endl;

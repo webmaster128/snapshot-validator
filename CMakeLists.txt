@@ -15,6 +15,7 @@ add_executable(${PROJECT_NAME}
     blockheader.cpp
     main.cpp
     payload.cpp
+    state.cpp
     transaction.cpp
 )
 target_link_libraries(${PROJECT_NAME} ${PQ_LDFLAGS} ${PQXX_LDFLAGS} ${SODIUM_LDFLAGS})

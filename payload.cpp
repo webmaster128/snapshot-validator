@@ -12,6 +12,18 @@ std::size_t Payload::transactionCount() const
     return transactions_.size();
 }
 
+std::vector<Transaction> Payload::transactions() const
+{
+    auto out = std::vector<Transaction>();
+    out.reserve(transactionCount());
+
+    for (const auto &transactionAndSignature : transactions_) {
+        out.push_back(transactionAndSignature.first);
+    }
+
+    return out;
+}
+
 std::vector<unsigned char> Payload::hash()
 {
     auto out = std::vector<unsigned char>(crypto_hash_sha256_BYTES);

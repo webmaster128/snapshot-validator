@@ -3,6 +3,50 @@
 #include <algorithm>
 #include <sodium.h>
 
+namespace {
+
+std::vector<unsigned char> firstEightBytesReversed(const std::vector<unsigned char> &data) {
+    auto firstBytes = std::vector<unsigned char>{data.cbegin(), data.cbegin()+8};
+    std::reverse(firstBytes.begin(), firstBytes.end());
+    return firstBytes;
+}
+
+std::vector<unsigned char> firstEightBytesReversed(const std::string &data) {
+    auto firstBytes = std::vector<unsigned char>{data.data(), data.data()+8};
+    std::reverse(firstBytes.begin(), firstBytes.end());
+    return firstBytes;
+}
+
+std::uint64_t idFromEightBytes(std::vector<unsigned char> firstBytes)
+{
+    std::uint64_t out = 0
+        | (std::uint64_t{firstBytes[0]} << 7*8)
+        | (std::uint64_t{firstBytes[1]} << 6*8)
+        | (std::uint64_t{firstBytes[2]} << 5*8)
+        | (std::uint64_t{firstBytes[3]} << 4*8)
+        | (std::uint64_t{firstBytes[4]} << 3*8)
+        | (std::uint64_t{firstBytes[5]} << 2*8)
+        | (std::uint64_t{firstBytes[6]} << 1*8)
+        | (std::uint64_t{firstBytes[7]} << 0*8);
+    return out;
+}
+
+std::uint64_t addressFromPubkey(std::vector<unsigned char> publicKey) {
+    //auto publicKeyHex = bytes2Hex(publicKey);
+
+    auto hash = std::vector<unsigned char>(crypto_hash_sha256_BYTES);
+    crypto_hash_sha256(hash.data(),
+                       publicKey.data(),
+                       publicKey.size());
+
+    auto id = idFromEightBytes(firstEightBytesReversed(hash));
+
+    return id;
+}
+
+
+}
+
 Transaction::Transaction(
         std::uint8_t type,
         std::uint32_t timestamp,
@@ -12,11 +56,12 @@ Transaction::Transaction(
         const unsigned char* assetDataBegin,
         std::size_t assetDataLength
         )
-    : type_(type)
+    : type(type)
     , timestamp_(timestamp)
+    , senderAddress(addressFromPubkey(senderPublicKey))
     , senderPublicKey_(senderPublicKey)
-    , recipientId_(recipientId)
-    , amount_(amount)
+    , recipientAddress(recipientId)
+    , amount(amount)
     , assetDataBegin_(assetDataBegin)
     , assetDataLength_(assetDataLength)
 {
@@ -32,7 +77,7 @@ std::vector<unsigned char> Transaction::serialize() const
             + assetDataLength_
             ;
     auto out = std::vector<unsigned char>(size);
-    out[0] = type_;
+    out[0] = type;
     out[1] = (timestamp_ >> 0) & 0xFF;
     out[2] = (timestamp_ >> 8) & 0xFF;
     out[3] = (timestamp_ >> 16) & 0xFF;
@@ -42,11 +87,11 @@ std::vector<unsigned char> Transaction::serialize() const
     }
 
     for (int i = 0; i < 8; ++i) {
-        out[37+i] = (recipientId_ >> (7-i)*8) & 0xFF;
+        out[37+i] = (recipientAddress >> (7-i)*8) & 0xFF;
     }
 
     for (int i = 0; i < 8; ++i) {
-        out[45+i] = (amount_ >> i*8) & 0xFF;
+        out[45+i] = (amount >> i*8) & 0xFF;
     }
 
     for (int i = 0; i < assetDataLength_; ++i) {
@@ -69,29 +114,16 @@ std::vector<unsigned char> Transaction::hash(std::vector<unsigned char> signatur
 
 std::uint64_t Transaction::id(std::vector<unsigned char> signature) const
 {
-    auto hashBytes = hash(signature);
-    auto firstBytes = std::vector<unsigned char>{hashBytes.cbegin(), hashBytes.cbegin()+8};
-    std::reverse(firstBytes.begin(), firstBytes.end());
-
-    std::uint64_t out = 0
-        | (std::uint64_t{firstBytes[0]} << 7*8)
-        | (std::uint64_t{firstBytes[1]} << 6*8)
-        | (std::uint64_t{firstBytes[2]} << 5*8)
-        | (std::uint64_t{firstBytes[3]} << 4*8)
-        | (std::uint64_t{firstBytes[4]} << 3*8)
-        | (std::uint64_t{firstBytes[5]} << 2*8)
-        | (std::uint64_t{firstBytes[6]} << 1*8)
-        | (std::uint64_t{firstBytes[7]} << 0*8);
-    return out;
+    return idFromEightBytes(firstEightBytesReversed(hash(signature)));
 }
 
 std::ostream& operator<<(std::ostream& os, const Transaction& trx)
 {
-    os << std::to_string(trx.type_)
+    os << std::to_string(trx.type)
        << "/" << trx.timestamp_
        << "/" << trx.senderPublicKey_.size()
-       << "/" << trx.recipientId_ << "L"
-       << "/" << trx.amount_
+       << "/" << trx.recipientAddress << "L"
+       << "/" << trx.amount
     ;
     return os;
 }

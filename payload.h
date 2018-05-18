@@ -10,6 +10,7 @@ public:
     );
 
     std::size_t transactionCount() const;
+    std::vector<Transaction> transactions() const;
 
     std::vector<unsigned char> hash();
 
