@@ -18,6 +18,13 @@ inline std::vector<unsigned char> asVector(const pqxx::binarystring &binstr) {
     );
 }
 
+inline std::vector<unsigned char> asVector(const std::string &str) {
+    return std::vector<unsigned char>(
+                reinterpret_cast<const unsigned char*>(str.data()),
+                reinterpret_cast<const unsigned char*>(str.data() + str.size())
+    );
+}
+
 class ScopedBenchmark {
 public:
     ScopedBenchmark(std::string title)
@@ -104,23 +111,19 @@ int main()
                 auto senderPublicKey = asVector(dbSenderPublicKey);
                 auto signature = asVector(dbSignature);
 
-                const unsigned char* assetDataBegin = nullptr;
-                std::size_t assetDataLength = 0;
+                std::vector<unsigned char> assetData = {};
                 switch (dbType) {
                 case 0:
-                    assetDataBegin = reinterpret_cast<const unsigned char*>(dbType0Asset.get());
-                    assetDataLength = dbType0Asset.length();
+                    assetData = asVector(dbType0Asset);
                     break;
                 case 1:
                     if (dbType1Asset) {
-                        assetDataBegin = reinterpret_cast<const unsigned char*>(dbType1Asset->data());
-                        assetDataLength = dbType1Asset->size();
+                        assetData = asVector(*dbType1Asset);
                     }
                     break;
                 case 2:
                     if (dbType2Asset) {
-                        assetDataBegin = reinterpret_cast<const unsigned char*>(dbType2Asset->data());
-                        assetDataLength = dbType2Asset->size();
+                        assetData = asVector(*dbType2Asset);
                     }
                     break;
                 }
@@ -145,8 +148,7 @@ int main()
                     recipientId,
                     dbAmount,
                     dbFee,
-                    assetDataBegin,
-                    assetDataLength
+                    assetData
                 );
                 blockToTransactions[dbBockId].push_back({t, signature});
                 //blockToTransactions.insert({dbId, t});

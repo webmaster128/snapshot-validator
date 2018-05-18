@@ -11,8 +11,7 @@ Transaction::Transaction(
         std::uint64_t _recipientId,
         std::uint64_t _amount,
         std::uint64_t _fee,
-        const unsigned char* _assetDataBegin,
-        std::size_t _assetDataLength
+        std::vector<unsigned char> _assetData
         )
     : type(_type)
     , timestamp(_timestamp)
@@ -21,8 +20,7 @@ Transaction::Transaction(
     , recipientAddress(_recipientId)
     , amount(_amount)
     , fee(_fee)
-    , assetDataBegin(_assetDataBegin)
-    , assetDataLength(_assetDataLength)
+    , assetData(_assetData)
 {
 }
 
@@ -33,7 +31,7 @@ std::vector<unsigned char> Transaction::serialize() const
             + 32 // sender pubkey
             + 8 // recipient
             + 8 // amount
-            + assetDataLength
+            + assetData.size()
             ;
     auto out = std::vector<unsigned char>(size);
     out[0] = type;
@@ -53,8 +51,8 @@ std::vector<unsigned char> Transaction::serialize() const
         out[45+i] = (amount >> i*8) & 0xFF;
     }
 
-    for (int i = 0; i < assetDataLength; ++i) {
-        out[53+i] = *(assetDataBegin + i);
+    for (int i = 0; i < assetData.size(); ++i) {
+        out[53+i] = assetData[i];
     }
 
     return out;
