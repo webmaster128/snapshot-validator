@@ -11,5 +11,10 @@ include_directories(${PQ_INCLUDE_DIRS} ${PQXX_INCLUDE_DIRS} ${SODIUM_INCLUDE_DIR
 
 message(${PQ_LIBRARIES} ${PQXX_LIBRARIES})
 
-add_executable(${PROJECT_NAME} main.cpp block.cpp blockheader.cpp payload.cpp transaction.cpp)
+add_executable(${PROJECT_NAME}
+    blockheader.cpp
+    main.cpp
+    payload.cpp
+    transaction.cpp
+)
 target_link_libraries(${PROJECT_NAME} ${PQ_LDFLAGS} ${PQXX_LDFLAGS} ${SODIUM_LDFLAGS})
