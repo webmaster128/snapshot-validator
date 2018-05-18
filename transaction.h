@@ -12,6 +12,7 @@ struct Transaction {
         std::vector<unsigned char> senderPublicKey,
         std::uint64_t recipientId,
         std::uint64_t amount,
+        std::uint64_t fee,
         const unsigned char* assetDataBegin,
         std::size_t assetDataLength
     );
@@ -22,6 +23,7 @@ struct Transaction {
     const std::uint64_t senderAddress;
     const std::uint64_t recipientAddress;
     const std::uint64_t amount;
+    const std::uint64_t fee; // not signed
     const unsigned char* assetDataBegin;
     const std::size_t assetDataLength;
 

@@ -10,6 +10,7 @@ Transaction::Transaction(
         std::vector<unsigned char> _senderPublicKey,
         std::uint64_t _recipientId,
         std::uint64_t _amount,
+        std::uint64_t _fee,
         const unsigned char* _assetDataBegin,
         std::size_t _assetDataLength
         )
@@ -19,6 +20,7 @@ Transaction::Transaction(
     , senderPublicKey(_senderPublicKey)
     , recipientAddress(_recipientId)
     , amount(_amount)
+    , fee(_fee)
     , assetDataBegin(_assetDataBegin)
     , assetDataLength(_assetDataLength)
 {

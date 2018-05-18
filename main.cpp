@@ -71,7 +71,7 @@ int main()
 
             pqxx::result R = transaction.exec(R"SQL(
                 SELECT
-                    id, "blockId", type, timestamp, "senderPublicKey", "recipientId", amount, signature,
+                    id, "blockId", type, timestamp, "senderPublicKey", "recipientId", amount, fee, signature,
                     transfer.data AS type0Asset,
                     multisignatures.keysgroup AS type1Asset,
                     delegates.username AS type2Asset
@@ -91,6 +91,7 @@ int main()
                 auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
                 auto dbRecipientIdString = row[index++].get<std::string>();
                 auto dbAmount = row[index++].as<std::uint64_t>();
+                auto dbFee = row[index++].as<std::uint64_t>();
                 auto dbSignature = pqxx::binarystring(row[index++]);
                 auto dbType0Asset = pqxx::binarystring(row[index++]);
                 auto dbType1Asset = row[index++].get<std::string>();
@@ -140,6 +141,7 @@ int main()
                     senderPublicKey,
                     recipientId,
                     dbAmount,
+                    dbFee,
                     assetDataBegin,
                     assetDataLength
                 );
@@ -261,9 +263,11 @@ int main()
                 for (auto &t : payload.transactions()) {
                     switch(t.type) {
                     case 0:
-                        blockchainState.balances[t.senderAddress] -= (t.amount + 10000000 /* 0.1 LSK fee */);
+                        blockchainState.balances[t.senderAddress] -= (t.amount + t.fee);
                         blockchainState.balances[t.recipientAddress] += t.amount;
                         break;
+                    default:
+                        blockchainState.balances[t.senderAddress] -= t.fee;
                     }
 
                     validateState(blockchainState);
