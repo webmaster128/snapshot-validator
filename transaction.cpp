@@ -5,22 +5,22 @@
 #include "lisk.h"
 
 Transaction::Transaction(
-        std::uint8_t type,
-        std::uint32_t timestamp,
-        std::vector<unsigned char> senderPublicKey,
-        std::uint64_t recipientId,
-        std::uint64_t amount,
-        const unsigned char* assetDataBegin,
-        std::size_t assetDataLength
+        std::uint8_t _type,
+        std::uint32_t _timestamp,
+        std::vector<unsigned char> _senderPublicKey,
+        std::uint64_t _recipientId,
+        std::uint64_t _amount,
+        const unsigned char* _assetDataBegin,
+        std::size_t _assetDataLength
         )
-    : type(type)
-    , timestamp_(timestamp)
-    , senderAddress(addressFromPubkey(senderPublicKey))
-    , senderPublicKey_(senderPublicKey)
-    , recipientAddress(recipientId)
-    , amount(amount)
-    , assetDataBegin_(assetDataBegin)
-    , assetDataLength_(assetDataLength)
+    : type(_type)
+    , timestamp_(_timestamp)
+    , senderAddress(addressFromPubkey(_senderPublicKey))
+    , senderPublicKey_(_senderPublicKey)
+    , recipientAddress(_recipientId)
+    , amount(_amount)
+    , assetDataBegin_(_assetDataBegin)
+    , assetDataLength_(_assetDataLength)
 {
 }
 
