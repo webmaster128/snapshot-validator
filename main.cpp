@@ -37,6 +37,8 @@ private:
 
 int main()
 {
+    ScopedBenchmark benchmarkFull("Overall runtime"); static_cast<void>(benchmarkFull);
+
     if (sodium_init() == -1) {
         return 1;
     }
@@ -68,7 +70,7 @@ int main()
 
         {
             std::cout << "Reading transactions ..." << std::endl;
-            ScopedBenchmark benchmark("Reading transactions");
+            ScopedBenchmark benchmarkTransactions("Reading transactions"); static_cast<void>(benchmarkTransactions);
 
             pqxx::result R = transaction.exec(R"SQL(
                 SELECT
@@ -179,7 +181,7 @@ int main()
 
         {
             std::cout << "Reading blocks ..." << std::endl;
-            ScopedBenchmark benchmark("Reading blocks");
+            ScopedBenchmark benchmarkBlocks("Reading blocks"); static_cast<void>(benchmarkBlocks);
 
             pqxx::result R = transaction.exec(R"SQL(
                 SELECT
@@ -191,6 +193,9 @@ int main()
 
             std::uint64_t lastHeight = 0;
             std::uint64_t lastBlockId = 0;
+            std::uint64_t roundFees = 0;
+            std::vector<std::uint64_t> roundDelegates = std::vector<std::uint64_t>(101);
+            std::vector<std::uint64_t> roundRewards = std::vector<std::uint64_t>(101);
             for (auto row : R) {
                 int index = 0;
                 const auto dbId = row[index++].as<std::uint64_t>();
@@ -274,13 +279,37 @@ int main()
                     validateState(blockchainState);
                 }
 
-                blockchainState.balances[addressFromPubkey(bh.generatorPublicKey)] += bh.reward;
+                roundFees += bh.totalFee;
+                roundDelegates[(dbHeight-1)%101] = addressFromPubkey(bh.generatorPublicKey);
+                roundRewards[(dbHeight-1)%101] = bh.reward;
 
-                //std::cout << "Block: " << id << std::endl;
+                bool isLast = (dbHeight%101 == 0);
+                //std::cout << "Block: " << id << " in round " << roundFromHeight(dbHeight) << " last: " << isLast << " reward: " << bh.reward << std::endl;
+
+                if (isLast) {
+                    auto feePerDelegate = roundFees/101;
+                    auto feeRemaining = roundFees - (101*feePerDelegate);
+
+                    for (int i = 0; i < 101; ++i) {
+                        auto reward = roundRewards[i];
+                        blockchainState.balances[roundDelegates[i]] += (reward + feePerDelegate);
+                    }
+
+                    if (feeRemaining > 0) {
+                        // rest goes to the last delegate
+                        blockchainState.balances[roundDelegates[100]] += feeRemaining;
+                    }
+
+                    roundFees = 0;
+                }
+
             }
         }
 
         validateState(blockchainState);
+
+        std::cout << "lisksnake balance: " << blockchainState.balances[14272331929440866024ul] << std::endl;
+        std::cout << "prolina balance: " << blockchainState.balances[2178850910632340753ul] << std::endl;
 
         transaction.commit();
     }
