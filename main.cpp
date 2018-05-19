@@ -42,7 +42,7 @@ private:
     std::string title_;
 };
 
-int main()
+int run(std::vector<std::string> args)
 {
     ScopedBenchmark benchmarkFull("Overall runtime"); static_cast<void>(benchmarkFull);
 
@@ -52,7 +52,8 @@ int main()
 
     try
     {
-        pqxx::connection dbConnection("dbname=lisk_beta");
+        if (args.size() < 2) throw std::runtime_error("missing database name parameter");
+        pqxx::connection dbConnection("dbname=" + args[1]);
         std::cout << "Connected to database " << dbConnection.dbname() << std::endl;
         pqxx::read_transaction db(dbConnection);
 
@@ -340,4 +341,9 @@ int main()
     }
 
     return 0;
+}
+
+int main(int argc, char* argv[]) {
+    std::vector<std::string> args(argv, argv + argc);
+    return run(args);
 }
