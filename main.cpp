@@ -52,7 +52,7 @@ int run(std::vector<std::string> args)
 
             pqxx::result R = db.exec(R"SQL(
                 SELECT
-                    id, "blockId", type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0'),
+                    id, "blockId", type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
                     amount, fee, signature,
                     transfer.data AS type0Asset,
                     delegates.username AS type2Asset,
