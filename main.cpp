@@ -55,6 +55,7 @@ int run(std::vector<std::string> args)
                     id, "blockId", trs.type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
                     amount, fee, signature,
                     transfer.data AS type0_asset,
+                    signatures."publicKey" AS type1_asset,
                     delegates.username AS type2_asset,
                     replace(votes.votes, ',', '') AS type3_asset,
                     multisignatures.keysgroup AS type4_asset,
@@ -62,6 +63,7 @@ int run(std::vector<std::string> args)
                     coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category
                 FROM trs
                 LEFT JOIN transfer ON trs.id = transfer."transactionId"
+                LEFT JOIN signatures ON trs.id = signatures."transactionId"
                 LEFT JOIN delegates ON trs.id = delegates."transactionId"
                 LEFT JOIN votes ON trs.id = votes."transactionId"
                 LEFT JOIN multisignatures ON trs.id = multisignatures."transactionId"
@@ -81,6 +83,7 @@ int run(std::vector<std::string> args)
                 auto dbFee = row[index++].as<std::uint64_t>();
                 auto dbSignature = pqxx::binarystring(row[index++]);
                 auto dbType0Asset = pqxx::binarystring(row[index++]);
+                auto dbType1Asset = pqxx::binarystring(row[index++]);
                 auto dbType2Asset = row[index++].get<std::string>();
                 auto dbType3Asset = row[index++].get<std::string>();
                 auto dbType4Asset = row[index++].get<std::string>();
@@ -96,6 +99,9 @@ int run(std::vector<std::string> args)
                 switch (dbType) {
                 case 0:
                     assetData = asVector(dbType0Asset);
+                    break;
+                case 1:
+                    assetData = asVector(dbType1Asset);
                     break;
                 case 2:
                     if (dbType2Asset) {
