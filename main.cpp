@@ -11,20 +11,6 @@
 #include "transaction.h"
 #include "utils.h"
 
-inline std::vector<unsigned char> asVector(const pqxx::binarystring &binstr) {
-    return std::vector<unsigned char>(
-                reinterpret_cast<const unsigned char*>(binstr.get()),
-                reinterpret_cast<const unsigned char*>(binstr.get() + binstr.length())
-    );
-}
-
-inline std::vector<unsigned char> asVector(const std::string &str) {
-    return std::vector<unsigned char>(
-                reinterpret_cast<const unsigned char*>(str.data()),
-                reinterpret_cast<const unsigned char*>(str.data() + str.size())
-    );
-}
-
 class ScopedBenchmark {
 public:
     ScopedBenchmark(std::string title)

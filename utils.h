@@ -27,6 +27,20 @@ inline std::string bytes2Hex(const std::vector<unsigned char> data) {
     return out.str();
 }
 
+inline std::vector<unsigned char> asVector(const pqxx::binarystring &binstr) {
+    return std::vector<unsigned char>(
+                reinterpret_cast<const unsigned char*>(binstr.get()),
+                reinterpret_cast<const unsigned char*>(binstr.get() + binstr.length())
+    );
+}
+
+inline std::vector<unsigned char> asVector(const std::string &str) {
+    return std::vector<unsigned char>(
+                reinterpret_cast<const unsigned char*>(str.data()),
+                reinterpret_cast<const unsigned char*>(str.data() + str.size())
+    );
+}
+
 template<typename T>
 bool compareKeys(std::unordered_map<std::uint64_t, T> a, std::unordered_map<std::uint64_t, T> b, bool logging = false) {
     bool ok = true;
