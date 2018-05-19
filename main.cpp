@@ -54,9 +54,9 @@ int run(std::vector<std::string> args)
                 SELECT
                     id, "blockId", type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
                     amount, fee, signature,
-                    transfer.data AS type0Asset,
-                    delegates.username AS type2Asset,
-                    multisignatures.keysgroup AS type4Asset
+                    transfer.data AS type0_asset,
+                    delegates.username AS type2_asset,
+                    multisignatures.keysgroup AS type4_asset
                 FROM trs
                 LEFT JOIN transfer ON trs.id = transfer."transactionId"
                 LEFT JOIN delegates ON trs.id = delegates."transactionId"
