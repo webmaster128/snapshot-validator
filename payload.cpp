@@ -24,17 +24,22 @@ std::vector<Transaction> Payload::transactions() const
     return out;
 }
 
-std::vector<unsigned char> Payload::hash()
+std::vector<unsigned char> Payload::serialize() const
+{
+    std::vector<unsigned char> out;
+    for (const auto &tws : transactions_) {
+        auto serializedTransaction = tws.transaction.serialize();
+        out.insert(out.end(), serializedTransaction.begin(), serializedTransaction.end());
+        out.insert(out.end(), tws.signature.begin(), tws.signature.end());
+        out.insert(out.end(), tws.secondSignature.begin(), tws.secondSignature.end());
+    }
+    return out;
+}
+
+std::vector<unsigned char> Payload::hash() const
 {
     auto out = std::vector<unsigned char>(crypto_hash_sha256_BYTES);
-    crypto_hash_sha256_state state;
-    crypto_hash_sha256_init(&state);
-    for (const auto &tws : transactions_) {
-        auto message = tws.transaction.serialize();
-        message.insert(message.end(), tws.signature.begin(), tws.signature.end());
-        message.insert(message.end(), tws.secondSignature.begin(), tws.secondSignature.end());
-        crypto_hash_sha256_update(&state, message.data(), message.size());
-    }
-    crypto_hash_sha256_final(&state, out.data());
+    auto message = serialize();
+    crypto_hash_sha256(out.data(), message.data(), message.size());
     return out;
 }

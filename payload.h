@@ -12,7 +12,8 @@ public:
     std::size_t transactionCount() const;
     std::vector<Transaction> transactions() const;
 
-    std::vector<unsigned char> hash();
+    std::vector<unsigned char> serialize() const;
+    std::vector<unsigned char> hash() const;
 
 private:
     std::vector<TransactionWithSignatures> transactions_;
