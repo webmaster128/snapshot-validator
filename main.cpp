@@ -55,12 +55,12 @@ int run(std::vector<std::string> args)
                     id, "blockId", type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0'),
                     amount, fee, signature,
                     transfer.data AS type0Asset,
-                    multisignatures.keysgroup AS type1Asset,
-                    delegates.username AS type2Asset
+                    delegates.username AS type2Asset,
+                    multisignatures.keysgroup AS type4Asset
                 FROM trs
                 LEFT JOIN transfer ON trs.id = transfer."transactionId"
-                LEFT JOIN multisignatures ON trs.id = multisignatures."transactionId"
                 LEFT JOIN delegates ON trs.id = delegates."transactionId"
+                LEFT JOIN multisignatures ON trs.id = multisignatures."transactionId"
                 ORDER BY "rowId"
             )SQL");
             for (auto row : R) {
@@ -76,8 +76,8 @@ int run(std::vector<std::string> args)
                 auto dbFee = row[index++].as<std::uint64_t>();
                 auto dbSignature = pqxx::binarystring(row[index++]);
                 auto dbType0Asset = pqxx::binarystring(row[index++]);
-                auto dbType1Asset = row[index++].get<std::string>();
                 auto dbType2Asset = row[index++].get<std::string>();
+                auto dbType4Asset = row[index++].get<std::string>();
 
                 // Parse fields in row
                 auto senderPublicKey = asVector(dbSenderPublicKey);
@@ -88,14 +88,14 @@ int run(std::vector<std::string> args)
                 case 0:
                     assetData = asVector(dbType0Asset);
                     break;
-                case 1:
-                    if (dbType1Asset) {
-                        assetData = asVector(*dbType1Asset);
-                    }
-                    break;
                 case 2:
                     if (dbType2Asset) {
                         assetData = asVector(*dbType2Asset);
+                    }
+                    break;
+                case 4:
+                    if (dbType4Asset) {
+                        assetData = asVector(*dbType4Asset);
                     }
                     break;
                 }
