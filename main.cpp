@@ -56,10 +56,12 @@ int run(std::vector<std::string> args)
                     amount, fee, signature,
                     transfer.data AS type0_asset,
                     delegates.username AS type2_asset,
+                    replace(votes.votes, ',', '') AS type3_asset,
                     multisignatures.keysgroup AS type4_asset
                 FROM trs
                 LEFT JOIN transfer ON trs.id = transfer."transactionId"
                 LEFT JOIN delegates ON trs.id = delegates."transactionId"
+                LEFT JOIN votes ON trs.id = votes."transactionId"
                 LEFT JOIN multisignatures ON trs.id = multisignatures."transactionId"
                 ORDER BY "rowId"
             )SQL");
@@ -77,6 +79,7 @@ int run(std::vector<std::string> args)
                 auto dbSignature = pqxx::binarystring(row[index++]);
                 auto dbType0Asset = pqxx::binarystring(row[index++]);
                 auto dbType2Asset = row[index++].get<std::string>();
+                auto dbType3Asset = row[index++].get<std::string>();
                 auto dbType4Asset = row[index++].get<std::string>();
 
                 // Parse fields in row
@@ -92,6 +95,9 @@ int run(std::vector<std::string> args)
                     if (dbType2Asset) {
                         assetData = asVector(*dbType2Asset);
                     }
+                    break;
+                case 3:
+                    assetData = asVector(*dbType3Asset);
                     break;
                 case 4:
                     if (dbType4Asset) {
