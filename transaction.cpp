@@ -3,6 +3,7 @@
 #include <sodium.h>
 
 #include "lisk.h"
+#include "utils.h"
 
 Transaction::Transaction(
         std::uint8_t _type,
@@ -72,6 +73,22 @@ std::vector<unsigned char> Transaction::hash(std::vector<unsigned char> signatur
 std::uint64_t Transaction::id(std::vector<unsigned char> signature) const
 {
     return idFromEightBytes(firstEightBytesReversed(hash(signature)));
+}
+
+std::vector<std::vector<unsigned char>> Transaction::parseType4Pubkeys(const std::string transactionAsset)
+{
+    std::vector<std::vector<unsigned char>> out;
+
+    auto iterator = transactionAsset.cbegin();
+    while (iterator != transactionAsset.cend()) {
+        if (*iterator == ',') ++iterator;
+        ++iterator; // skip "+"
+        auto pubkeyHex = std::string(iterator, iterator+64);
+        out.push_back(hex2Bytes(pubkeyHex));
+        iterator += 64;
+    }
+
+    return out;
 }
 
 std::ostream& operator<<(std::ostream& os, const Transaction& trx)

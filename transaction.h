@@ -29,5 +29,7 @@ struct Transaction {
     std::vector<unsigned char> hash(std::vector<unsigned char> signature = {}) const;
     std::uint64_t id(std::vector<unsigned char> signature) const;
 
+    static std::vector<std::vector<unsigned char>> parseType4Pubkeys(const std::string transactionAsset);
+
     friend std::ostream& operator<<(std::ostream& os, const Transaction& transaction);
 };
