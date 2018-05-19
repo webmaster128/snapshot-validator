@@ -52,22 +52,22 @@ int main()
 
     try
     {
-        pqxx::connection C("dbname=lisk_beta");
-        std::cout << "Connected to database " << C.dbname() << std::endl;
-        pqxx::read_transaction transaction(C);
+        pqxx::connection dbConnection("dbname=lisk_beta");
+        std::cout << "Connected to database " << dbConnection.dbname() << std::endl;
+        pqxx::read_transaction db(dbConnection);
 
         {
-            pqxx::result R = transaction.exec("SELECT COUNT(*) as number FROM trs");
+            pqxx::result R = db.exec("SELECT COUNT(*) as number FROM trs");
             for (auto row : R) std::cout << "Transaction count " << row[0].c_str() << std::endl;
         }
 
         {
-            pqxx::result R = transaction.exec("SELECT COUNT(*) as number FROM blocks");
+            pqxx::result R = db.exec("SELECT COUNT(*) as number FROM blocks");
             for (auto row : R) std::cout << "Blocks count " << row[0].c_str() << std::endl;
         }
 
         {
-            pqxx::result R = transaction.exec("SELECT MAX(height) FROM blocks");
+            pqxx::result R = db.exec("SELECT MAX(height) FROM blocks");
             for (auto row : R) std::cout << "Height: " << row[0].c_str() << std::endl;
         }
 
@@ -79,7 +79,7 @@ int main()
             std::cout << "Reading transactions ..." << std::endl;
             ScopedBenchmark benchmarkTransactions("Reading transactions"); static_cast<void>(benchmarkTransactions);
 
-            pqxx::result R = transaction.exec(R"SQL(
+            pqxx::result R = db.exec(R"SQL(
                 SELECT
                     id, "blockId", type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0'),
                     amount, fee, signature,
@@ -178,7 +178,7 @@ int main()
             std::cout << "Reading blocks ..." << std::endl;
             ScopedBenchmark benchmarkBlocks("Reading blocks"); static_cast<void>(benchmarkBlocks);
 
-            pqxx::result R = transaction.exec(R"SQL(
+            pqxx::result R = db.exec(R"SQL(
                 SELECT
                     id, version, timestamp, height, "previousBlock", "numberOfTransactions", "totalAmount", "totalFee", reward,
                     "payloadLength", "payloadHash", "generatorPublicKey", "blockSignature"
@@ -309,7 +309,7 @@ int main()
             ScopedBenchmark benchmarkMemAccounts("Checking mem_accounts"); static_cast<void>(benchmarkMemAccounts);
 
             std::unordered_map<std::uint64_t, std::int64_t> balances;
-            pqxx::result R = transaction.exec(R"SQL(
+            pqxx::result R = db.exec(R"SQL(
                 SELECT
                     left(address, -1), balance
                 FROM mem_accounts
@@ -331,7 +331,7 @@ int main()
         std::cout << "lisksnake balance: " << blockchainState.balances[14272331929440866024ul] << std::endl;
         std::cout << "prolina balance: " << blockchainState.balances[2178850910632340753ul] << std::endl;
 
-        transaction.commit();
+        db.commit();
     }
     catch (const std::exception &e)
     {
