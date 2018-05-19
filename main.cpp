@@ -52,17 +52,20 @@ int run(std::vector<std::string> args)
 
             pqxx::result R = db.exec(R"SQL(
                 SELECT
-                    id, "blockId", type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
+                    id, "blockId", trs.type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
                     amount, fee, signature,
                     transfer.data AS type0_asset,
                     delegates.username AS type2_asset,
                     replace(votes.votes, ',', '') AS type3_asset,
-                    multisignatures.keysgroup AS type4_asset
+                    multisignatures.keysgroup AS type4_asset,
+                    (dapps.name || dapps.description || dapps.tags || dapps.link || dapps.icon) AS type5_asset_texts,
+                    coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category
                 FROM trs
                 LEFT JOIN transfer ON trs.id = transfer."transactionId"
                 LEFT JOIN delegates ON trs.id = delegates."transactionId"
                 LEFT JOIN votes ON trs.id = votes."transactionId"
                 LEFT JOIN multisignatures ON trs.id = multisignatures."transactionId"
+                LEFT JOIN dapps ON trs.id = dapps."transactionId"
                 ORDER BY "rowId"
             )SQL");
             for (auto row : R) {
@@ -81,6 +84,9 @@ int run(std::vector<std::string> args)
                 auto dbType2Asset = row[index++].get<std::string>();
                 auto dbType3Asset = row[index++].get<std::string>();
                 auto dbType4Asset = row[index++].get<std::string>();
+                auto dbType5AssetText = row[index++].get<std::string>();
+                auto dbType5AssetType = row[index++].as<std::uint32_t>();
+                auto dbType5AssetCategory = row[index++].as<std::uint32_t>();
 
                 // Parse fields in row
                 auto senderPublicKey = asVector(dbSenderPublicKey);
@@ -103,6 +109,17 @@ int run(std::vector<std::string> args)
                     if (dbType4Asset) {
                         assetData = asVector(*dbType4Asset);
                     }
+                    break;
+                case 5:
+                    assetData = asVector(*dbType5AssetText);
+                    assetData.push_back((dbType5AssetType >> 0*8) & 0xff);
+                    assetData.push_back((dbType5AssetType >> 1*8) & 0xff);
+                    assetData.push_back((dbType5AssetType >> 2*8) & 0xff);
+                    assetData.push_back((dbType5AssetType >> 3*8) & 0xff);
+                    assetData.push_back((dbType5AssetCategory >> 0*8) & 0xff);
+                    assetData.push_back((dbType5AssetCategory >> 1*8) & 0xff);
+                    assetData.push_back((dbType5AssetCategory >> 2*8) & 0xff);
+                    assetData.push_back((dbType5AssetCategory >> 3*8) & 0xff);
                     break;
                 }
 
