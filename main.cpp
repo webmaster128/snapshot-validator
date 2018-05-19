@@ -60,7 +60,7 @@ int run(std::vector<std::string> args)
                     replace(votes.votes, ',', '') AS type3_asset,
                     coalesce(multisignatures.min, 0) AS type4_asset_min, coalesce(multisignatures.lifetime, 0) AS type4_asset_lifetime,
                     replace(multisignatures.keysgroup, ',', '') AS type4_asset_keys,
-                    (dapps.name || dapps.description || dapps.tags || dapps.link || dapps.icon) AS type5_asset_texts,
+                    (coalesce(dapps.name, '') || coalesce(dapps.description, '') || coalesce(dapps.tags, '') || coalesce(dapps.link, '') || coalesce(dapps.icon, '')) AS type5_asset_texts,
                     coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category
                 FROM trs
                 LEFT JOIN transfer ON trs.id = transfer."transactionId"
