@@ -80,6 +80,7 @@ std::vector<std::vector<unsigned char>> Transaction::parseType4Pubkeys(const std
     std::vector<std::vector<unsigned char>> out;
 
     auto iterator = transactionAsset.cbegin();
+    iterator += 2; // skip min, lifetime
     while (iterator != transactionAsset.cend()) {
         if (*iterator == ',') ++iterator;
         ++iterator; // skip "+"

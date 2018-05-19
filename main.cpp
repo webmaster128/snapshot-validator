@@ -58,7 +58,8 @@ int run(std::vector<std::string> args)
                     signatures."publicKey" AS type1_asset,
                     delegates.username AS type2_asset,
                     replace(votes.votes, ',', '') AS type3_asset,
-                    multisignatures.keysgroup AS type4_asset,
+                    coalesce(multisignatures.min, 0) AS type4_asset_min, coalesce(multisignatures.lifetime, 0) AS type4_asset_lifetime,
+                    replace(multisignatures.keysgroup, ',', '') AS type4_asset_keys,
                     (dapps.name || dapps.description || dapps.tags || dapps.link || dapps.icon) AS type5_asset_texts,
                     coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category
                 FROM trs
@@ -86,7 +87,9 @@ int run(std::vector<std::string> args)
                 auto dbType1Asset = pqxx::binarystring(row[index++]);
                 auto dbType2Asset = row[index++].get<std::string>();
                 auto dbType3Asset = row[index++].get<std::string>();
-                auto dbType4Asset = row[index++].get<std::string>();
+                auto dbType4AssetMin = row[index++].as<int>();
+                auto dbType4AssetLifetime = row[index++].as<int>();
+                auto dbType4AssetKeys = row[index++].get<std::string>();
                 auto dbType5AssetText = row[index++].get<std::string>();
                 auto dbType5AssetType = row[index++].as<std::uint32_t>();
                 auto dbType5AssetCategory = row[index++].as<std::uint32_t>();
@@ -111,11 +114,13 @@ int run(std::vector<std::string> args)
                 case 3:
                     assetData = asVector(*dbType3Asset);
                     break;
-                case 4:
-                    if (dbType4Asset) {
-                        assetData = asVector(*dbType4Asset);
-                    }
+                case 4: {
+                    assetData.push_back(static_cast<std::uint8_t>(dbType4AssetMin));
+                    assetData.push_back(static_cast<std::uint8_t>(dbType4AssetLifetime));
+                    auto keys = asVector(*dbType4AssetKeys);
+                    assetData.insert(assetData.end(), keys.cbegin(), keys.cend());
                     break;
+                }
                 case 5:
                     assetData = asVector(*dbType5AssetText);
                     assetData.push_back((dbType5AssetType >> 0*8) & 0xff);
