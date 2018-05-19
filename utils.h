@@ -3,8 +3,10 @@
 #include <string>
 #include <vector>
 #include <iomanip>
+#include <iostream>
 #include <sstream>
 #include <unordered_map>
+#include <pqxx/pqxx>
 
 inline std::vector<unsigned char> hex2Bytes(const std::string hex) {
     std::vector<unsigned char> out(hex.size() / 2);
