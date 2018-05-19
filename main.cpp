@@ -221,15 +221,15 @@ int run(std::vector<std::string> args)
                     throw std::runtime_error("transaction number mismatch");
                 }
 
-                auto calculatedPayloadHash = payload.hash();
-                if (payloadHash != calculatedPayloadHash) {
-                    //throw std::runtime_error("payload hash mismatch");
-                    std::cout << "payload hash mismatch" << std::endl;
-                }
-
                 auto id = bh.id(signature);
                 if (id != dbId) {
                     throw std::runtime_error("id mismatch");
+                }
+
+                auto calculatedPayloadHash = payload.hash();
+                if (payloadHash != calculatedPayloadHash) {
+                    //throw std::runtime_error("payload hash mismatch");
+                    std::cout << "payload hash mismatch for block " << id << std::endl;
                 }
 
                 // Update state from transaction
