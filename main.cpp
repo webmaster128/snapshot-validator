@@ -43,7 +43,7 @@ int run(std::vector<std::string> args)
         }
 
 
-        std::unordered_map<std::uint64_t, std::vector<std::pair<Transaction, std::vector<unsigned char>>>> blockToTransactions;
+        std::unordered_map<std::uint64_t, std::vector<TransactionWithSignatures>> blockToTransactions;
         State blockchainState;
 
         {
@@ -53,7 +53,7 @@ int run(std::vector<std::string> args)
             pqxx::result R = db.exec(R"SQL(
                 SELECT
                     id, "blockId", trs.type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
-                    amount, fee, signature,
+                    amount, fee, signature, "signSignature",
                     transfer.data AS type0_asset,
                     signatures."publicKey" AS type1_asset,
                     delegates.username AS type2_asset,
@@ -83,6 +83,7 @@ int run(std::vector<std::string> args)
                 auto dbAmount = row[index++].as<std::uint64_t>();
                 auto dbFee = row[index++].as<std::uint64_t>();
                 auto dbSignature = pqxx::binarystring(row[index++]);
+                auto dbSecondSignature = pqxx::binarystring(row[index++]);
                 auto dbType0Asset = pqxx::binarystring(row[index++]);
                 auto dbType1Asset = pqxx::binarystring(row[index++]);
                 auto dbType2Asset = row[index++].get<std::string>();
@@ -97,6 +98,7 @@ int run(std::vector<std::string> args)
                 // Parse fields in row
                 auto senderPublicKey = asVector(dbSenderPublicKey);
                 auto signature = asVector(dbSignature);
+                auto secondSignature = asVector(dbSecondSignature);
 
                 std::vector<unsigned char> assetData = {};
                 switch (dbType) {
@@ -148,7 +150,7 @@ int run(std::vector<std::string> args)
                     dbFee,
                     assetData
                 );
-                blockToTransactions[dbBockId].push_back({t, signature});
+                blockToTransactions[dbBockId].push_back(TransactionWithSignatures(t, signature, secondSignature));
                 //blockToTransactions.insert({dbId, t});
 
                 if (dbType == 0 || (dbType == 2 && dbTimestamp != 0)) {
