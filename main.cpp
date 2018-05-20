@@ -136,11 +136,6 @@ int run(std::vector<std::string> args)
                     break;
                 }
 
-                //if (type == 2 && timestamp == 0) {
-                //    amount = 25;
-                //}
-
-                // Use fields in row
                 auto t = Transaction(
                     dbType,
                     dbTimestamp,
@@ -151,7 +146,6 @@ int run(std::vector<std::string> args)
                     assetData
                 );
                 blockToTransactions[dbBockId].push_back(TransactionWithSignatures(t, signature, secondSignature));
-                //blockToTransactions.insert({dbId, t});
 
                 if (dbType == 0 || (dbType == 2 && dbTimestamp != 0)) {
                     auto calculatedId = t.id(signature);
