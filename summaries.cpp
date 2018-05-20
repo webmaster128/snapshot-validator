@@ -28,8 +28,7 @@ void checkMemAccounts(pqxx::read_transaction &db, const State &blockchainState)
     }
 
     if (balances != blockchainState.balances) {
-        // debug
-        compareKeys(blockchainState.balances, balances, true);
+        compareKeys(balances, blockchainState.balances, true);
         throw std::runtime_error("Balances in mem_accounts do not match blockchain state");
     }
 }
