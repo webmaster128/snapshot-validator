@@ -59,20 +59,26 @@ std::vector<unsigned char> Transaction::serialize() const
     return out;
 }
 
-std::vector<unsigned char> Transaction::hash(std::vector<unsigned char> signature) const
+std::vector<unsigned char> Transaction::hash(std::vector<unsigned char> signature, std::vector<unsigned char> secondSignature) const
 {
     auto out = std::vector<unsigned char>(crypto_hash_sha256_BYTES);
 
+    crypto_hash_sha256_state state;
+    crypto_hash_sha256_init(&state);
+
     auto message = serialize();
-    message.insert(message.end(), signature.begin(), signature.end());
-    crypto_hash_sha256(out.data(), message.data(), message.size());
+    crypto_hash_sha256_update(&state, message.data(), message.size());
+    crypto_hash_sha256_update(&state, signature.data(), signature.size());
+    crypto_hash_sha256_update(&state, secondSignature.data(), secondSignature.size());
+
+    crypto_hash_sha256_final(&state, out.data());
 
     return out;
 }
 
-std::uint64_t Transaction::id(std::vector<unsigned char> signature) const
+std::uint64_t Transaction::id(std::vector<unsigned char> signature, std::vector<unsigned char> secondSignature) const
 {
-    return idFromEightBytes(firstEightBytesReversed(hash(signature)));
+    return idFromEightBytes(firstEightBytesReversed(hash(signature, secondSignature)));
 }
 
 std::vector<std::vector<unsigned char>> Transaction::parseType4Pubkeys(const std::string transactionAsset)

@@ -9,10 +9,10 @@ namespace TransactionValidator {
 
 void validate(TransactionRow row, bool secondSignatureRequired)
 {
-    //auto calculatedId = row.transaction.id(row.signature);
-    //if (row.id != calculatedId) {
-    //    throw std::runtime_error("Transaction ID mismatch");
-    //}
+    auto calculatedId = row.transaction.id(row.signature, row.secondSignature);
+    if (row.id != calculatedId) {
+        throw std::runtime_error("Transaction ID mismatch");
+    }
 
     auto hash = row.transaction.hash();
 

@@ -241,7 +241,7 @@ int run(std::vector<std::string> args)
                     // std::cout << "payload: " << bytes2Hex(payloadSerialized) << std::endl;
 
                     for (auto &tws : blockToTransactions[id]) {
-                        auto transactionId = tws.transaction.id(tws.signature);
+                        auto transactionId = tws.transaction.id(tws.signature, tws.secondSignature);
                         std::cout << tws.transaction << " " << transactionId << std::endl;
                     }
 

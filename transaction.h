@@ -26,8 +26,8 @@ struct Transaction {
     const std::vector<unsigned char> assetData;
 
     std::vector<unsigned char> serialize() const;
-    std::vector<unsigned char> hash(std::vector<unsigned char> signature = {}) const;
-    std::uint64_t id(std::vector<unsigned char> signature) const;
+    std::vector<unsigned char> hash(std::vector<unsigned char> signature = {}, std::vector<unsigned char> secondSignature = {}) const;
+    std::uint64_t id(std::vector<unsigned char> signature, std::vector<unsigned char> secondSignature) const;
 
     static std::vector<std::vector<unsigned char>> parseType4Pubkeys(const std::string transactionAsset);
 
