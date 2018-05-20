@@ -17,11 +17,12 @@ void checkMemAccounts(pqxx::read_transaction &db, const State &blockchainState)
 
     std::unordered_map<std::uint64_t, std::int64_t> balances;
     std::unordered_map<std::uint64_t, std::vector<unsigned char>> secondPubkeys;
+    std::unordered_map<std::uint64_t, std::string> delegateNames;
 
     pqxx::result result = db.exec(R"SQL(
       SELECT
           left(address, -1), balance,
-          "secondPublicKey"
+          "secondPublicKey", coalesce(username, '')
       FROM mem_accounts
     )SQL");
     for (auto row : result) {
@@ -29,11 +30,11 @@ void checkMemAccounts(pqxx::read_transaction &db, const State &blockchainState)
         const auto dbAddress = row[index++].as<std::uint64_t>();
         const auto dbBalance = row[index++].as<std::int64_t>();
         const auto dbSecondPublicKey = pqxx::binarystring(row[index++]);
+        const auto dbUsername = row[index++].as<std::string>();
 
         balances[dbAddress] = dbBalance;
-        if (dbSecondPublicKey.length() != 0) {
-            secondPubkeys[dbAddress] = asVector(dbSecondPublicKey);
-        }
+        if (dbSecondPublicKey.length() != 0) secondPubkeys[dbAddress] = asVector(dbSecondPublicKey);
+        if (!dbUsername.empty()) delegateNames[dbAddress] = dbUsername;
     }
 
     if (balances != blockchainState.balances) {
@@ -44,6 +45,11 @@ void checkMemAccounts(pqxx::read_transaction &db, const State &blockchainState)
     if (secondPubkeys != blockchainState.secondPubkeys) {
         compareKeys(secondPubkeys, blockchainState.secondPubkeys, true);
         throw std::runtime_error("second pubkeys in mem_accounts do not match blockchain state");
+    }
+
+    if (delegateNames != blockchainState.delegateNames) {
+        compareKeys(delegateNames, blockchainState.delegateNames, true);
+        throw std::runtime_error("delegate names in mem_accounts do not match blockchain state");
     }
 }
 

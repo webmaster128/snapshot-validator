@@ -289,6 +289,10 @@ int run(std::vector<std::string> args)
                         blockchainState.balances[t.senderAddress] -= t.fee;
                         blockchainState.secondPubkeys[t.senderAddress] = t.assetData;
                         break;
+                    case 2:
+                        blockchainState.balances[t.senderAddress] -= t.fee;
+                        blockchainState.delegateNames[t.senderAddress] = std::string(t.assetData.begin(), t.assetData.end());
+                        break;
                     case 4: {
                         blockchainState.balances[t.senderAddress] -= t.fee;
 
