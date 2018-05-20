@@ -4,6 +4,6 @@
 
 namespace TransactionValidator {
 
-void validate(Transaction t, std::vector<unsigned char> signature, std::vector<unsigned char> secondSignature);
+void validate(TransactionRow row);
 
 }

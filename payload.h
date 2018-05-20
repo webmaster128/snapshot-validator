@@ -6,7 +6,7 @@ class Payload {
 
 public:
     Payload(
-            std::vector<TransactionWithSignatures> transactions
+            std::vector<TransactionRow> transactions
     );
 
     std::size_t transactionCount() const;
@@ -16,5 +16,5 @@ public:
     std::vector<unsigned char> hash() const;
 
 private:
-    std::vector<TransactionWithSignatures> transactions_;
+    std::vector<TransactionRow> transactions_;
 };

@@ -34,18 +34,21 @@ struct Transaction {
     friend std::ostream& operator<<(std::ostream& os, const Transaction& transaction);
 };
 
-struct TransactionWithSignatures {
-    TransactionWithSignatures(
+struct TransactionRow {
+    TransactionRow(
             Transaction _transaction,
             std::vector<unsigned char> _signature,
-            std::vector<unsigned char> _secondSignature)
+            std::vector<unsigned char> _secondSignature,
+            std::uint64_t _id)
         : transaction(_transaction)
         , signature(_signature)
         , secondSignature(_secondSignature)
+        , id(_id)
     {
     }
 
     const Transaction transaction;
     const std::vector<unsigned char> signature;
     const std::vector<unsigned char> secondSignature;
+    const std::uint64_t id;
 };

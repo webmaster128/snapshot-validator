@@ -2,7 +2,7 @@
 
 #include "sodium.h"
 
-Payload::Payload(std::vector<TransactionWithSignatures> transactions)
+Payload::Payload(std::vector<TransactionRow> transactions)
     : transactions_(transactions)
 {
 }

@@ -45,7 +45,7 @@ int run(std::vector<std::string> args)
         }
 
 
-        std::unordered_map<std::uint64_t, std::vector<TransactionWithSignatures>> blockToTransactions;
+        std::unordered_map<std::uint64_t, std::vector<TransactionRow>> blockToTransactions;
         State blockchainState;
 
         {
@@ -147,7 +147,7 @@ int run(std::vector<std::string> args)
                     dbFee,
                     assetData
                 );
-                blockToTransactions[dbBockId].emplace_back(t, signature, secondSignature);
+                blockToTransactions[dbBockId].emplace_back(t, signature, secondSignature, dbId);
             }
         }
 
@@ -253,13 +253,13 @@ int run(std::vector<std::string> args)
                     }
                 }
 
-                for (auto &tws : blockToTransactions[dbId]) {
-                    auto &t = tws.transaction;
+                for (auto &transactionRow : blockToTransactions[dbId]) {
+                    auto &t = transactionRow.transaction;
 
                     // Validate transaction
 
                     if (t.type == 0 || (t.type == 2 && t.timestamp != 0)) {
-                        TransactionValidator::validate(t, tws.signature, tws.secondSignature);
+                        TransactionValidator::validate(transactionRow);
                     } else {
                         std::cout << "Transaction not verified: " << t << std::endl;
                     }
