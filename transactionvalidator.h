@@ -4,6 +4,6 @@
 
 namespace TransactionValidator {
 
-void validate(TransactionRow row);
+void validate(TransactionRow row, bool secondSignatureRequired);
 
 }

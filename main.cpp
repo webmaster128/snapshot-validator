@@ -261,7 +261,8 @@ int run(std::vector<std::string> args)
                     if (dbHeight == 1) {
                         std::cout << "Transaction not verified: " << t << std::endl;
                     } else {
-                        TransactionValidator::validate(transactionRow);
+                        bool secondSignatureRequired = blockchainState.secondPubkeys.count(t.senderAddress) == 1;
+                        TransactionValidator::validate(transactionRow, secondSignatureRequired);
                     }
 
                     // Update state from transaction

@@ -7,7 +7,7 @@
 
 namespace TransactionValidator {
 
-void validate(TransactionRow row)
+void validate(TransactionRow row, bool secondSignatureRequired)
 {
     //auto calculatedId = row.transaction.id(row.signature);
     //if (row.id != calculatedId) {
@@ -27,6 +27,10 @@ void validate(TransactionRow row)
         //std::cout << "Transaction: " << t << std::endl;
         //std::cout << "Pubkey: " << bytes2Hex(std::vector<unsigned char>(senderPublicKeyBegin, senderPublicKeyBegin+senderPublicKeyLength)) << std::endl;
         //std::cout << "Valid ID: " << dbId << "/" << calculatedId << std::endl;
+    }
+
+    if (secondSignatureRequired) {
+        std::cout << "Transaction: " << row.id << " requires second signature" << std::endl;
     }
 }
 
