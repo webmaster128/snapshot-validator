@@ -8,6 +8,7 @@
 #include "payload.h"
 #include "state.h"
 #include "scopedbenchmark.h"
+#include "summaries.h"
 #include "transaction.h"
 #include "utils.h"
 
@@ -331,29 +332,7 @@ int run(std::vector<std::string> args)
         // validate after all blocks
         validateState(blockchainState);
 
-        {
-            std::cout << "Checking mem_accounts ..." << std::endl;
-            ScopedBenchmark benchmarkMemAccounts("Checking mem_accounts"); static_cast<void>(benchmarkMemAccounts);
-
-            std::unordered_map<std::uint64_t, std::int64_t> balances;
-            pqxx::result R = db.exec(R"SQL(
-                SELECT
-                    left(address, -1), balance
-                FROM mem_accounts
-            )SQL");
-            for (auto row : R) {
-                int index = 0;
-                const auto dbAddress = row[index++].as<std::uint64_t>();
-                const auto dbBalance = row[index++].as<std::int64_t>();
-                balances[dbAddress] = dbBalance;
-            }
-
-            if (balances != blockchainState.balances) {
-                // debug
-                compareKeys(blockchainState.balances, balances, true);
-                throw std::runtime_error("Balances in mem_accounts do not match blockchain state");
-            }
-        }
+        Summaries::checkMemAccounts(db, blockchainState);
 
         std::cout << "lisksnake balance: " << blockchainState.balances[14272331929440866024ul] << std::endl;
         std::cout << "prolina balance: " << blockchainState.balances[2178850910632340753ul] << std::endl;

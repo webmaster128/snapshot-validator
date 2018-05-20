@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME}
     lisk.cpp
     main.cpp
     payload.cpp
+    summaries.cpp
     state.cpp
     transaction.cpp
 )
