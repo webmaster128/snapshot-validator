@@ -258,8 +258,22 @@ int run(std::vector<std::string> args)
 
                 auto calculatedPayloadHash = payload.hash();
                 if (payloadHash != calculatedPayloadHash) {
-                    //throw std::runtime_error("payload hash mismatch");
-                    std::cout << "payload hash mismatch for block " << id << std::endl;
+                    auto payloadSerialized = payload.serialize();
+                    std::cout << "payload length calculated: " << payloadSerialized.size()
+                              << " expected: " << bh.payloadLength << std::endl;
+                    // std::cout << "payload: " << bytes2Hex(payloadSerialized) << std::endl;
+
+                    for (auto &tws : blockToTransactions[id]) {
+                        auto transactionId = tws.transaction.id(tws.signature);
+                        std::cout << tws.transaction << " " << transactionId << std::endl;
+                    }
+
+                    if (dbHeight == 1) {
+                        // warn only (https://github.com/LiskHQ/lisk/issues/2047)
+                        std::cout << "payload hash mismatch for block " << id << std::endl;
+                    } else {
+                        throw std::runtime_error("payload hash mismatch");
+                    }
                 }
 
                 // Update state from transaction
