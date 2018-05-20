@@ -10,6 +10,7 @@
 #include "scopedbenchmark.h"
 #include "summaries.h"
 #include "transaction.h"
+#include "transactionvalidator.h"
 #include "utils.h"
 
 
@@ -258,28 +259,9 @@ int run(std::vector<std::string> args)
                     // Validate transaction
 
                     if (t.type == 0 || (t.type == 2 && t.timestamp != 0)) {
-                        auto calculatedId = t.id(signature);
-
-                        //if (dbId != calculatedId) {
-                        //    throw std::runtime_error("Transaction ID mismatch");
-                        //}
-
-                        auto hash = t.hash();
-
-                        if (crypto_sign_verify_detached(tws.signature.data(), hash.data(), hash.size(), t.senderPublicKey.data()) != 0) {
-                            std::cout << "ID: " << dbId << std::endl;
-                            std::cout << "Transaction: " << t << std::endl;
-                            std::cout << "Pubkey: " << bytes2Hex(t.senderPublicKey) << std::endl;
-                            std::cout << "Signature: " << bytes2Hex(tws.signature) << std::endl;
-                            throw std::runtime_error("Invalid transaction signature");
-                        } else {
-                            // valid!
-                            //std::cout << "Transaction: " << t << std::endl;
-                            //std::cout << "Pubkey: " << bytes2Hex(std::vector<unsigned char>(senderPublicKeyBegin, senderPublicKeyBegin+senderPublicKeyLength)) << std::endl;
-                            //std::cout << "Valid ID: " << dbId << "/" << calculatedId << std::endl;
-                        }
+                        TransactionValidator::validate(t, tws.signature, tws.secondSignature);
                     } else {
-                        std::cout << "Transaction not verified: " << t << " ID: " << dbId << std::endl;
+                        std::cout << "Transaction not verified: " << t << std::endl;
                     }
 
                     // Update state from transaction
