@@ -7,7 +7,7 @@
 
 namespace TransactionValidator {
 
-void validate(TransactionRow row, bool secondSignatureRequired)
+void validate(TransactionRow row, std::vector<unsigned char> secondSignatureRequiredBy)
 {
     auto calculatedId = row.transaction.id(row.signature, row.secondSignature);
     if (row.id != calculatedId) {
@@ -22,15 +22,18 @@ void validate(TransactionRow row, bool secondSignatureRequired)
         std::cout << "Sender: " << bytes2Hex(row.transaction.senderPublicKey) << std::endl;
         std::cout << "Signature: " << bytes2Hex(row.signature) << std::endl;
         throw std::runtime_error("Invalid transaction signature");
-    } else {
-        // valid!
-        //std::cout << "Transaction: " << t << std::endl;
-        //std::cout << "Pubkey: " << bytes2Hex(std::vector<unsigned char>(senderPublicKeyBegin, senderPublicKeyBegin+senderPublicKeyLength)) << std::endl;
-        //std::cout << "Valid ID: " << dbId << "/" << calculatedId << std::endl;
     }
 
-    if (secondSignatureRequired) {
-        std::cout << "Transaction: " << row.id << " requires second signature" << std::endl;
+    if (!secondSignatureRequiredBy.empty()) {
+        //std::cout << "Transaction: " << row.id << " requires second signature" << std::endl;
+        auto hash2 = row.transaction.hash(row.signature);
+        if (crypto_sign_verify_detached(row.secondSignature.data(), hash2.data(), hash2.size(), secondSignatureRequiredBy.data()) != 0) {
+            std::cout << "ID: " << row.id << std::endl;
+            std::cout << "Transaction: " << row.transaction << std::endl;
+            std::cout << "Sender: " << bytes2Hex(row.transaction.senderPublicKey) << std::endl;
+            std::cout << "Signature: " << bytes2Hex(row.signature) << std::endl;
+            throw std::runtime_error("Invalid transaction second signature");
+        }
     }
 }
 
