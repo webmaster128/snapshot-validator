@@ -19,7 +19,7 @@ void validate(TransactionRow row)
     if (crypto_sign_verify_detached(row.signature.data(), hash.data(), hash.size(), row.transaction.senderPublicKey.data()) != 0) {
         std::cout << "ID: " << row.id << std::endl;
         std::cout << "Transaction: " << row.transaction << std::endl;
-        std::cout << "Pubkey: " << bytes2Hex(row.transaction.senderPublicKey) << std::endl;
+        std::cout << "Sender: " << bytes2Hex(row.transaction.senderPublicKey) << std::endl;
         std::cout << "Signature: " << bytes2Hex(row.signature) << std::endl;
         throw std::runtime_error("Invalid transaction signature");
     } else {
