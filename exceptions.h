@@ -1,7 +1,7 @@
 #pragma once
 
-#define TESTNET 1
-//#define BETANET 1
+//#define TESTNET 1
+#define BETANET 1
 
 #include <cstdint>
 

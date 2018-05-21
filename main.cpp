@@ -3,6 +3,7 @@
 #include <sodium.h>
 #include <unordered_map>
 
+#include "assets.h"
 #include "blockheader.h"
 #include "lisk.h"
 #include "payload.h"
@@ -44,6 +45,12 @@ int run(std::vector<std::string> args)
             for (auto row : R) std::cout << "Height: " << row[0].c_str() << std::endl;
         }
 
+        Assets::validateType0AssetData(db);
+        Assets::validateType1AssetData(db);
+        Assets::validateType2AssetData(db);
+        Assets::validateType3AssetData(db);
+        Assets::validateType4AssetData(db);
+        Assets::validateType5AssetData(db);
 
         std::unordered_map<std::uint64_t, std::vector<TransactionRow>> blockToTransactions;
         State blockchainState;

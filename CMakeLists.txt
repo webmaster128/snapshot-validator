@@ -12,6 +12,7 @@ include_directories(${PQ_INCLUDE_DIRS} ${PQXX_INCLUDE_DIRS} ${SODIUM_INCLUDE_DIR
 message(${PQ_LIBRARIES} ${PQXX_LIBRARIES})
 
 add_executable(${PROJECT_NAME}
+    assets.cpp
     blockheader.cpp
     lisk.cpp
     main.cpp
