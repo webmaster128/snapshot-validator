@@ -7,6 +7,7 @@
 #include "blockheader.h"
 #include "lisk.h"
 #include "payload.h"
+#include "settings.h"
 #include "state.h"
 #include "scopedbenchmark.h"
 #include "summaries.h"
@@ -45,9 +46,9 @@ int run(std::vector<std::string> args)
             for (auto row : R) std::cout << "Height: " << row[0].c_str() << std::endl;
         }
 
-        bool betanet = false;
+        Settings settings(Network::Testnet);
 
-        if (betanet) {
+        if (settings.v100Compatible) {
             Assets::validateType0AssetData(db);
         }
         Assets::validateType1AssetData(db);
@@ -67,7 +68,7 @@ int run(std::vector<std::string> args)
                 SELECT
                     id, "blockId", trs.type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
                     amount, fee, signature, "signSignature",
-                    )SQL" + std::string(betanet ? "transfer.data" : "''") + R"SQL( AS type0_asset,
+                    )SQL" + std::string(settings.v100Compatible ? "transfer.data" : "''") + R"SQL( AS type0_asset,
                     signatures."publicKey" AS type1_asset,
                     delegates.username AS type2_asset,
                     replace(votes.votes, ',', '') AS type3_asset,
@@ -76,7 +77,7 @@ int run(std::vector<std::string> args)
                     (coalesce(dapps.name, '') || coalesce(dapps.description, '') || coalesce(dapps.tags, '') || coalesce(dapps.link, '') || coalesce(dapps.icon, '')) AS type5_asset_texts,
                     coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category
                 FROM trs
-                )SQL" + std::string(betanet ? "LEFT JOIN transfer ON trs.id = transfer.\"transactionId\"" : "") + R"SQL(
+                )SQL" + std::string(settings.v100Compatible ? "LEFT JOIN transfer ON trs.id = transfer.\"transactionId\"" : "") + R"SQL(
                 LEFT JOIN signatures ON trs.id = signatures."transactionId"
                 LEFT JOIN delegates ON trs.id = delegates."transactionId"
                 LEFT JOIN votes ON trs.id = votes."transactionId"
@@ -319,7 +320,7 @@ int run(std::vector<std::string> args)
                         blockchainState.balances[t.senderAddress] -= t.fee;
                     }
 
-                    validateState(blockchainState);
+                    validateState(blockchainState, settings);
                 }
 
                 roundFees += bh.totalFee;
@@ -350,7 +351,7 @@ int run(std::vector<std::string> args)
         }
 
         // validate after all blocks
-        validateState(blockchainState);
+        validateState(blockchainState, settings);
 
         Summaries::checkMemAccounts(db, blockchainState);
 

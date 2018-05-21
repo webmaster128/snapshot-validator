@@ -18,6 +18,7 @@ add_executable(${PROJECT_NAME}
     main.cpp
     payload.cpp
     summaries.cpp
+    settings.cpp
     state.cpp
     transaction.cpp
     transactionvalidator.cpp
