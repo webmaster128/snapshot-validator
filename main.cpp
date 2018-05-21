@@ -224,8 +224,13 @@ int run(std::vector<std::string> args)
                 }
 
                 Payload payload(blockToTransactions[dbId]);
-                if (payload.transactionCount() != dbNumberOfTransactions) {
-                    throw std::runtime_error("transaction number mismatch");
+                if (payload.transactionCount() != bh.numberOfTransactions) {
+                    throw std::runtime_error(
+                                "transactions count mismatch in block at height " +
+                                std::to_string(dbHeight) + ". " +
+                                "Expected by block header: " + std::to_string(bh.numberOfTransactions) +
+                                " found: " + std::to_string(payload.transactionCount())
+                                );
                 }
 
                 auto id = bh.id(signature);
