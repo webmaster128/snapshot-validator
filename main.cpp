@@ -258,7 +258,7 @@ int run(std::vector<std::string> args)
 
                     // Validate transaction
 
-                    if (dbHeight == 1) {
+                    if (dbHeight == 1 && t.type != 0) {
                         std::cout << "Transaction not verified: " << t << std::endl;
                     } else {
                         std::vector<unsigned char> secondSignatureRequiredBy;
