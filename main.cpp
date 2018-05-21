@@ -45,7 +45,11 @@ int run(std::vector<std::string> args)
             for (auto row : R) std::cout << "Height: " << row[0].c_str() << std::endl;
         }
 
-        Assets::validateType0AssetData(db);
+        bool betanet = false;
+
+        if (betanet) {
+            Assets::validateType0AssetData(db);
+        }
         Assets::validateType1AssetData(db);
         Assets::validateType2AssetData(db);
         Assets::validateType3AssetData(db);
@@ -63,7 +67,7 @@ int run(std::vector<std::string> args)
                 SELECT
                     id, "blockId", trs.type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
                     amount, fee, signature, "signSignature",
-                    transfer.data AS type0_asset,
+                    )SQL" + std::string(betanet ? "transfer.data" : "''") + R"SQL( AS type0_asset,
                     signatures."publicKey" AS type1_asset,
                     delegates.username AS type2_asset,
                     replace(votes.votes, ',', '') AS type3_asset,
@@ -72,7 +76,7 @@ int run(std::vector<std::string> args)
                     (coalesce(dapps.name, '') || coalesce(dapps.description, '') || coalesce(dapps.tags, '') || coalesce(dapps.link, '') || coalesce(dapps.icon, '')) AS type5_asset_texts,
                     coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category
                 FROM trs
-                LEFT JOIN transfer ON trs.id = transfer."transactionId"
+                )SQL" + std::string(betanet ? "LEFT JOIN transfer ON trs.id = transfer.\"transactionId\"" : "") + R"SQL(
                 LEFT JOIN signatures ON trs.id = signatures."transactionId"
                 LEFT JOIN delegates ON trs.id = delegates."transactionId"
                 LEFT JOIN votes ON trs.id = votes."transactionId"
@@ -88,7 +92,13 @@ int run(std::vector<std::string> args)
                 auto dbType = row[index++].as<int>();
                 auto dbTimestamp = row[index++].as<std::uint32_t>();
                 auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
-                auto dbRecipientId = row[index++].as<std::uint64_t>();
+                std::uint64_t dbRecipientId;
+                if (dbId == 393955899193580559) {
+                    index++;
+                    dbRecipientId = 0;
+                } else {
+                    dbRecipientId = row[index++].as<std::uint64_t>();
+                }
                 auto dbAmount = row[index++].as<std::uint64_t>();
                 auto dbFee = row[index++].as<std::uint64_t>();
                 auto dbSignature = pqxx::binarystring(row[index++]);
