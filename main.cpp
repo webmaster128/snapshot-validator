@@ -347,6 +347,9 @@ int run(std::vector<std::string> args)
                     roundFees = 0;
                 }
 
+                if (dbHeight%1000 == 0) {
+                    std::cout << "Done processing block at height " << dbHeight << std::endl;
+                }
             }
         }
 
