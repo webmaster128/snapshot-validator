@@ -38,7 +38,8 @@ void checkMemAccounts(pqxx::read_transaction &db, const State &blockchainState)
     }
 
     if (balances != blockchainState.balances) {
-        compareKeys(balances, blockchainState.balances, true);
+        bool keysMatch = compareKeys(balances, blockchainState.balances, true);
+        if (keysMatch) compareValues(balances, blockchainState.balances, true);
         throw std::runtime_error("Balances in mem_accounts do not match blockchain state");
     }
 
@@ -48,7 +49,8 @@ void checkMemAccounts(pqxx::read_transaction &db, const State &blockchainState)
     }
 
     if (delegateNames != blockchainState.delegateNames) {
-        compareKeys(delegateNames, blockchainState.delegateNames, true);
+        bool keysMatch = compareKeys(delegateNames, blockchainState.delegateNames, true);
+        if (keysMatch) compareValues(delegateNames, blockchainState.delegateNames, true);
         throw std::runtime_error("delegate names in mem_accounts do not match blockchain state");
     }
 }

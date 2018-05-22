@@ -64,3 +64,19 @@ bool compareKeys(std::unordered_map<std::uint64_t, T> a, std::unordered_map<std:
 
     return ok;
 }
+
+template<typename T>
+bool compareValues(std::unordered_map<std::uint64_t, T> a, std::unordered_map<std::uint64_t, T> b, bool logging = false) {
+    bool ok = true;
+    for (auto iter = a.cbegin(); iter != a.cend(); ++iter) {
+        const auto key = iter->first;
+        const auto value = iter->second;
+
+        if (b[key] != value) {
+            if (logging) std::cout << "a[" << key << "] = " << value << "; b[" << key << "] = " << b[key] << std::endl;
+            ok = false;
+        }
+    }
+
+    return ok;
+}
