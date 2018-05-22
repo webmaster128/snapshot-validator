@@ -1,3 +1,4 @@
+#include <chrono>
 #include <iostream>
 #include <pqxx/pqxx>
 #include <sodium.h>
@@ -173,6 +174,7 @@ int run(std::vector<std::string> args)
         {
             std::cout << "Reading blocks ..." << std::endl;
             ScopedBenchmark benchmarkBlocks("Reading blocks"); static_cast<void>(benchmarkBlocks);
+            std::unordered_map<std::uint64_t, std::chrono::steady_clock::time_point> times;
 
             pqxx::result R = db.exec(R"SQL(
                 SELECT
@@ -350,7 +352,16 @@ int run(std::vector<std::string> args)
                 }
 
                 if (dbHeight%1000 == 0) {
-                    std::cout << "Done processing block at height " << dbHeight << std::endl;
+                    auto now = std::chrono::steady_clock::now();
+                    times[dbHeight] = now;
+                    std::cout << "Done processing block at height " << dbHeight;
+                    const int benchmarkSpan = 100000;
+                    if (times.count(dbHeight-benchmarkSpan)) {
+                        auto diff = std::chrono::duration<float>(now - times[dbHeight-benchmarkSpan]).count();
+                        auto bps = benchmarkSpan / diff;
+                        std::cout << " (speed " << std::fixed << std::setprecision(1) << bps  << " blocks/s)";
+                    }
+                    std::cout << std::endl;
                 }
             }
         }
