@@ -11,6 +11,7 @@ Settings::Settings(Network network)
             10403141873189588012ul,
             16896494584440078079ul,
         };
+        exceptions.balanceAdjustments[15449731671927352923ul] = -1*100000000; // Burned 1 LSK as `amount` in a delegate vote
         break;
     case Network::Betanet:
         negativeBalanceAddress = 9594788837974552645ul;

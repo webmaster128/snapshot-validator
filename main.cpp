@@ -324,6 +324,10 @@ int run(std::vector<std::string> args)
                         blockchainState.balances[t.senderAddress] -= t.fee;
                     }
 
+                    if (settings.exceptions.balanceAdjustments.count(transactionRow.id)) {
+                        blockchainState.balances[t.senderAddress] += settings.exceptions.balanceAdjustments[transactionRow.id];
+                    }
+
                     validateState(blockchainState, settings);
                 }
 
