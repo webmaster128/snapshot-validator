@@ -359,11 +359,11 @@ int run(std::vector<std::string> args)
                     auto now = std::chrono::steady_clock::now();
                     times[dbHeight] = now;
                     std::cout << "Done processing block at height " << dbHeight;
-                    const int benchmarkSpan = 100000;
+                    const int benchmarkSpan = 10000;
                     if (times.count(dbHeight-benchmarkSpan)) {
                         auto diff = std::chrono::duration<float>(now - times[dbHeight-benchmarkSpan]).count();
                         auto bps = benchmarkSpan / diff;
-                        std::cout << " (speed " << std::fixed << std::setprecision(1) << bps  << " blocks/s)";
+                        std::cout << " (current speed " << std::fixed << std::setprecision(1) << bps  << " blocks/s)";
                     }
                     std::cout << std::endl;
                 }
