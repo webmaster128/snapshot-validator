@@ -375,9 +375,6 @@ int run(std::vector<std::string> args)
 
         Summaries::checkMemAccounts(db, blockchainState);
 
-        std::cout << "lisksnake balance: " << blockchainState.balances[14272331929440866024ul] << std::endl;
-        std::cout << "prolina balance: " << blockchainState.balances[2178850910632340753ul] << std::endl;
-
         db.commit();
     }
     catch (const std::exception &e)
