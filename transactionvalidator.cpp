@@ -7,6 +7,14 @@
 
 namespace {
 
+void validate_id(const TransactionRow &row)
+{
+    auto calculatedId = row.transaction.id(row.signature, row.secondSignature);
+    if (row.id != calculatedId) {
+        throw std::runtime_error("Transaction ID mismatch");
+    }
+}
+
 void validate_amount(const TransactionRow &row, const Exceptions &exceptions)
 {
     if (exceptions.balanceAdjustments.count(row.id)) return;
@@ -102,11 +110,7 @@ namespace TransactionValidator {
 
 void validate(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy, const Exceptions &exceptions)
 {
-    auto calculatedId = row.transaction.id(row.signature, row.secondSignature);
-    if (row.id != calculatedId) {
-        throw std::runtime_error("Transaction ID mismatch");
-    }
-
+    validate_id(row);
     validate_amount(row, exceptions);
     validate_fee(row, exceptions);
     validate_signature(row, secondSignatureRequiredBy);
