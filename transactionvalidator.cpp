@@ -76,7 +76,7 @@ void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
 
 namespace TransactionValidator {
 
-void validate(const TransactionRow &row, std::vector<unsigned char> secondSignatureRequiredBy, const Exceptions &exceptions)
+void validate(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy, const Exceptions &exceptions)
 {
     auto calculatedId = row.transaction.id(row.signature, row.secondSignature);
     if (row.id != calculatedId) {
