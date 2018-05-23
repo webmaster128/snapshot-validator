@@ -297,32 +297,7 @@ int run(std::vector<std::string> args)
 
                     // Update state from transaction
                     if (settings.exceptions.inertTransactions.count(transactionRow.id) == 0) {
-                        switch(t.type) {
-                        case 0:
-                            blockchainState.balances[t.senderAddress] -= (t.amount + t.fee);
-                            blockchainState.balances[t.recipientAddress] += t.amount;
-                            break;
-                        case 1:
-                            blockchainState.balances[t.senderAddress] -= t.fee;
-                            blockchainState.secondPubkeys[t.senderAddress] = t.assetData;
-                            break;
-                        case 2:
-                            blockchainState.balances[t.senderAddress] -= t.fee;
-                            blockchainState.delegateNames[t.senderAddress] = std::string(t.assetData.begin(), t.assetData.end());
-                            break;
-                        case 4: {
-                            blockchainState.balances[t.senderAddress] -= t.fee;
-
-                            // Ensure addresses from type 4 transactions exist
-                            auto pubkeys = Transaction::parseType4Pubkeys(std::string(t.assetData.begin(), t.assetData.end()));
-                            for (auto &pubkey : pubkeys) {
-                                blockchainState.balances[addressFromPubkey(pubkey)] += 0;
-                            }
-                            break;
-                        }
-                        default:
-                            blockchainState.balances[t.senderAddress] -= t.fee;
-                        }
+                        blockchainState.applyTransaction(t);
                     }
 
                     if (settings.exceptions.balanceAdjustments.count(transactionRow.id)) {
