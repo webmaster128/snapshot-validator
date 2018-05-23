@@ -72,20 +72,8 @@ void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
     }
 }
 
-}
-
-namespace TransactionValidator {
-
-void validate(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy, const Exceptions &exceptions)
+void validate_signature(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy)
 {
-    auto calculatedId = row.transaction.id(row.signature, row.secondSignature);
-    if (row.id != calculatedId) {
-        throw std::runtime_error("Transaction ID mismatch");
-    }
-
-    validate_amount(row, exceptions);
-    validate_fee(row, exceptions);
-
     auto hash = row.transaction.hash();
     if (crypto_sign_verify_detached(row.signature.data(), hash.data(), hash.size(), row.transaction.senderPublicKey.data()) != 0) {
         std::cout << "ID: " << row.id << std::endl;
@@ -106,6 +94,22 @@ void validate(const TransactionRow &row, const std::vector<unsigned char> &secon
             throw std::runtime_error("Invalid transaction second signature");
         }
     }
+}
+
+}
+
+namespace TransactionValidator {
+
+void validate(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy, const Exceptions &exceptions)
+{
+    auto calculatedId = row.transaction.id(row.signature, row.secondSignature);
+    if (row.id != calculatedId) {
+        throw std::runtime_error("Transaction ID mismatch");
+    }
+
+    validate_amount(row, exceptions);
+    validate_fee(row, exceptions);
+    validate_signature(row, secondSignatureRequiredBy);
 }
 
 }
