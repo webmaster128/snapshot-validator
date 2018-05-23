@@ -18,6 +18,60 @@ void validate_amount(const TransactionRow &row, const Exceptions &exceptions)
     }
 }
 
+void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
+{
+    const auto fee = row.transaction.fee;
+    const auto id = row.id;
+
+    if (exceptions.transactionFees.count(id)) {
+        auto expected = exceptions.transactionFees.at(id);
+        if (fee != expected) {
+            throw std::runtime_error("Transaction " + std::to_string(id) +
+                                     " has different fee than expected by exception: " + std::to_string(fee));
+        }
+        return;
+    }
+
+    // https://github.com/LiskHQ/lisk-elements/blob/development/src/transactions/constants.js
+    switch (row.transaction.type) {
+    case 0:
+        if (fee != 10000000)
+            throw std::runtime_error("Transaction " + std::to_string(id) + " type 0 fee invalid: " + std::to_string(fee));
+        break;
+    case 1:
+        if (fee != 500000000)
+            throw std::runtime_error("Transaction " + std::to_string(id) + " type 1 fee invalid: " + std::to_string(fee));
+        break;
+    case 2:
+        if (fee != 2500000000)
+            throw std::runtime_error("Transaction " + std::to_string(id) + " type 2 fee invalid: " + std::to_string(fee));
+        break;
+    case 3:
+        if (fee != 100000000)
+            throw std::runtime_error("Transaction " + std::to_string(id) + " type 3 fee invalid: " + std::to_string(fee));
+        break;
+    case 4:
+        // TODO: fee is 5 LSK per key
+        if (fee != 500000000)
+            throw std::runtime_error("Transaction " + std::to_string(id) + " type 4 fee invalid: " + std::to_string(fee));
+        break;
+    case 5:
+        if (fee != 2500000000)
+            throw std::runtime_error("Transaction " + std::to_string(id) + " type 5 fee invalid: " + std::to_string(fee));
+        break;
+    case 6:
+        if (fee != 100000000)
+            throw std::runtime_error("Transaction " + std::to_string(id) + " type 6 fee invalid: " + std::to_string(fee));
+        break;
+    case 7:
+        if (fee != 100000000)
+            throw std::runtime_error("Transaction " + std::to_string(id) + " type 7 fee invalid: " + std::to_string(fee));
+        break;
+    default:
+        break;
+    }
+}
+
 }
 
 namespace TransactionValidator {
@@ -30,6 +84,7 @@ void validate(const TransactionRow &row, std::vector<unsigned char> secondSignat
     }
 
     validate_amount(row, exceptions);
+    validate_fee(row, exceptions);
 
     auto hash = row.transaction.hash();
     if (crypto_sign_verify_detached(row.signature.data(), hash.data(), hash.size(), row.transaction.senderPublicKey.data()) != 0) {
