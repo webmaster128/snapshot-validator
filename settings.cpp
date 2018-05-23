@@ -11,6 +11,10 @@ Settings::Settings(Network network)
             10403141873189588012ul, // 624550
             16896494584440078079ul, // 631670
         };
+        exceptions.inertTransactions = {
+            16394286522174687330ul, // 1318685
+            12298100805070303137ul, // 3057955
+        };
         exceptions.balanceAdjustments[15449731671927352923ul] = -1*100000000; // Burned 1 LSK as `amount` in a delegate vote
         break;
     case Network::Betanet:

@@ -11,6 +11,7 @@ enum class Network {
 
 struct Exceptions {
     std::set<std::uint64_t> invalidTransactionSignature;
+    std::set<std::uint64_t> inertTransactions;
     std::unordered_map<std::uint64_t, std::int64_t> balanceAdjustments;
 };
 
