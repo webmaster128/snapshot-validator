@@ -34,9 +34,9 @@ void State::applyTransaction(const Transaction &t)
     }
 }
 
-void validateState(const State state, const Settings &settings)
+void State::validate(const Settings &settings) const
 {
-    for (auto &addressBalance : state.balances) {
+    for (auto &addressBalance : balances) {
         if (addressBalance.second < 0 && addressBalance.first != settings.negativeBalanceAddress) {
             throw std::runtime_error(
                         "Negative balance for address " + std::to_string(addressBalance.first) +

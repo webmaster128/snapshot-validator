@@ -304,7 +304,7 @@ int run(std::vector<std::string> args)
                         blockchainState.balances[t.senderAddress] += settings.exceptions.balanceAdjustments[transactionRow.id];
                     }
 
-                    validateState(blockchainState, settings);
+                    blockchainState.validate(settings);
                 }
 
                 roundFees += bh.totalFee;
@@ -347,7 +347,7 @@ int run(std::vector<std::string> args)
         }
 
         // validate after all blocks
-        validateState(blockchainState, settings);
+        blockchainState.validate(settings);
 
         Summaries::checkMemAccounts(db, blockchainState);
 
