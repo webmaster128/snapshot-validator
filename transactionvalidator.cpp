@@ -5,6 +5,21 @@
 
 #include "utils.h"
 
+namespace {
+
+void validate_amount(const TransactionRow &row, const Exceptions &exceptions)
+{
+    if (exceptions.balanceAdjustments.count(row.id)) return;
+
+    if (row.transaction.type != 0 && row.transaction.amount != 0) {
+        throw std::runtime_error(
+                    "Amount not 0 for type " + std::to_string(row.transaction.type) +
+                    " transaction " + std::to_string(row.id) + ": " + std::to_string(row.transaction.amount));
+    }
+}
+
+}
+
 namespace TransactionValidator {
 
 void validate(const TransactionRow &row, std::vector<unsigned char> secondSignatureRequiredBy, const Exceptions &exceptions)
@@ -14,11 +29,7 @@ void validate(const TransactionRow &row, std::vector<unsigned char> secondSignat
         throw std::runtime_error("Transaction ID mismatch");
     }
 
-    if (row.transaction.type != 0 && row.transaction.amount != 0 && exceptions.balanceAdjustments.count(row.id) == 0) {
-        throw std::runtime_error(
-                    "Amount not 0 for type " + std::to_string(row.transaction.type) +
-                    " transaction " + std::to_string(row.id) + ": " + std::to_string(row.transaction.amount));
-    }
+    validate_amount(row, exceptions);
 
     auto hash = row.transaction.hash();
     if (crypto_sign_verify_detached(row.signature.data(), hash.data(), hash.size(), row.transaction.senderPublicKey.data()) != 0) {
