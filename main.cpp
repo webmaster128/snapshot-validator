@@ -95,7 +95,7 @@ int run(std::vector<std::string> args)
                 auto dbTimestamp = row[index++].as<std::uint32_t>();
                 auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
                 std::uint64_t dbRecipientId;
-                if (dbId == 393955899193580559) {
+                if (settings.exceptions.recipientAddressOutOfRange.count(dbId)) {
                     index++;
                     dbRecipientId = 0;
                 } else {
