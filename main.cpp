@@ -130,9 +130,7 @@ int run(std::vector<std::string> args)
                     assetData = asVector(dbType1Asset);
                     break;
                 case 2:
-                    if (dbType2Asset) {
-                        assetData = asVector(*dbType2Asset);
-                    }
+                    assetData = asVector(*dbType2Asset);
                     break;
                 case 3:
                     assetData = asVector(*dbType3Asset);
