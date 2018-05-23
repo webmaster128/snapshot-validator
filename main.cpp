@@ -292,7 +292,7 @@ int run(std::vector<std::string> args)
                         if (blockchainState.secondPubkeys.count(t.senderAddress) == 1) {
                             secondSignatureRequiredBy = blockchainState.secondPubkeys[t.senderAddress];
                         }
-                        TransactionValidator::validate(transactionRow, secondSignatureRequiredBy);
+                        TransactionValidator::validate(transactionRow, secondSignatureRequiredBy, settings.exceptions);
                     }
 
                     // Update state from transaction
