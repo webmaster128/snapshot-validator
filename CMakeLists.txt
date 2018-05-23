@@ -13,13 +13,13 @@ message(${PQ_LIBRARIES} ${PQXX_LIBRARIES})
 
 add_executable(${PROJECT_NAME}
     assets.cpp
+    blockchain_state.cpp
     blockheader.cpp
     lisk.cpp
     main.cpp
     payload.cpp
     summaries.cpp
     settings.cpp
-    state.cpp
     transaction.cpp
     transactionvalidator.cpp
 )

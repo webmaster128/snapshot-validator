@@ -6,7 +6,7 @@
 #include "settings.h"
 #include "transaction.h"
 
-struct State {
+struct BlockchainState {
     std::unordered_map<std::uint64_t, std::int64_t> balances;
     std::unordered_map<std::uint64_t, std::vector<unsigned char>> secondPubkeys;
     std::unordered_map<std::uint64_t, std::string> delegateNames;

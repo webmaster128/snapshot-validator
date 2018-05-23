@@ -2,10 +2,10 @@
 
 #include <pqxx/pqxx>
 
-#include "state.h"
+#include "blockchain_state.h"
 
 namespace Summaries {
 
-void checkMemAccounts(pqxx::read_transaction &db, const State &blockchainState);
+void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockchainState);
 
 }

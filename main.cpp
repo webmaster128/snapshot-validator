@@ -5,11 +5,11 @@
 #include <unordered_map>
 
 #include "assets.h"
+#include "blockchain_state.h"
 #include "blockheader.h"
 #include "lisk.h"
 #include "payload.h"
 #include "settings.h"
-#include "state.h"
 #include "scopedbenchmark.h"
 #include "summaries.h"
 #include "transaction.h"
@@ -59,7 +59,7 @@ int run(std::vector<std::string> args)
         Assets::validateType5AssetData(db);
 
         std::unordered_map<std::uint64_t, std::vector<TransactionRow>> blockToTransactions;
-        State blockchainState;
+        BlockchainState blockchainState;
 
         {
             std::cout << "Reading transactions ..." << std::endl;

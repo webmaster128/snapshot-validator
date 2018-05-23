@@ -10,7 +10,7 @@
 
 namespace Summaries {
 
-void checkMemAccounts(pqxx::read_transaction &db, const State &blockchainState)
+void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockchainState)
 {
     std::cout << "Checking mem_accounts ..." << std::endl;
     ScopedBenchmark benchmarkMemAccounts("Checking mem_accounts"); static_cast<void>(benchmarkMemAccounts);

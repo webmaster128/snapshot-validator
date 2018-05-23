@@ -1,10 +1,10 @@
-#include "state.h"
+#include "blockchain_state.h"
 
 #include <stdexcept>
 
 #include "lisk.h"
 
-void State::applyTransaction(const Transaction &t)
+void BlockchainState::applyTransaction(const Transaction &t)
 {
     switch(t.type) {
     case 0:
@@ -34,7 +34,7 @@ void State::applyTransaction(const Transaction &t)
     }
 }
 
-void State::validate(const Settings &settings) const
+void BlockchainState::validate(const Settings &settings) const
 {
     for (auto &addressBalance : balances) {
         if (addressBalance.second < 0 && addressBalance.first != settings.negativeBalanceAddress) {
