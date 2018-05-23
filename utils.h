@@ -70,10 +70,11 @@ bool compareValues(std::unordered_map<std::uint64_t, T> a, std::unordered_map<st
     bool ok = true;
     for (auto iter = a.cbegin(); iter != a.cend(); ++iter) {
         const auto key = iter->first;
-        const auto value = iter->second;
+        const auto aValue = iter->second;
+        const auto bValue = b[key];
 
-        if (b[key] != value) {
-            if (logging) std::cout << "a[" << key << "] = " << value << "; b[" << key << "] = " << b[key] << std::endl;
+        if (bValue != aValue) {
+            if (logging) std::cout << "a[" << key << "] = " << aValue << "; b[" << key << "] = " << bValue << std::endl;
             ok = false;
         }
     }
