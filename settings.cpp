@@ -24,6 +24,7 @@ Settings::Settings(Network network)
     case Network::Betanet:
         negativeBalanceAddress = 9594788837974552645ul;
         v100Compatible = true;
+        exceptions.transactionFees[715435610815407684ul] = 0;
         break;
     }
 }

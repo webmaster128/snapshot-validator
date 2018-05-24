@@ -9,6 +9,12 @@ enum class Network {
     Betanet,
 };
 
+inline Network networkFromName(std::string name) {
+    if (name == "testnet") return Network::Testnet;
+    if (name == "betanet") return Network::Betanet;
+    throw std::runtime_error("Unknown network name: '" + name + "'");
+}
+
 struct Exceptions {
     std::set<std::uint64_t> invalidTransactionSignature;
     std::set<std::uint64_t> inertTransactions;

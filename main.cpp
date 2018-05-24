@@ -25,10 +25,16 @@ int run(std::vector<std::string> args)
         return 1;
     }
 
+    if (args.size() != 3) {
+        throw std::runtime_error("usage: blockchain-validator mainnet|testnet|betanet database_name");
+    }
+
+    const std::string networkName = args[1];
+    const std::string dbname = args[2];
+
     try
     {
-        if (args.size() < 2) throw std::runtime_error("missing database name parameter");
-        pqxx::connection dbConnection("dbname=" + args[1]);
+        pqxx::connection dbConnection("dbname=" + dbname);
         std::cout << "Connected to database " << dbConnection.dbname() << std::endl;
         pqxx::read_transaction db(dbConnection);
 
@@ -47,7 +53,7 @@ int run(std::vector<std::string> args)
             for (auto row : R) std::cout << "Height: " << row[0].c_str() << std::endl;
         }
 
-        Settings settings(Network::Testnet);
+        Settings settings(networkFromName(networkName));
 
         if (settings.v100Compatible) {
             Assets::validateType0AssetData(db);

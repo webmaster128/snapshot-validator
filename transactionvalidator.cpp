@@ -45,7 +45,7 @@ void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
     // https://github.com/LiskHQ/lisk-elements/blob/development/src/transactions/constants.js
     switch (t.type) {
     case 0:
-        expected = 10000000;
+        expected = t.assetData.empty() ? 10000000 : 20000000;
         break;
     case 1:
         expected = 500000000;
