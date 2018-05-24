@@ -28,55 +28,55 @@ void validate_amount(const TransactionRow &row, const Exceptions &exceptions)
 
 void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
 {
-    const auto fee = row.transaction.fee;
+    const auto t = row.transaction;
     const auto id = row.id;
 
     if (exceptions.transactionFees.count(id)) {
         auto expected = exceptions.transactionFees.at(id);
-        if (fee != expected) {
+        if (t.fee != expected) {
             throw std::runtime_error("Transaction " + std::to_string(id) +
-                                     " has different fee than expected by exception: " + std::to_string(fee));
+                                     " has different fee than expected by exception: " + std::to_string(t.fee));
         }
         return;
     }
 
+    std::uint64_t expected;
+
     // https://github.com/LiskHQ/lisk-elements/blob/development/src/transactions/constants.js
-    switch (row.transaction.type) {
+    switch (t.type) {
     case 0:
-        if (fee != 10000000)
-            throw std::runtime_error("Transaction " + std::to_string(id) + " type 0 fee invalid: " + std::to_string(fee));
+        expected = 10000000;
         break;
     case 1:
-        if (fee != 500000000)
-            throw std::runtime_error("Transaction " + std::to_string(id) + " type 1 fee invalid: " + std::to_string(fee));
+        expected = 500000000;
         break;
     case 2:
-        if (fee != 2500000000)
-            throw std::runtime_error("Transaction " + std::to_string(id) + " type 2 fee invalid: " + std::to_string(fee));
+        expected = 2500000000;
         break;
     case 3:
-        if (fee != 100000000)
-            throw std::runtime_error("Transaction " + std::to_string(id) + " type 3 fee invalid: " + std::to_string(fee));
+        expected = 100000000;
         break;
     case 4:
-        // TODO: fee is 5 LSK per key
-        if (fee != 500000000)
-            throw std::runtime_error("Transaction " + std::to_string(id) + " type 4 fee invalid: " + std::to_string(fee));
+        expected = 500000000 * (row.transaction.type4Pubkeys.size() + 1);
         break;
     case 5:
-        if (fee != 2500000000)
-            throw std::runtime_error("Transaction " + std::to_string(id) + " type 5 fee invalid: " + std::to_string(fee));
+        expected = 2500000000;
         break;
     case 6:
-        if (fee != 100000000)
-            throw std::runtime_error("Transaction " + std::to_string(id) + " type 6 fee invalid: " + std::to_string(fee));
+        expected = 100000000;
         break;
     case 7:
-        if (fee != 100000000)
-            throw std::runtime_error("Transaction " + std::to_string(id) + " type 7 fee invalid: " + std::to_string(fee));
+        expected = 100000000;
         break;
     default:
+        throw std::runtime_error("Unknown transaction type");
         break;
+    }
+
+    if (t.fee != expected) {
+        throw std::runtime_error("Transaction " + std::to_string(id) + " type " + std::to_string(t.type) +
+                                 " has invalid fee: " + std::to_string(t.fee) +
+                                 " expected: "  + std::to_string(expected));
     }
 }
 
