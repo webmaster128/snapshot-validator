@@ -5,6 +5,11 @@ which shellcheck > /dev/null && shellcheck "$0"
 NETWORK="$1"
 SNAPSHOT_FILE="$2"
 
+(
+	cd "$(dirname "$SNAPSHOT_FILE")"
+	sha256sum "$(basename "$SNAPSHOT_FILE")"
+)
+
 RESTORE_TIME="$(date --utc +%Y-%m-%dT%H-%M-%SZ)"
 RESTORE_DB_NAME="blockchain_validator_tmp_${RESTORE_TIME}_pid$$"
 
