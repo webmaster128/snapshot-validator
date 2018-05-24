@@ -23,8 +23,7 @@ void BlockchainState::applyTransaction(const Transaction &t)
         balances[t.senderAddress] -= t.fee;
 
         // Ensure addresses from type 4 transactions exist
-        auto pubkeys = Transaction::parseType4Pubkeys(std::string(t.assetData.begin(), t.assetData.end()));
-        for (auto &pubkey : pubkeys) {
+        for (auto &pubkey : t.type4Pubkeys) {
             balances[addressFromPubkey(pubkey)] += 0;
         }
         break;

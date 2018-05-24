@@ -22,6 +22,9 @@ Transaction::Transaction(
     , amount(_amount)
     , fee(_fee)
     , assetData(_assetData)
+    , type4Pubkeys(_type == 4
+                   ? Transaction::parseType4Pubkeys(std::string(_assetData.begin(), _assetData.end()))
+                   : std::vector<std::vector<unsigned char>>())
 {
 }
 
