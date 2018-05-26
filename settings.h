@@ -19,6 +19,7 @@ struct Exceptions {
     std::set<std::uint64_t> invalidTransactionSignature;
     std::set<std::uint64_t> inertTransactions;
     std::set<std::uint64_t> recipientAddressOutOfRange;
+    std::set<std::uint64_t> payloadHashMismatch;
     std::unordered_map<std::uint64_t, std::int64_t> transactionFees;
     std::unordered_map<std::uint64_t, std::int64_t> balanceAdjustments;
 };

@@ -18,6 +18,10 @@ Settings::Settings(Network network)
         exceptions.recipientAddressOutOfRange = {
             393955899193580559ul, // 2511672
         };
+        exceptions.payloadHashMismatch = {
+            // transaction 393955899193580559 cannot be serialized
+            2748170801018258119ul, // 2511672
+        };
         exceptions.transactionFees[16733264093386669800ul] = 0;
         exceptions.balanceAdjustments[15449731671927352923ul] = -1*100000000; // Burned 1 LSK as `amount` in a delegate vote
         break;

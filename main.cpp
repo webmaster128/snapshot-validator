@@ -262,24 +262,26 @@ int run(std::vector<std::string> args)
                     throw std::runtime_error("id mismatch");
                 }
 
-                auto calculatedPayloadHash = payload.hash();
-                if (payloadHash != calculatedPayloadHash) {
-                    auto payloadSerialized = payload.serialize();
-                    std::cout << "Payload length calculated: " << payloadSerialized.size()
-                              << " expected: " << bh.payloadLength << std::endl;
-                    // std::cout << "payload: " << bytes2Hex(payloadSerialized) << std::endl;
+                if (settings.exceptions.payloadHashMismatch.count(id) == 0) {
+                    auto calculatedPayloadHash = payload.hash();
+                    if (payloadHash != calculatedPayloadHash) {
+                        auto payloadSerialized = payload.serialize();
+                        std::cout << "Payload length calculated: " << payloadSerialized.size()
+                                  << " expected: " << bh.payloadLength << std::endl;
+                        // std::cout << "payload: " << bytes2Hex(payloadSerialized) << std::endl;
 
-                    for (auto &tws : blockToTransactions[id]) {
-                        auto transactionId = tws.transaction.id(tws.signature, tws.secondSignature);
-                        std::cout << "Payload transaction: " << tws.transaction << " " << transactionId << std::endl;
-                    }
+                        for (auto &tws : blockToTransactions[id]) {
+                            auto transactionId = tws.transaction.id(tws.signature, tws.secondSignature);
+                            std::cout << "Payload transaction: " << tws.transaction << " " << transactionId << std::endl;
+                        }
 
-                    if (dbHeight == 1) {
-                        // warn only (https://github.com/LiskHQ/lisk/issues/2047)
-                        std::cout << "payload hash mismatch for block " << id << std::endl;
-                    } else {
-                        throw std::runtime_error("Payload hash mismatch in block id " + std::to_string(id) +
-                                                 " height " + std::to_string(dbHeight));
+                        if (dbHeight == 1) {
+                            // warn only (https://github.com/LiskHQ/lisk/issues/2047)
+                            std::cout << "payload hash mismatch for block " << id << std::endl;
+                        } else {
+                            throw std::runtime_error("Payload hash mismatch in block id " + std::to_string(id) +
+                                                     " height " + std::to_string(dbHeight));
+                        }
                     }
                 }
 
