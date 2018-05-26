@@ -15,8 +15,11 @@ Settings::Settings(Network network)
             16394286522174687330ul, // 1318685
             12298100805070303137ul, // 3057955
         };
-        exceptions.recipientAddressOutOfRange = {
+        exceptions.transactionsContainingInvalidRecipientAddress = {
             393955899193580559ul, // 2511672
+        };
+        exceptions.invalidAddresses = {
+            "19961131544040416558L",
         };
         exceptions.payloadHashMismatch = {
             // transaction 393955899193580559 cannot be serialized

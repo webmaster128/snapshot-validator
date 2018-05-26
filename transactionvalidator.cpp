@@ -110,10 +110,14 @@ namespace TransactionValidator {
 
 void validate(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy, const Exceptions &exceptions)
 {
-    validate_id(row);
+    bool canBeSerialized = (exceptions.transactionsContainingInvalidRecipientAddress.count(row.id) == 0);
+    if (canBeSerialized) {
+        validate_id(row);
+        validate_signature(row, secondSignatureRequiredBy);
+    }
+
     validate_amount(row, exceptions);
     validate_fee(row, exceptions);
-    validate_signature(row, secondSignatureRequiredBy);
 }
 
 }

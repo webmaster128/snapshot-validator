@@ -14,8 +14,11 @@
 #include "summaries.h"
 #include "transaction.h"
 #include "transactionvalidator.h"
+#include "types.h"
 #include "utils.h"
 #include "log.h"
+
+address_t TRASH = 0;
 
 
 int run(std::vector<std::string> args)
@@ -102,9 +105,9 @@ int run(std::vector<std::string> args)
                 auto dbTimestamp = row[index++].as<std::uint32_t>();
                 auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
                 std::uint64_t dbRecipientId;
-                if (settings.exceptions.recipientAddressOutOfRange.count(dbId)) {
+                if (settings.exceptions.transactionsContainingInvalidRecipientAddress.count(dbId)) {
                     index++;
-                    dbRecipientId = 0;
+                    dbRecipientId = TRASH;
                 } else {
                     dbRecipientId = row[index++].as<std::uint64_t>();
                 }
@@ -355,9 +358,10 @@ int run(std::vector<std::string> args)
         }
 
         // validate after all blocks
+        blockchainState.balances.erase(TRASH);
         blockchainState.validate(settings);
 
-        Summaries::checkMemAccounts(db, blockchainState);
+        Summaries::checkMemAccounts(db, blockchainState, settings.exceptions);
 
         db.commit();
     }

@@ -10,7 +10,7 @@
 
 namespace Summaries {
 
-void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockchainState)
+void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockchainState, const Exceptions &exceptions)
 {
     std::cout << "Checking mem_accounts ..." << std::endl;
     ScopedBenchmark benchmarkMemAccounts("Checking mem_accounts"); static_cast<void>(benchmarkMemAccounts);
@@ -19,11 +19,20 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
     std::unordered_map<std::uint64_t, std::vector<unsigned char>> secondPubkeys;
     std::unordered_map<std::uint64_t, std::string> delegateNames;
 
+    std::string listOfExcludedAddresses;
+    for (auto &address : exceptions.invalidAddresses) {
+        if (!listOfExcludedAddresses.empty()) listOfExcludedAddresses += ", ";
+        listOfExcludedAddresses += "'" + address + "'";
+    }
+
     pqxx::result result = db.exec(R"SQL(
       SELECT
           left(address, -1), balance,
           "secondPublicKey", coalesce(username, '')
       FROM mem_accounts
+      WHERE address NOT IN (
+        )SQL" + listOfExcludedAddresses + R"SQL(
+      )
     )SQL");
     for (auto row : result) {
         int index = 0;
