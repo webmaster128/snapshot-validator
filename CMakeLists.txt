@@ -16,6 +16,7 @@ add_executable(${PROJECT_NAME}
     blockchain_state.cpp
     blockheader.cpp
     lisk.cpp
+    log.cpp
     main.cpp
     payload.cpp
     summaries.cpp

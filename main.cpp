@@ -15,6 +15,7 @@
 #include "transaction.h"
 #include "transactionvalidator.h"
 #include "utils.h"
+#include "log.h"
 
 
 int run(std::vector<std::string> args)
@@ -341,7 +342,7 @@ int run(std::vector<std::string> args)
                 if (dbHeight%1000 == 0) {
                     auto now = std::chrono::steady_clock::now();
                     times[dbHeight] = now;
-                    std::cout << "Done processing block at height " << dbHeight;
+                    NumberLog().out() << "Done processing block at height " << dbHeight;
                     const int benchmarkSpan = 10000;
                     if (times.count(dbHeight-benchmarkSpan)) {
                         auto diff = std::chrono::duration<float>(now - times[dbHeight-benchmarkSpan]).count();
