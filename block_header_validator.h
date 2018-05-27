@@ -1,6 +1,6 @@
 #pragma once
 
-#include "blockheader.h"
+#include "block_header.h"
 #include "types.h"
 
 namespace BlockHeaderValidator {
