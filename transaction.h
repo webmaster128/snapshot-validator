@@ -43,11 +43,13 @@ struct TransactionRow {
             Transaction _transaction,
             std::vector<unsigned char> _signature,
             std::vector<unsigned char> _secondSignature,
-            std::uint64_t _id)
+            std::uint64_t _id,
+            std::uint64_t _blockId)
         : transaction(_transaction)
         , signature(_signature)
         , secondSignature(_secondSignature)
         , id(_id)
+        , blockId(_blockId)
     {
     }
 
@@ -55,4 +57,5 @@ struct TransactionRow {
     const std::vector<unsigned char> signature;
     const std::vector<unsigned char> secondSignature;
     const std::uint64_t id;
+    const std::uint64_t blockId;
 };

@@ -190,7 +190,7 @@ int run(std::vector<std::string> args)
                     dbFee,
                     assetData
                 );
-                blockToTransactions[dbBockId].emplace_back(t, signature, secondSignature, dbId);
+                blockToTransactions[dbBockId].emplace_back(t, signature, secondSignature, dbId, dbBockId);
             }
         }
 
@@ -313,7 +313,7 @@ int run(std::vector<std::string> args)
 
                     // Update state from transaction
                     if (settings.exceptions.inertTransactions.count(transactionRow.id) == 0) {
-                        blockchainState.applyTransaction(t);
+                        blockchainState.applyTransaction(transactionRow);
                     }
 
                     if (settings.exceptions.balanceAdjustments.count(transactionRow.id)) {
@@ -323,12 +323,15 @@ int run(std::vector<std::string> args)
                     blockchainState.validate(settings);
                 }
 
+                blockchainState.applyBlock(bh, dbId);
+
                 roundFees += bh.totalFee;
                 roundDelegates[(dbHeight-1)%101] = addressFromPubkey(bh.generatorPublicKey);
                 roundRewards[(dbHeight-1)%101] = bh.reward;
 
                 bool isLast = (dbHeight%101 == 0);
                 //std::cout << "Block: " << id << " in round " << roundFromHeight(dbHeight) << " last: " << isLast << " reward: " << bh.reward << std::endl;
+
 
                 if (isLast) {
                     auto feePerDelegate = roundFees/101;
@@ -342,6 +345,10 @@ int run(std::vector<std::string> args)
                     if (feeRemaining > 0) {
                         // rest goes to the last delegate
                         blockchainState.balances[roundDelegates[100]] += feeRemaining;
+                    }
+
+                    for (int i = 0; i < 101; ++i) {
+                        blockchainState.lastBlockId[roundDelegates[i]] = dbId;
                     }
 
                     roundFees = 0;
