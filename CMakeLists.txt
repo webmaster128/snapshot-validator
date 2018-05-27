@@ -15,6 +15,7 @@ add_executable(${PROJECT_NAME}
     assets.cpp
     blockchain_state.cpp
     blockheader.cpp
+    block_header_validator.cpp
     lisk.cpp
     log.cpp
     main.cpp

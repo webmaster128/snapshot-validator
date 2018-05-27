@@ -29,7 +29,7 @@ struct BlockHeader {
     const std::vector<unsigned char> payloadHash;
     const std::vector<unsigned char> generatorPublicKey;
 
-    std::vector<unsigned char> serialize();
-    std::vector<unsigned char> hash(std::vector<unsigned char> signature = {});
-    std::uint64_t id(std::vector<unsigned char> signature);
+    std::vector<unsigned char> serialize() const;
+    std::vector<unsigned char> hash(std::vector<unsigned char> signature = {}) const;
+    std::uint64_t id(std::vector<unsigned char> signature) const;
 };

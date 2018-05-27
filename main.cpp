@@ -7,6 +7,7 @@
 #include "assets.h"
 #include "blockchain_state.h"
 #include "blockheader.h"
+#include "block_header_validator.h"
 #include "lisk.h"
 #include "payload.h"
 #include "settings.h"
@@ -243,13 +244,7 @@ int run(std::vector<std::string> args)
                     generatorPublicKey
                 );
 
-                auto hash = bh.hash();
-                if (crypto_sign_verify_detached(signature.data(), hash.data(), hash.size(), generatorPublicKey.data()) != 0) {
-                    std::cout << "ID: " << dbId << std::endl;
-                    std::cout << "Pubkey: " << bytes2Hex(generatorPublicKey) << std::endl;
-                    std::cout << "Signature: " << bytes2Hex(signature) << std::endl;
-                    throw std::runtime_error("Invalid block signature");
-                }
+                BlockHeaderValidator::validate(bh, dbId, signature);
 
                 Payload payload(blockToTransactions[dbId]);
                 if (payload.transactionCount() != bh.numberOfTransactions) {
@@ -261,12 +256,7 @@ int run(std::vector<std::string> args)
                                 );
                 }
 
-                auto id = bh.id(signature);
-                if (id != dbId) {
-                    throw std::runtime_error("id mismatch");
-                }
-
-                if (settings.exceptions.payloadHashMismatch.count(id) == 0) {
+                if (settings.exceptions.payloadHashMismatch.count(dbId) == 0) {
                     auto calculatedPayloadHash = payload.hash();
                     if (payloadHash != calculatedPayloadHash) {
                         auto payloadSerialized = payload.serialize();
@@ -274,16 +264,16 @@ int run(std::vector<std::string> args)
                                   << " expected: " << bh.payloadLength << std::endl;
                         // std::cout << "payload: " << bytes2Hex(payloadSerialized) << std::endl;
 
-                        for (auto &tws : blockToTransactions[id]) {
+                        for (auto &tws : blockToTransactions[dbId]) {
                             auto transactionId = tws.transaction.id(tws.signature, tws.secondSignature);
                             std::cout << "Payload transaction: " << tws.transaction << " " << transactionId << std::endl;
                         }
 
                         if (dbHeight == 1) {
                             // warn only (https://github.com/LiskHQ/lisk/issues/2047)
-                            std::cout << "payload hash mismatch for block " << id << std::endl;
+                            std::cout << "payload hash mismatch for block " << dbId << std::endl;
                         } else {
-                            throw std::runtime_error("Payload hash mismatch in block id " + std::to_string(id) +
+                            throw std::runtime_error("Payload hash mismatch in block id " + std::to_string(dbId) +
                                                      " height " + std::to_string(dbHeight));
                         }
                     }

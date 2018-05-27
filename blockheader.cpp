@@ -29,7 +29,7 @@ BlockHeader::BlockHeader(
 {
 }
 
-std::vector<unsigned char> BlockHeader::serialize()
+std::vector<unsigned char> BlockHeader::serialize() const
 {
 
     std::size_t size = 4 // version
@@ -105,7 +105,7 @@ std::vector<unsigned char> BlockHeader::serialize()
     return out;
 }
 
-std::vector<unsigned char> BlockHeader::hash(std::vector<unsigned char> signature)
+std::vector<unsigned char> BlockHeader::hash(std::vector<unsigned char> signature) const
 {
     auto out = std::vector<unsigned char>(crypto_hash_sha256_BYTES);
 
@@ -116,7 +116,7 @@ std::vector<unsigned char> BlockHeader::hash(std::vector<unsigned char> signatur
     return out;
 }
 
-std::uint64_t BlockHeader::id(std::vector<unsigned char> signature)
+std::uint64_t BlockHeader::id(std::vector<unsigned char> signature) const
 {
     auto hashBytes = hash(signature);
     auto firstBytes = std::vector<unsigned char>{hashBytes.cbegin(), hashBytes.cbegin()+8};
