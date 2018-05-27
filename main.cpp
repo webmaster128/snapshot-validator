@@ -305,8 +305,9 @@ int run(std::vector<std::string> args)
                         // skip
                     } else {
                         std::vector<unsigned char> secondSignatureRequiredBy;
-                        if (blockchainState.secondPubkeys.count(t.senderAddress) == 1) {
-                            secondSignatureRequiredBy = blockchainState.secondPubkeys[t.senderAddress];
+                        try {
+                            secondSignatureRequiredBy = blockchainState.addressSummaries.at(t.senderAddress).secondPubkey;
+                        } catch (std::out_of_range) {
                         }
                         TransactionValidator::validate(transactionRow, secondSignatureRequiredBy, settings.exceptions);
                     }
@@ -317,7 +318,7 @@ int run(std::vector<std::string> args)
                     }
 
                     if (settings.exceptions.balanceAdjustments.count(transactionRow.id)) {
-                        blockchainState.balances[t.senderAddress] += settings.exceptions.balanceAdjustments[transactionRow.id];
+                        blockchainState.addressSummaries[t.senderAddress].balance += settings.exceptions.balanceAdjustments[transactionRow.id];
                     }
 
                     blockchainState.validate(settings);
@@ -339,16 +340,16 @@ int run(std::vector<std::string> args)
 
                     for (int i = 0; i < 101; ++i) {
                         auto reward = roundRewards[i];
-                        blockchainState.balances[roundDelegates[i]] += (reward + feePerDelegate);
+                        blockchainState.addressSummaries[roundDelegates[i]].balance += (reward + feePerDelegate);
                     }
 
                     if (feeRemaining > 0) {
                         // rest goes to the last delegate
-                        blockchainState.balances[roundDelegates[100]] += feeRemaining;
+                        blockchainState.addressSummaries[roundDelegates[100]].balance += feeRemaining;
                     }
 
                     for (int i = 0; i < 101; ++i) {
-                        blockchainState.lastBlockId[roundDelegates[i]] = dbId;
+                        blockchainState.addressSummaries[roundDelegates[i]].lastBlockId = dbId;
                     }
 
                     roundFees = 0;
@@ -372,7 +373,7 @@ int run(std::vector<std::string> args)
         // validate after all blocks
         blockchainState.validate(settings);
 
-        blockchainState.balances.erase(TRASH);
+        blockchainState.addressSummaries.erase(TRASH);
         Summaries::checkMemAccounts(db, blockchainState, settings.exceptions);
 
         db.commit();

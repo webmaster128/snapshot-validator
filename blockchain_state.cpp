@@ -10,55 +10,57 @@ void BlockchainState::applyTransaction(const TransactionRow &transactionRow)
 
     switch(t.type) {
     case 0:
-        balances[t.senderAddress] -= (t.amount + t.fee);
-        balances[t.recipientAddress] += t.amount;
-        lastBlockId[t.senderAddress] = transactionRow.blockId;
-        lastBlockId[t.recipientAddress] = transactionRow.blockId;
+        addressSummaries[t.senderAddress].balance -= (t.amount + t.fee);
+        addressSummaries[t.recipientAddress].balance += t.amount;
+        addressSummaries[t.senderAddress].lastBlockId = transactionRow.blockId;
+        addressSummaries[t.recipientAddress].lastBlockId = transactionRow.blockId;
         break;
     case 1:
-        balances[t.senderAddress] -= t.fee;
-        secondPubkeys[t.senderAddress] = t.assetData;
-        lastBlockId[t.senderAddress] = transactionRow.blockId;
+        addressSummaries[t.senderAddress].balance -= t.fee;
+        addressSummaries[t.senderAddress].secondPubkey = t.assetData;
+        addressSummaries[t.senderAddress].lastBlockId = transactionRow.blockId;
         break;
     case 2:
-        balances[t.senderAddress] -= t.fee;
-        delegateNames[t.senderAddress] = std::string(t.assetData.begin(), t.assetData.end());
-        lastBlockId[t.senderAddress] = transactionRow.blockId;
+        addressSummaries[t.senderAddress].balance -= t.fee;
+        addressSummaries[t.senderAddress].delegateName = std::string(t.assetData.begin(), t.assetData.end());
+        addressSummaries[t.senderAddress].lastBlockId = transactionRow.blockId;
         break;
     case 4: {
-        balances[t.senderAddress] -= t.fee;
+        addressSummaries[t.senderAddress].balance -= t.fee;
+        addressSummaries[t.senderAddress].lastBlockId = transactionRow.blockId;
 
-        // Ensure addresses from type 4 transactions exist
         for (auto &pubkey : t.type4Pubkeys) {
-            balances[addressFromPubkey(pubkey)] += 0;
+            // Ensure addresses from type 4 transactions exist
+            (void) addressSummaries[addressFromPubkey(pubkey)];
         }
-        lastBlockId[t.senderAddress] = transactionRow.blockId;
         break;
     }
     case 7:
-        balances[t.senderAddress] -= (t.amount + t.fee);
-        balances[t.recipientAddress] += t.amount;
-        lastBlockId[t.senderAddress] = transactionRow.blockId;
-        lastBlockId[t.recipientAddress] = transactionRow.blockId;
+        addressSummaries[t.senderAddress].balance -= (t.amount + t.fee);
+        addressSummaries[t.recipientAddress].balance += t.amount;
+        addressSummaries[t.senderAddress].lastBlockId = transactionRow.blockId;
+        addressSummaries[t.recipientAddress].lastBlockId = transactionRow.blockId;
         break;
     default:
-        balances[t.senderAddress] -= t.fee;
-        lastBlockId[t.senderAddress] = transactionRow.blockId;
+        addressSummaries[t.senderAddress].balance -= t.fee;
+        addressSummaries[t.senderAddress].lastBlockId = transactionRow.blockId;
     }
 }
 
 void BlockchainState::applyBlock(const BlockHeader &bh, std::uint64_t blockId)
 {
-    lastBlockId[addressFromPubkey(bh.generatorPublicKey)] = blockId;
+    addressSummaries[addressFromPubkey(bh.generatorPublicKey)].lastBlockId = blockId;
 }
 
 void BlockchainState::validate(const Settings &settings) const
 {
-    for (auto &addressBalance : balances) {
-        if (addressBalance.second < 0 && addressBalance.first != settings.negativeBalanceAddress) {
+    for (auto &keyValue : addressSummaries) {
+        auto address = keyValue.first;
+        auto summary = keyValue.second;
+        if (summary.balance < 0 && address != settings.negativeBalanceAddress) {
             throw std::runtime_error(
-                        "Negative balance for address " + std::to_string(addressBalance.first) +
-                        ": " + std::to_string(addressBalance.second));
+                        "Negative balance for address " + std::to_string(address) +
+                        ": " + std::to_string(summary.balance));
         }
     }
 }
