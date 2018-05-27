@@ -23,7 +23,7 @@ add_executable(${PROJECT_NAME}
     summaries.cpp
     settings.cpp
     transaction.cpp
-    transactionvalidator.cpp
+    transaction_validator.cpp
 )
 target_link_libraries(${PROJECT_NAME}
     ${PQ_LDFLAGS}

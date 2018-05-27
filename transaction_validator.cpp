@@ -1,4 +1,4 @@
-#include "transactionvalidator.h"
+#include "transaction_validator.h"
 
 #include <iostream>
 #include <sodium.h>

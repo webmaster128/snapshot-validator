@@ -14,7 +14,7 @@
 #include "scopedbenchmark.h"
 #include "summaries.h"
 #include "transaction.h"
-#include "transactionvalidator.h"
+#include "transaction_validator.h"
 #include "types.h"
 #include "utils.h"
 #include "log.h"
