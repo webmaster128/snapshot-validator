@@ -90,7 +90,9 @@ int run(std::vector<std::string> args)
                     coalesce(multisignatures.min, 0) AS type4_asset_min, coalesce(multisignatures.lifetime, 0) AS type4_asset_lifetime,
                     replace(multisignatures.keysgroup, ',', '') AS type4_asset_keys,
                     (coalesce(dapps.name, '') || coalesce(dapps.description, '') || coalesce(dapps.tags, '') || coalesce(dapps.link, '') || coalesce(dapps.icon, '')) AS type5_asset_texts,
-                    coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category
+                    coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category,
+                    coalesce(intransfer."dappId", '') AS type6_asset,
+                    (coalesce(outtransfer."dappId", '') || coalesce(outtransfer."outTransactionId", '')) AS type7_asset
                 FROM trs
                 )SQL" + std::string(settings.v100Compatible ? "LEFT JOIN transfer ON trs.id = transfer.\"transactionId\"" : "") + R"SQL(
                 LEFT JOIN signatures ON trs.id = signatures."transactionId"
@@ -98,6 +100,8 @@ int run(std::vector<std::string> args)
                 LEFT JOIN votes ON trs.id = votes."transactionId"
                 LEFT JOIN multisignatures ON trs.id = multisignatures."transactionId"
                 LEFT JOIN dapps ON trs.id = dapps."transactionId"
+                LEFT JOIN intransfer ON trs.id = intransfer."transactionId"
+                LEFT JOIN outtransfer ON trs.id = outtransfer."transactionId"
                 ORDER BY "rowId"
             )SQL");
             for (auto row : R) {
@@ -129,6 +133,8 @@ int run(std::vector<std::string> args)
                 auto dbType5AssetText = row[index++].get<std::string>();
                 auto dbType5AssetType = row[index++].as<std::uint32_t>();
                 auto dbType5AssetCategory = row[index++].as<std::uint32_t>();
+                auto dbType6Asset = row[index++].as<std::string>();
+                auto dbType7Asset = row[index++].as<std::string>();
 
                 // Parse fields in row
                 auto senderPublicKey = asVector(dbSenderPublicKey);
@@ -166,6 +172,12 @@ int run(std::vector<std::string> args)
                     assetData.push_back((dbType5AssetCategory >> 1*8) & 0xff);
                     assetData.push_back((dbType5AssetCategory >> 2*8) & 0xff);
                     assetData.push_back((dbType5AssetCategory >> 3*8) & 0xff);
+                    break;
+                case 6:
+                    assetData = asVector(dbType6Asset);
+                    break;
+                case 7:
+                    assetData = asVector(dbType7Asset);
                     break;
                 }
 

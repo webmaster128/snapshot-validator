@@ -19,10 +19,27 @@ void validate_amount(const TransactionRow &row, const Exceptions &exceptions)
 {
     if (exceptions.balanceAdjustments.count(row.id)) return;
 
-    if (row.transaction.type != 0 && row.transaction.amount != 0) {
-        throw std::runtime_error(
-                    "Amount not 0 for type " + std::to_string(row.transaction.type) +
-                    " transaction " + std::to_string(row.id) + ": " + std::to_string(row.transaction.amount));
+    switch (row.transaction.type) {
+    case 0:
+    case 6:
+    case 7:
+        // any amount is okay
+        break;
+    case 1:
+    case 2:
+    case 3:
+    case 4:
+    case 5: {
+        if (row.transaction.amount != 0) {
+               throw std::runtime_error(
+                           "Amount not 0 for type " + std::to_string(row.transaction.type) +
+                           " transaction " + std::to_string(row.id) + ": " + std::to_string(row.transaction.amount));
+        }
+        break;
+    }
+    default:
+        throw std::runtime_error("Unknown transaction type");
+        break;
     }
 }
 
@@ -63,10 +80,10 @@ void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
         expected = 2500000000;
         break;
     case 6:
-        expected = 100000000;
+        expected = 10000000;
         break;
     case 7:
-        expected = 100000000;
+        expected = 10000000;
         break;
     default:
         throw std::runtime_error("Unknown transaction type");

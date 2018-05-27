@@ -28,6 +28,10 @@ void BlockchainState::applyTransaction(const Transaction &t)
         }
         break;
     }
+    case 7:
+        balances[t.senderAddress] -= (t.amount + t.fee);
+        balances[t.recipientAddress] += t.amount;
+        break;
     default:
         balances[t.senderAddress] -= t.fee;
     }
