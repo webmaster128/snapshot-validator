@@ -36,14 +36,14 @@ namespace Assets {
 
 void peersEmpty(pqxx::read_transaction &db)
 {
-    {
-        auto count = db.exec1("SELECT count(*) from peers")[0].as<int>();
-        if (count != 0) throw std::runtime_error("Table peers not empty");
-    }
-    {
-        auto count = db.exec1("SELECT count(*) from peers_dapp")[0].as<int>();
-        if (count != 0) throw std::runtime_error("Table peers_dapp not empty");
-    }
+    auto count = db.exec1("SELECT count(*) from peers")[0].as<int>();
+    if (count != 0) throw std::runtime_error("Table peers not empty");
+}
+
+void peersDappEmpty(pqxx::read_transaction &db)
+{
+    auto count = db.exec1("SELECT count(*) from peers_dapp")[0].as<int>();
+    if (count != 0) throw std::runtime_error("Table peers_dapp not empty");
 }
 
 void validateType0AssetData(pqxx::read_transaction &db)

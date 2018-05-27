@@ -6,6 +6,7 @@
 namespace Assets {
 
 void peersEmpty(pqxx::read_transaction &db);
+void peersDappEmpty(pqxx::read_transaction &db);
 void validateType0AssetData(pqxx::read_transaction &db);
 void validateType1AssetData(pqxx::read_transaction &db);
 void validateType2AssetData(pqxx::read_transaction &db);
