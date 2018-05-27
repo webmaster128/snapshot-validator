@@ -41,21 +41,28 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
 
     MemAccountsData memAccounts;
 
-    std::string listOfExcludedAddresses;
-    for (auto &address : exceptions.invalidAddresses) {
-        if (!listOfExcludedAddresses.empty()) listOfExcludedAddresses += ", ";
-        listOfExcludedAddresses += "'" + address + "'";
+    std::string excludedAddressFilter;
+    if (!exceptions.invalidAddresses.empty())
+    {
+        excludedAddressFilter += "WHERE address NOT IN (";
+        bool first = true;
+        for (auto &address : exceptions.invalidAddresses) {
+            if (!first) excludedAddressFilter += ", ";
+            excludedAddressFilter += "'" + address + "'";
+            first = false;
+        }
+        excludedAddressFilter += ")";
     }
 
     pqxx::result result = db.exec(R"SQL(
       SELECT
-          left(address, -1), balance, coalesce("blockId", '0'),
-          coalesce("secondPublicKey", ''::bytea), coalesce(username, '')
-      FROM mem_accounts
-      WHERE address NOT IN (
-        )SQL" + listOfExcludedAddresses + R"SQL(
-      )
-    )SQL");
+          left(address, -1),
+          balance,
+          coalesce("blockId", '0'),
+          coalesce("secondPublicKey", ''::bytea),
+          coalesce(username, '')
+      FROM mem_accounts)SQL"
+      + excludedAddressFilter);
     for (auto row : result) {
         int index = 0;
         const auto dbAddress = row[index++].as<std::uint64_t>();
