@@ -21,6 +21,15 @@ void validateUniqueTransactionId(pqxx::read_transaction &db, const std::string t
     }
 }
 
+void checkUnconfirmed(pqxx::read_transaction &db, const std::string tableName, const std::string columnName)
+{
+    auto row = db.exec1("SELECT count(*) FROM " + tableName + " WHERE \"" + columnName + "\" != \"u_" + columnName + "\"");
+    if (row[0].as<int>() != 0)
+    {
+        throw std::runtime_error("Column " + columnName + " does not match u_" + columnName + " in table " + tableName);
+    }
+}
+
 }
 
 namespace Assets {
@@ -75,6 +84,18 @@ void validateType6AssetData(pqxx::read_transaction &db)
 void validateType7AssetData(pqxx::read_transaction &db)
 {
     validateUniqueTransactionId(db, "outtransfer");
+}
+
+void checkUnconfirmedInMemAccounts(pqxx::read_transaction &db)
+{
+    checkUnconfirmed(db, "mem_accounts", "username");
+    checkUnconfirmed(db, "mem_accounts", "isDelegate");
+    checkUnconfirmed(db, "mem_accounts", "secondSignature");
+    checkUnconfirmed(db, "mem_accounts", "balance");
+    checkUnconfirmed(db, "mem_accounts", "delegates");
+    checkUnconfirmed(db, "mem_accounts", "multimin");
+    checkUnconfirmed(db, "mem_accounts", "multilifetime");
+    checkUnconfirmed(db, "mem_accounts", "nameexist");
 }
 
 }

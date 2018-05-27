@@ -14,5 +14,6 @@ void validateType4AssetData(pqxx::read_transaction &db);
 void validateType5AssetData(pqxx::read_transaction &db);
 void validateType6AssetData(pqxx::read_transaction &db);
 void validateType7AssetData(pqxx::read_transaction &db);
+void checkUnconfirmedInMemAccounts(pqxx::read_transaction &db);
 
 }
