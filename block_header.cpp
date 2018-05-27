@@ -5,31 +5,7 @@
 
 #include <sodium.h>
 
-BlockHeader::BlockHeader(
-        std::uint32_t _version,
-        std::uint32_t _timestamp,
-        std::uint64_t _previousBlock,
-        std::uint32_t _numberOfTransactions,
-        std::uint64_t _totalAmount,
-        std::uint64_t _totalFee,
-        std::uint64_t _reward,
-        std::uint32_t _payloadLength,
-        std::vector<unsigned char> _payloadHash,
-        std::vector<unsigned char> _generatorPublicKey)
-    : version(_version)
-    , timestamp(_timestamp)
-    , previousBlock(_previousBlock)
-    , numberOfTransactions(_numberOfTransactions)
-    , totalAmount(_totalAmount)
-    , totalFee(_totalFee)
-    , reward(_reward)
-    , payloadLength(_payloadLength)
-    , payloadHash(_payloadHash)
-    , generatorPublicKey(_generatorPublicKey)
-{
-}
-
-std::vector<unsigned char> BlockHeader::serialize() const
+bytes_t BlockHeader::serialize() const
 {
 
     std::size_t size = 4 // version
@@ -105,7 +81,7 @@ std::vector<unsigned char> BlockHeader::serialize() const
     return out;
 }
 
-std::vector<unsigned char> BlockHeader::hash(std::vector<unsigned char> signature) const
+bytes_t BlockHeader::hash(bytes_t signature) const
 {
     auto out = std::vector<unsigned char>(crypto_hash_sha256_BYTES);
 
@@ -116,7 +92,7 @@ std::vector<unsigned char> BlockHeader::hash(std::vector<unsigned char> signatur
     return out;
 }
 
-std::uint64_t BlockHeader::id(std::vector<unsigned char> signature) const
+std::uint64_t BlockHeader::id(bytes_t signature) const
 {
     auto hashBytes = hash(signature);
     auto firstBytes = std::vector<unsigned char>{hashBytes.cbegin(), hashBytes.cbegin()+8};

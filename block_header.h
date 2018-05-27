@@ -4,19 +4,32 @@
 #include <string>
 #include <vector>
 
+#include "types.h"
+
 struct BlockHeader {
     BlockHeader(
-        std::uint32_t version,
-        std::uint32_t timestamp,
-        std::uint64_t previousBlock,
-        std::uint32_t numberOfTransactions,
-        std::uint64_t totalAmount,
-        std::uint64_t totalFee,
-        std::uint64_t reward,
-        std::uint32_t payloadLength,
-        std::vector<unsigned char> payloadHash,
-        std::vector<unsigned char> generatorPublicKey
-    );
+        const std::uint32_t _version,
+        const std::uint32_t _timestamp,
+        const std::uint64_t _previousBlock,
+        const std::uint32_t _numberOfTransactions,
+        const std::uint64_t _totalAmount,
+        const std::uint64_t _totalFee,
+        const std::uint64_t _reward,
+        const std::uint32_t _payloadLength,
+        const bytes_t _payloadHash,
+        const bytes_t _generatorPublicKey)
+        : version(_version)
+        , timestamp(_timestamp)
+        , previousBlock(_previousBlock)
+        , numberOfTransactions(_numberOfTransactions)
+        , totalAmount(_totalAmount)
+        , totalFee(_totalFee)
+        , reward(_reward)
+        , payloadLength(_payloadLength)
+        , payloadHash(_payloadHash)
+        , generatorPublicKey(_generatorPublicKey)
+    {
+    }
 
     const std::uint32_t version;
     const std::uint32_t timestamp;
@@ -26,10 +39,10 @@ struct BlockHeader {
     const std::uint64_t totalFee;
     const std::uint64_t reward;
     const std::uint32_t payloadLength;
-    const std::vector<unsigned char> payloadHash;
-    const std::vector<unsigned char> generatorPublicKey;
+    const bytes_t payloadHash;
+    const bytes_t generatorPublicKey;
 
-    std::vector<unsigned char> serialize() const;
-    std::vector<unsigned char> hash(std::vector<unsigned char> signature = {}) const;
-    std::uint64_t id(std::vector<unsigned char> signature) const;
+    bytes_t serialize() const;
+    bytes_t hash(bytes_t signature = {}) const;
+    std::uint64_t id(bytes_t signature) const;
 };
