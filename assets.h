@@ -2,8 +2,10 @@
 
 #include <pqxx/pqxx>
 
+// TODO: rename
 namespace Assets {
 
+void peersEmpty(pqxx::read_transaction &db);
 void validateType0AssetData(pqxx::read_transaction &db);
 void validateType1AssetData(pqxx::read_transaction &db);
 void validateType2AssetData(pqxx::read_transaction &db);

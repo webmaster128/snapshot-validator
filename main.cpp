@@ -60,6 +60,7 @@ int run(std::vector<std::string> args)
 
         Settings settings(networkFromName(networkName));
 
+        Assets::peersEmpty(db);
         if (settings.v100Compatible) {
             Assets::validateType0AssetData(db);
         }
