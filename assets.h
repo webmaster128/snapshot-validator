@@ -12,5 +12,7 @@ void validateType2AssetData(pqxx::read_transaction &db);
 void validateType3AssetData(pqxx::read_transaction &db);
 void validateType4AssetData(pqxx::read_transaction &db);
 void validateType5AssetData(pqxx::read_transaction &db);
+void validateType6AssetData(pqxx::read_transaction &db);
+void validateType7AssetData(pqxx::read_transaction &db);
 
 }

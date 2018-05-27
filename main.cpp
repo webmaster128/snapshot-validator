@@ -69,6 +69,8 @@ int run(std::vector<std::string> args)
         Assets::validateType3AssetData(db);
         Assets::validateType4AssetData(db);
         Assets::validateType5AssetData(db);
+        Assets::validateType6AssetData(db);
+        Assets::validateType7AssetData(db);
 
         std::unordered_map<std::uint64_t, std::vector<TransactionRow>> blockToTransactions;
         BlockchainState blockchainState;

@@ -67,4 +67,14 @@ void validateType5AssetData(pqxx::read_transaction &db)
     validateUniqueTransactionId(db, "dapps");
 }
 
+void validateType6AssetData(pqxx::read_transaction &db)
+{
+    validateUniqueTransactionId(db, "intransfer");
+}
+
+void validateType7AssetData(pqxx::read_transaction &db)
+{
+    validateUniqueTransactionId(db, "outtransfer");
+}
+
 }
