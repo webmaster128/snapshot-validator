@@ -19,7 +19,7 @@
 #include "utils.h"
 #include "log.h"
 
-address_t TRASH = 0;
+address_t TRASH = 12125591683379294247ul; // random address that is hopefully not used
 
 
 int run(std::vector<std::string> args)
@@ -349,9 +349,9 @@ int run(std::vector<std::string> args)
         }
 
         // validate after all blocks
-        blockchainState.balances.erase(TRASH);
         blockchainState.validate(settings);
 
+        blockchainState.balances.erase(TRASH);
         Summaries::checkMemAccounts(db, blockchainState, settings.exceptions);
 
         db.commit();
