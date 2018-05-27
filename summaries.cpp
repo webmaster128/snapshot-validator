@@ -8,6 +8,16 @@
 #include "scopedbenchmark.h"
 #include "utils.h"
 
+namespace {
+
+struct MemAccountsData {
+    std::unordered_map<std::uint64_t, std::int64_t> balances;
+    std::unordered_map<std::uint64_t, std::vector<unsigned char>> secondPubkeys;
+    std::unordered_map<std::uint64_t, std::string> delegateNames;
+};
+
+}
+
 namespace Summaries {
 
 void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockchainState, const Exceptions &exceptions)
@@ -15,9 +25,7 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
     std::cout << "Checking mem_accounts ..." << std::endl;
     ScopedBenchmark benchmarkMemAccounts("Checking mem_accounts"); static_cast<void>(benchmarkMemAccounts);
 
-    std::unordered_map<std::uint64_t, std::int64_t> balances;
-    std::unordered_map<std::uint64_t, std::vector<unsigned char>> secondPubkeys;
-    std::unordered_map<std::uint64_t, std::string> delegateNames;
+    MemAccountsData memAccounts;
 
     std::string listOfExcludedAddresses;
     for (auto &address : exceptions.invalidAddresses) {
@@ -41,25 +49,25 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
         const auto dbSecondPublicKey = pqxx::binarystring(row[index++]);
         const auto dbUsername = row[index++].as<std::string>();
 
-        balances[dbAddress] = dbBalance;
-        if (dbSecondPublicKey.length() != 0) secondPubkeys[dbAddress] = asVector(dbSecondPublicKey);
-        if (!dbUsername.empty()) delegateNames[dbAddress] = dbUsername;
+        memAccounts.balances[dbAddress] = dbBalance;
+        if (dbSecondPublicKey.length() != 0) memAccounts.secondPubkeys[dbAddress] = asVector(dbSecondPublicKey);
+        if (!dbUsername.empty()) memAccounts.delegateNames[dbAddress] = dbUsername;
     }
 
-    if (balances != blockchainState.balances) {
-        bool keysMatch = compareKeys(balances, blockchainState.balances, true);
-        if (keysMatch) compareValues(balances, blockchainState.balances, true);
+    if (memAccounts.balances != blockchainState.balances) {
+        bool keysMatch = compareKeys(memAccounts.balances, blockchainState.balances, true);
+        if (keysMatch) compareValues(memAccounts.balances, blockchainState.balances, true);
         throw std::runtime_error("Balances in mem_accounts do not match blockchain state");
     }
 
-    if (secondPubkeys != blockchainState.secondPubkeys) {
-        compareKeys(secondPubkeys, blockchainState.secondPubkeys, true);
+    if (memAccounts.secondPubkeys != blockchainState.secondPubkeys) {
+        compareKeys(memAccounts.secondPubkeys, blockchainState.secondPubkeys, true);
         throw std::runtime_error("second pubkeys in mem_accounts do not match blockchain state");
     }
 
-    if (delegateNames != blockchainState.delegateNames) {
-        bool keysMatch = compareKeys(delegateNames, blockchainState.delegateNames, true);
-        if (keysMatch) compareValues(delegateNames, blockchainState.delegateNames, true);
+    if (memAccounts.delegateNames != blockchainState.delegateNames) {
+        bool keysMatch = compareKeys(memAccounts.delegateNames, blockchainState.delegateNames, true);
+        if (keysMatch) compareValues(memAccounts.delegateNames, blockchainState.delegateNames, true);
         throw std::runtime_error("delegate names in mem_accounts do not match blockchain state");
     }
 }
