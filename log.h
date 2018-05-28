@@ -1,6 +1,6 @@
 #pragma once
 
-#import <iostream>
+#include <iostream>
 
 class NumberLog {
 public:
