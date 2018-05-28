@@ -23,7 +23,7 @@ std::uint64_t idFromEightBytes(bytes_t firstBytes)
     return out;
 }
 
-std::uint64_t addressFromPubkey(bytes_t publicKey) {
+address_t addressFromPubkey(bytes_t publicKey) {
     //auto publicKeyHex = bytes2Hex(publicKey);
 
     auto hash = bytes_t(crypto_hash_sha256_BYTES);
