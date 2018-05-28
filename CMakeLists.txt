@@ -27,7 +27,7 @@ add_executable(${PROJECT_NAME}
     transaction_validator.cpp
 )
 target_link_libraries(${PROJECT_NAME}
-    ${PQ_LDFLAGS}
     ${PQXX_LDFLAGS}
+    ${PQ_LDFLAGS}
     ${SODIUM_LDFLAGS}
 )
