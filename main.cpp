@@ -86,7 +86,7 @@ int run(std::vector<std::string> args)
             std::cout << "Reading transactions ..." << std::endl;
             ScopedBenchmark benchmarkTransactions("Reading transactions"); static_cast<void>(benchmarkTransactions);
 
-            pqxx::result R = db.exec(R"SQL(
+            pqxx::result result = db.exec(R"SQL(
                 SELECT
                     id, "blockId", trs.type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
                     amount, fee, signature, "signSignature",
@@ -111,7 +111,7 @@ int run(std::vector<std::string> args)
                 LEFT JOIN outtransfer ON trs.id = outtransfer."transactionId"
                 ORDER BY "rowId"
             )SQL");
-            for (auto row : R) {
+            for (auto row : result) {
                 // Read fields in row
                 int index = 0;
                 const auto dbId = row[index++].as<std::uint64_t>();
