@@ -114,11 +114,11 @@ int run(std::vector<std::string> args)
             for (auto row : R) {
                 // Read fields in row
                 int index = 0;
-                auto dbId = row[index++].as<std::uint64_t>();
-                auto dbBockId = row[index++].as<std::uint64_t>();
-                auto dbType = row[index++].as<int>();
-                auto dbTimestamp = row[index++].as<std::uint32_t>();
-                auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
+                const auto dbId = row[index++].as<std::uint64_t>();
+                const auto dbBockId = row[index++].as<std::uint64_t>();
+                const auto dbType = row[index++].as<int>();
+                const auto dbTimestamp = row[index++].as<std::uint32_t>();
+                const auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
                 std::uint64_t dbRecipientId;
                 if (settings.exceptions.transactionsContainingInvalidRecipientAddress.count(dbId)) {
                     index++;
@@ -126,27 +126,27 @@ int run(std::vector<std::string> args)
                 } else {
                     dbRecipientId = row[index++].as<std::uint64_t>();
                 }
-                auto dbAmount = row[index++].as<std::uint64_t>();
-                auto dbFee = row[index++].as<std::uint64_t>();
-                auto dbSignature = pqxx::binarystring(row[index++]);
-                auto dbSecondSignature = pqxx::binarystring(row[index++]);
-                auto dbType0Asset = pqxx::binarystring(row[index++]);
-                auto dbType1Asset = pqxx::binarystring(row[index++]);
-                auto dbType2Asset = row[index++].get<std::string>();
-                auto dbType3Asset = row[index++].get<std::string>();
-                auto dbType4AssetMin = row[index++].as<int>();
-                auto dbType4AssetLifetime = row[index++].as<int>();
-                auto dbType4AssetKeys = row[index++].get<std::string>();
-                auto dbType5AssetText = row[index++].get<std::string>();
-                auto dbType5AssetType = row[index++].as<std::uint32_t>();
-                auto dbType5AssetCategory = row[index++].as<std::uint32_t>();
-                auto dbType6Asset = row[index++].as<std::string>();
-                auto dbType7Asset = row[index++].as<std::string>();
+                const auto dbAmount = row[index++].as<std::uint64_t>();
+                const auto dbFee = row[index++].as<std::uint64_t>();
+                const auto dbSignature = pqxx::binarystring(row[index++]);
+                const auto dbSecondSignature = pqxx::binarystring(row[index++]);
+                const auto dbType0Asset = pqxx::binarystring(row[index++]);
+                const auto dbType1Asset = pqxx::binarystring(row[index++]);
+                const auto dbType2Asset = row[index++].get<std::string>();
+                const auto dbType3Asset = row[index++].get<std::string>();
+                const auto dbType4AssetMin = row[index++].as<int>();
+                const auto dbType4AssetLifetime = row[index++].as<int>();
+                const auto dbType4AssetKeys = row[index++].get<std::string>();
+                const auto dbType5AssetText = row[index++].get<std::string>();
+                const auto dbType5AssetType = row[index++].as<std::uint32_t>();
+                const auto dbType5AssetCategory = row[index++].as<std::uint32_t>();
+                const auto dbType6Asset = row[index++].as<std::string>();
+                const auto dbType7Asset = row[index++].as<std::string>();
 
                 // Parse fields in row
-                auto senderPublicKey = asVector(dbSenderPublicKey);
-                auto signature = asVector(dbSignature);
-                auto secondSignature = asVector(dbSecondSignature);
+                const auto senderPublicKey = asVector(dbSenderPublicKey);
+                const auto signature = asVector(dbSignature);
+                const auto secondSignature = asVector(dbSecondSignature);
 
                 std::vector<unsigned char> assetData = {};
                 switch (dbType) {
