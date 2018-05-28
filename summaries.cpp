@@ -61,7 +61,8 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
           coalesce("blockId", '0'),
           coalesce("secondPublicKey", ''::bytea),
           coalesce(username, '')
-      FROM mem_accounts)SQL"
+      FROM mem_accounts
+      )SQL"
       + excludedAddressFilter);
     for (auto row : result) {
         int index = 0;
