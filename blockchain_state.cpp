@@ -51,16 +51,3 @@ void BlockchainState::applyBlock(const BlockHeader &bh, std::uint64_t blockId)
 {
     addressSummaries[addressFromPubkey(bh.generatorPublicKey)].lastBlockId = blockId;
 }
-
-void BlockchainState::validate(const Settings &settings) const
-{
-    for (auto &keyValue : addressSummaries) {
-        auto address = keyValue.first;
-        auto summary = keyValue.second;
-        if (summary.balance < 0 && address != settings.negativeBalanceAddress) {
-            throw std::runtime_error(
-                        "Negative balance for address " + std::to_string(address) +
-                        ": " + std::to_string(summary.balance));
-        }
-    }
-}

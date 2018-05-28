@@ -6,6 +6,7 @@
 
 #include "assets.h"
 #include "blockchain_state.h"
+#include "blockchain_state_validator.h"
 #include "block_header.h"
 #include "block_header_validator.h"
 #include "lisk.h"
@@ -327,7 +328,7 @@ int run(std::vector<std::string> args)
                         blockchainState.addressSummaries[t.senderAddress].balance += settings.exceptions.balanceAdjustments[transactionRow.id];
                     }
 
-                    blockchainState.validate(settings);
+                    BlockchainStateValidator::validate(blockchainState, settings);
                 }
 
                 blockchainState.applyBlock(bh, dbId);
@@ -377,7 +378,7 @@ int run(std::vector<std::string> args)
         }
 
         // validate after all blocks
-        blockchainState.validate(settings);
+        BlockchainStateValidator::validate(blockchainState, settings);
 
         blockchainState.addressSummaries.erase(TRASH);
         Summaries::checkMemAccounts(db, blockchainState, settings.exceptions);

@@ -5,7 +5,6 @@
 #include <vector>
 
 #include "block_header.h"
-#include "settings.h"
 #include "transaction.h"
 #include "types.h"
 
@@ -21,5 +20,4 @@ struct BlockchainState {
 
     void applyTransaction(const TransactionRow &transactionRow);
     void applyBlock(const BlockHeader &bh, std::uint64_t blockId);
-    void validate(const Settings &settings) const;
 };
