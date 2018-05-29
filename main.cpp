@@ -343,10 +343,6 @@ int run(std::vector<std::string> args)
                         }
                         TransactionValidator::validate(transactionRow, secondSignatureRequiredBy, settings.exceptions);
                     }
-
-                    if (settings.exceptions.balanceAdjustments.count(transactionRow.id)) {
-                        blockchainState.addressSummaries[t.senderAddress].balance += settings.exceptions.balanceAdjustments[transactionRow.id];
-                    }
                 }
 
                 // Update state from block transactions
@@ -355,6 +351,10 @@ int run(std::vector<std::string> args)
                 for (auto &transactionRow : blockToTransactions[dbId]) {
                     if (settings.exceptions.inertTransactions.count(transactionRow.id) == 0) {
                         blockchainState.applyTransaction(transactionRow);
+                    }
+
+                    if (settings.exceptions.balanceAdjustments.count(transactionRow.id)) {
+                        blockchainState.addressSummaries[transactionRow.transaction.senderAddress].balance += settings.exceptions.balanceAdjustments[transactionRow.id];
                     }
                 }
                 BlockchainStateValidator::validate(blockchainState, settings);
