@@ -124,92 +124,105 @@ int run(std::vector<std::string> args)
                 ORDER BY "rowId"
             )SQL");
             for (auto row : result) {
-                // Read fields in row
-                int index = 0;
-                const auto dbId = row[index++].as<std::uint64_t>();
-                const auto dbBockId = row[index++].as<std::uint64_t>();
-                const auto dbType = row[index++].as<int>();
-                const auto dbTimestamp = row[index++].as<std::uint32_t>();
-                const auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
-                std::uint64_t dbRecipientId;
-                if (settings.exceptions.transactionsContainingInvalidRecipientAddress.count(dbId)) {
-                    index++;
-                    dbRecipientId = TRASH;
-                } else {
-                    dbRecipientId = row[index++].as<std::uint64_t>();
-                }
-                const auto dbAmount = row[index++].as<std::uint64_t>();
-                const auto dbFee = row[index++].as<std::uint64_t>();
-                const auto dbSignature = pqxx::binarystring(row[index++]);
-                const auto dbSecondSignature = pqxx::binarystring(row[index++]);
-                const auto dbType0Asset = pqxx::binarystring(row[index++]);
-                const auto dbType1Asset = pqxx::binarystring(row[index++]);
-                const auto dbType2Asset = row[index++].get<std::string>();
-                const auto dbType3Asset = row[index++].get<std::string>();
-                const auto dbType4AssetMin = row[index++].as<int>();
-                const auto dbType4AssetLifetime = row[index++].as<int>();
-                const auto dbType4AssetKeys = row[index++].get<std::string>();
-                const auto dbType5AssetText = row[index++].get<std::string>();
-                const auto dbType5AssetType = row[index++].as<std::uint32_t>();
-                const auto dbType5AssetCategory = row[index++].as<std::uint32_t>();
-                const auto dbType6Asset = row[index++].as<std::string>();
-                const auto dbType7Asset = row[index++].as<std::string>();
+                try {
+                    // Read fields in row
+                    int index = 0;
+                    const auto dbId = row[index++].as<std::uint64_t>();
+                    const auto dbBockId = row[index++].as<std::uint64_t>();
+                    const auto dbType = row[index++].as<int>();
+                    const auto dbTimestamp = row[index++].as<std::int32_t>();
+                    const auto dbSenderPublicKey = pqxx::binarystring(row[index++]);
+                    std::uint64_t dbRecipientId;
+                    if (settings.exceptions.transactionsContainingInvalidRecipientAddress.count(dbId)) {
+                        index++;
+                        dbRecipientId = TRASH;
+                    } else {
+                        dbRecipientId = row[index++].as<std::uint64_t>();
+                    }
+                    const auto dbAmount = row[index++].as<std::uint64_t>();
+                    const auto dbFee = row[index++].as<std::uint64_t>();
+                    const auto dbSignature = pqxx::binarystring(row[index++]);
+                    const auto dbSecondSignature = pqxx::binarystring(row[index++]);
+                    const auto dbType0Asset = pqxx::binarystring(row[index++]);
+                    const auto dbType1Asset = pqxx::binarystring(row[index++]);
+                    const auto dbType2Asset = row[index++].get<std::string>();
+                    const auto dbType3Asset = row[index++].get<std::string>();
+                    const auto dbType4AssetMin = row[index++].as<int>();
+                    const auto dbType4AssetLifetime = row[index++].as<int>();
+                    const auto dbType4AssetKeys = row[index++].get<std::string>();
+                    const auto dbType5AssetText = row[index++].get<std::string>();
+                    const auto dbType5AssetType = row[index++].as<std::uint32_t>();
+                    const auto dbType5AssetCategory = row[index++].as<std::uint32_t>();
+                    const auto dbType6Asset = row[index++].as<std::string>();
+                    const auto dbType7Asset = row[index++].as<std::string>();
 
-                // Parse fields in row
-                const auto senderPublicKey = asVector(dbSenderPublicKey);
-                const auto signature = asVector(dbSignature);
-                const auto secondSignature = asVector(dbSecondSignature);
+                    // Parse fields in row
+                    const auto senderPublicKey = asVector(dbSenderPublicKey);
+                    const auto signature = asVector(dbSignature);
+                    const auto secondSignature = asVector(dbSecondSignature);
 
-                std::vector<unsigned char> assetData = {};
-                switch (dbType) {
-                case 0:
-                    assetData = asVector(dbType0Asset);
-                    break;
-                case 1:
-                    assetData = asVector(dbType1Asset);
-                    break;
-                case 2:
-                    assetData = asVector(*dbType2Asset);
-                    break;
-                case 3:
-                    assetData = asVector(*dbType3Asset);
-                    break;
-                case 4: {
-                    assetData.push_back(static_cast<std::uint8_t>(dbType4AssetMin));
-                    assetData.push_back(static_cast<std::uint8_t>(dbType4AssetLifetime));
-                    auto keys = asVector(*dbType4AssetKeys);
-                    assetData.insert(assetData.end(), keys.cbegin(), keys.cend());
-                    break;
-                }
-                case 5:
-                    assetData = asVector(*dbType5AssetText);
-                    assetData.push_back((dbType5AssetType >> 0*8) & 0xff);
-                    assetData.push_back((dbType5AssetType >> 1*8) & 0xff);
-                    assetData.push_back((dbType5AssetType >> 2*8) & 0xff);
-                    assetData.push_back((dbType5AssetType >> 3*8) & 0xff);
-                    assetData.push_back((dbType5AssetCategory >> 0*8) & 0xff);
-                    assetData.push_back((dbType5AssetCategory >> 1*8) & 0xff);
-                    assetData.push_back((dbType5AssetCategory >> 2*8) & 0xff);
-                    assetData.push_back((dbType5AssetCategory >> 3*8) & 0xff);
-                    break;
-                case 6:
-                    assetData = asVector(dbType6Asset);
-                    break;
-                case 7:
-                    assetData = asVector(dbType7Asset);
-                    break;
-                }
+                    std::vector<unsigned char> assetData = {};
+                    switch (dbType) {
+                    case 0:
+                        assetData = asVector(dbType0Asset);
+                        break;
+                    case 1:
+                        assetData = asVector(dbType1Asset);
+                        break;
+                    case 2:
+                        assetData = asVector(*dbType2Asset);
+                        break;
+                    case 3:
+                        assetData = asVector(*dbType3Asset);
+                        break;
+                    case 4: {
+                        assetData.push_back(static_cast<std::uint8_t>(dbType4AssetMin));
+                        assetData.push_back(static_cast<std::uint8_t>(dbType4AssetLifetime));
+                        auto keys = asVector(*dbType4AssetKeys);
+                        assetData.insert(assetData.end(), keys.cbegin(), keys.cend());
+                        break;
+                    }
+                    case 5:
+                        assetData = asVector(*dbType5AssetText);
+                        assetData.push_back((dbType5AssetType >> 0*8) & 0xff);
+                        assetData.push_back((dbType5AssetType >> 1*8) & 0xff);
+                        assetData.push_back((dbType5AssetType >> 2*8) & 0xff);
+                        assetData.push_back((dbType5AssetType >> 3*8) & 0xff);
+                        assetData.push_back((dbType5AssetCategory >> 0*8) & 0xff);
+                        assetData.push_back((dbType5AssetCategory >> 1*8) & 0xff);
+                        assetData.push_back((dbType5AssetCategory >> 2*8) & 0xff);
+                        assetData.push_back((dbType5AssetCategory >> 3*8) & 0xff);
+                        break;
+                    case 6:
+                        assetData = asVector(dbType6Asset);
+                        break;
+                    case 7:
+                        assetData = asVector(dbType7Asset);
+                        break;
+                    }
 
-                auto t = Transaction(
-                    dbType,
-                    dbTimestamp,
-                    senderPublicKey,
-                    dbRecipientId,
-                    dbAmount,
-                    dbFee,
-                    assetData
-                );
-                blockToTransactions[dbBockId].emplace_back(t, signature, secondSignature, dbId, dbBockId);
+                    auto t = Transaction(
+                        dbType,
+                        dbTimestamp,
+                        senderPublicKey,
+                        dbRecipientId,
+                        dbAmount,
+                        dbFee,
+                        assetData
+                    );
+                    blockToTransactions[dbBockId].emplace_back(t, signature, secondSignature, dbId, dbBockId);
+                }
+                catch (const std::exception &e)
+                {
+                    std::cout << "Exception '" << e.what() << "' when reading row:\n";
+                    for (int i = 0; i < row.size(); ++i)
+                    {
+                        if (i > 0) std::cout << "|";
+                        std::cout << std::string(row[i].c_str());
+                    }
+                    std::cout << std::endl;
+                    throw;
+                }
             }
         }
 
