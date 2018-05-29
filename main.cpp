@@ -344,17 +344,20 @@ int run(std::vector<std::string> args)
                         TransactionValidator::validate(transactionRow, secondSignatureRequiredBy, settings.exceptions);
                     }
 
-                    // Update state from transaction
-                    if (settings.exceptions.inertTransactions.count(transactionRow.id) == 0) {
-                        blockchainState.applyTransaction(transactionRow);
-                    }
-
                     if (settings.exceptions.balanceAdjustments.count(transactionRow.id)) {
                         blockchainState.addressSummaries[t.senderAddress].balance += settings.exceptions.balanceAdjustments[transactionRow.id];
                     }
-
-                    BlockchainStateValidator::validate(blockchainState, settings);
                 }
+
+                // Update state from block transactions
+                // This is done outside of the first transactions loop because second signatures are
+                // only required for later blocks (see e.g. https://explorer.lisk.io/block/3087130330171409946)
+                for (auto &transactionRow : blockToTransactions[dbId]) {
+                    if (settings.exceptions.inertTransactions.count(transactionRow.id) == 0) {
+                        blockchainState.applyTransaction(transactionRow);
+                    }
+                }
+                BlockchainStateValidator::validate(blockchainState, settings);
 
                 blockchainState.applyBlock(bh, dbId);
 
