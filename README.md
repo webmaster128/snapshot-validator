@@ -35,3 +35,8 @@ providers wisely.
 
 * Ensure `snapshot-validator` is in PATH
 * Run `./validate_snapshot.sh testnet <testnet snapshot file>`
+
+## Further notes
+
+* Temporary databases are not dropped when validation fails. Use a Postgres management tool
+  like e.g. pgAdmin to clean up from time to time.
