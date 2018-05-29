@@ -48,7 +48,7 @@ struct BlockHeader {
 struct BlockRow {
     BlockRow(
             const BlockHeader _header,
-            const std::uint64_t _height,
+            const height_t _height,
             const std::uint64_t _id,
             const bytes_t _signature)
         : header(_header)
@@ -59,7 +59,7 @@ struct BlockRow {
     }
 
     const BlockHeader header;
-    const std::uint64_t height;
+    const height_t height;
     const std::uint64_t id;
     const bytes_t signature;
 };
