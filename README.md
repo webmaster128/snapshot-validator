@@ -23,13 +23,13 @@ providers wisely.
 ## How to install/compile
 
 * Install libpq-dev, libsodium-dev, a C++ compiler and cmake using your favourite package manager
-* Clone repo recursively
-* `cd external/libpqxx`
+* `git clone --recursive https://github.com/prolina-foundation/snapshot-validator.git`
+* `cd snapshot-validator/external/libpqxx`
 * `./configure --disable-documentation --prefix=$PWD/../libpqxx-installation && make -j 4 install`
 * `cd ../..`
 * `mkdir build && cd build`
 * `cmake -DCMAKE_BUILD_TYPE=Release .. && make -j 4`
-* Now move the resulting binary `snapshot-validator` into PATH
+* Now move the resulting binary `snapshot-validator` into PATH, e.g. `sudo mv snapshot-validator /usr/local/bin`
 
 ## How to use
 
