@@ -1,6 +1,6 @@
 cmake_minimum_required(VERSION 3.2)
 
-project(blockchain-validator)
+project(snapshot-validator)
 
 set(ENV{PKG_CONFIG_PATH} "${CMAKE_CURRENT_SOURCE_DIR}/external/libpqxx-installation/lib/pkgconfig:$ENV{PKG_CONFIG_PATH}")
 find_package(PkgConfig REQUIRED)

@@ -29,9 +29,9 @@ providers wisely.
 * `cd ../..`
 * `mkdir build && cd build`
 * `cmake -DCMAKE_BUILD_TYPE=Release .. && make -j 4`
-* Now move the resulting binary `blockchain-validator` into PATH
+* Now move the resulting binary `snapshot-validator` into PATH
 
 ## How to use
 
-* Ensure `blockchain-validator` is in PATH
+* Ensure `snapshot-validator` is in PATH
 * Run `./validate_snapshot.sh testnet <testnet snapshot file>`
