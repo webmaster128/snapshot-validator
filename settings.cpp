@@ -8,6 +8,11 @@ Settings::Settings(Network network)
         rewardOffset = 1451520;
         rewardDistance = 3000000;
         v100Compatible = false;
+        exceptions.invalidTransactionSignature = {
+            5676385569187187158ul, // 868797
+            5384302058030309746ul, // 869890
+            9352922026980330230ul, // 925165
+        };
         exceptions.transactionsContainingInvalidRecipientAddress = {
             4808146167169807212ul,
             8662249085950135942ul,
