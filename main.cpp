@@ -22,9 +22,19 @@
 
 address_t TRASH = 12125591683379294247ul; // random address that is hopefully not used
 
+void printHelp()
+{
+    std::cout << "usage: snapshot-validator mainnet|testnet|betanet database_name" << std::endl;
+}
 
 int run(std::vector<std::string> args)
 {
+    if (args.size() >= 2 && args[1] == "--help")
+    {
+        printHelp();
+        return 0;
+    }
+
     ScopedBenchmark benchmarkFull("Overall runtime"); static_cast<void>(benchmarkFull);
 
     if (sodium_init() == -1) {

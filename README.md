@@ -33,7 +33,7 @@ providers wisely.
 
 ## How to use
 
-* Ensure `snapshot-validator` is in PATH
+* Ensure `snapshot-validator` is in PATH: `snapshot-validator --help`
 * Run `./validate_snapshot.sh testnet <testnet snapshot file>`
 
 ## Further notes
