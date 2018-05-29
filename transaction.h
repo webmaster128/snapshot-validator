@@ -8,7 +8,7 @@
 struct Transaction {
     Transaction(
         std::uint8_t type,
-        std::uint32_t timestamp,
+        std::int32_t timestamp,
         std::vector<unsigned char> senderPublicKey,
         std::uint64_t recipientId,
         std::uint64_t amount,
@@ -17,7 +17,7 @@ struct Transaction {
     );
 
     const std::uint8_t type;
-    const std::uint32_t timestamp;
+    const std::int32_t timestamp;
     const std::vector<unsigned char> senderPublicKey;
     const std::uint64_t senderAddress;
     const std::uint64_t recipientAddress;

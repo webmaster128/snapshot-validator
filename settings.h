@@ -8,11 +8,13 @@
 #include "types.h"
 
 enum class Network {
+    Mainnet,
     Testnet,
     Betanet,
 };
 
 inline Network networkFromName(std::string name) {
+    if (name == "mainnet") return Network::Mainnet;
     if (name == "testnet") return Network::Testnet;
     if (name == "betanet") return Network::Betanet;
     throw std::runtime_error("Unknown network name: '" + name + "'");

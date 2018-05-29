@@ -88,14 +88,14 @@ void validateType7AssetData(pqxx::read_transaction &db)
 
 void checkUnconfirmedInMemAccounts(pqxx::read_transaction &db)
 {
-    checkUnconfirmed(db, "mem_accounts", "username");
-    checkUnconfirmed(db, "mem_accounts", "isDelegate");
-    checkUnconfirmed(db, "mem_accounts", "secondSignature");
-    checkUnconfirmed(db, "mem_accounts", "balance");
-    checkUnconfirmed(db, "mem_accounts", "delegates");
-    checkUnconfirmed(db, "mem_accounts", "multimin");
-    checkUnconfirmed(db, "mem_accounts", "multilifetime");
-    checkUnconfirmed(db, "mem_accounts", "nameexist");
+    //checkUnconfirmed(db, "mem_accounts", "username");
+    //checkUnconfirmed(db, "mem_accounts", "isDelegate");
+    //checkUnconfirmed(db, "mem_accounts", "secondSignature");
+    //checkUnconfirmed(db, "mem_accounts", "balance");
+    //checkUnconfirmed(db, "mem_accounts", "delegates");
+    //checkUnconfirmed(db, "mem_accounts", "multimin");
+    //checkUnconfirmed(db, "mem_accounts", "multilifetime");
+    //checkUnconfirmed(db, "mem_accounts", "nameexist");
 }
 
 }

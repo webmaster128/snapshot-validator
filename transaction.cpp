@@ -7,7 +7,7 @@
 
 Transaction::Transaction(
         std::uint8_t _type,
-        std::uint32_t _timestamp,
+        std::int32_t _timestamp,
         std::vector<unsigned char> _senderPublicKey,
         std::uint64_t _recipientId,
         std::uint64_t _amount,
