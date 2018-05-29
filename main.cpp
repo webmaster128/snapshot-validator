@@ -35,14 +35,16 @@ int run(std::vector<std::string> args)
         return 0;
     }
 
+    if (args.size() != 3)
+    {
+        printHelp();
+        return 1;
+    }
+
     ScopedBenchmark benchmarkFull("Overall runtime"); static_cast<void>(benchmarkFull);
 
     if (sodium_init() == -1) {
         return 1;
-    }
-
-    if (args.size() != 3) {
-        throw std::runtime_error("usage: blockchain-validator mainnet|testnet|betanet database_name");
     }
 
     const std::string networkName = args[1];
