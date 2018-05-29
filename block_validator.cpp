@@ -1,4 +1,4 @@
-#include "block_header_validator.h"
+#include "block_validator.h"
 
 #include <iostream>
 #include <sodium.h>
@@ -9,8 +9,8 @@ namespace {
 
 void validateId(const BlockHeader &bh, std::uint64_t dbId, const bytes_t &signature)
 {
-    auto id = bh.id(signature);
-    if (id != dbId)
+    auto calculatedId = bh.id(signature);
+    if (calculatedId != dbId)
     {
         throw std::runtime_error("Block ID mismatch");
     }
@@ -30,12 +30,12 @@ void validateSignature(const BlockHeader &bh, std::uint64_t dbId, const bytes_t 
 
 }
 
-namespace BlockHeaderValidator {
+namespace BlockValidator {
 
-void validate(const BlockHeader &bh, std::uint64_t dbId, const bytes_t &signature)
+void validate(const BlockRow &row)
 {
-    validateId(bh, dbId, signature);
-    validateSignature(bh, dbId, signature);
+    validateId(row.header, row.id, row.signature);
+    validateSignature(row.header, row.id, row.signature);
 }
 
 }

@@ -7,8 +7,8 @@
 #include "assets.h"
 #include "blockchain_state.h"
 #include "blockchain_state_validator.h"
-#include "block_header.h"
-#include "block_header_validator.h"
+#include "block.h"
+#include "block_validator.h"
 #include "lisk.h"
 #include "payload.h"
 #include "settings.h"
@@ -266,7 +266,7 @@ int run(std::vector<std::string> args)
                     generatorPublicKey
                 );
 
-                BlockHeaderValidator::validate(bh, dbId, signature);
+                BlockValidator::validate(BlockRow(bh, dbHeight, dbId, signature));
 
                 Payload payload(blockToTransactions[dbId]);
                 if (payload.transactionCount() != bh.numberOfTransactions) {

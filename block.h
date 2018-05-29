@@ -1,8 +1,6 @@
 #pragma once
 
 #include <cstdint>
-#include <string>
-#include <vector>
 
 #include "types.h"
 
@@ -45,4 +43,23 @@ struct BlockHeader {
     bytes_t serialize() const;
     bytes_t hash(bytes_t signature = {}) const;
     std::uint64_t id(bytes_t signature) const;
+};
+
+struct BlockRow {
+    BlockRow(
+            const BlockHeader _header,
+            const std::uint64_t _height,
+            const std::uint64_t _id,
+            const bytes_t _signature)
+        : header(_header)
+        , height(_height)
+        , id(_id)
+        , signature(_signature)
+    {
+    }
+
+    const BlockHeader header;
+    const std::uint64_t height;
+    const std::uint64_t id;
+    const bytes_t signature;
 };

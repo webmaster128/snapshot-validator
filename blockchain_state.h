@@ -4,7 +4,7 @@
 #include <unordered_map>
 #include <vector>
 
-#include "block_header.h"
+#include "block.h"
 #include "transaction.h"
 #include "types.h"
 
