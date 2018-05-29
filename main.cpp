@@ -266,7 +266,7 @@ int run(std::vector<std::string> args)
                     generatorPublicKey
                 );
 
-                BlockValidator::validate(BlockRow(bh, dbHeight, dbId, signature));
+                BlockValidator::validate(BlockRow(bh, dbHeight, dbId, signature), settings);
 
                 Payload payload(blockToTransactions[dbId]);
                 if (payload.transactionCount() != bh.numberOfTransactions) {

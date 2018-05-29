@@ -5,6 +5,8 @@ Settings::Settings(Network network)
     switch (network) {
     case Network::Testnet:
         negativeBalanceAddress = 16009998050678037905ul;
+        rewardOffset = 2160;
+        rewardDistance = 3000000;
         v100Compatible = false;
         exceptions.invalidTransactionSignature = {
             3274071402587084244ul,  // 595491
@@ -27,9 +29,13 @@ Settings::Settings(Network network)
         };
         exceptions.transactionFees[16733264093386669800ul] = 0;
         exceptions.balanceAdjustments[15449731671927352923ul] = -1*100000000; // Burned 1 LSK as `amount` in a delegate vote
+        exceptions.blockRewards[2161] = 2*100000000;
+        exceptions.blockRewards[2162] = 1*100000000;
         break;
     case Network::Betanet:
         negativeBalanceAddress = 9594788837974552645ul;
+        rewardOffset = 2160;
+        rewardDistance = 3000000;
         v100Compatible = true;
         exceptions.transactionFees[715435610815407684ul] = 0;
         break;
