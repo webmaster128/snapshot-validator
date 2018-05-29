@@ -100,6 +100,10 @@ void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
 void validate_signature(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy)
 {
     auto hash = row.transaction.hash();
+    if (row.signature.size() != crypto_sign_BYTES)
+    {
+        throw std::runtime_error("Signature has unexpected length: " + std::to_string(row.signature.size()));
+    }
     if (crypto_sign_verify_detached(row.signature.data(), hash.data(), hash.size(), row.transaction.senderPublicKey.data()) != 0) {
         std::cout << "ID: " << row.id << std::endl;
         std::cout << "Transaction: " << row.transaction << std::endl;
@@ -111,6 +115,11 @@ void validate_signature(const TransactionRow &row, const std::vector<unsigned ch
     if (!secondSignatureRequiredBy.empty()) {
         //std::cout << "Transaction: " << row.id << " requires second signature" << std::endl;
         auto hash2 = row.transaction.hash(row.signature);
+        if (row.secondSignature.size() != crypto_sign_BYTES)
+        {
+            throw std::runtime_error("Second signature required but signature has unexpected length: " +
+                                     std::to_string(row.secondSignature.size()));
+        }
         if (crypto_sign_verify_detached(row.secondSignature.data(), hash2.data(), hash2.size(), secondSignatureRequiredBy.data()) != 0) {
             std::cout << "ID: " << row.id << std::endl;
             std::cout << "Transaction: " << row.transaction << std::endl;

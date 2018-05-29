@@ -19,6 +19,10 @@ void validateId(const BlockHeader &bh, std::uint64_t dbId, const bytes_t &signat
 void validateSignature(const BlockHeader &bh, std::uint64_t dbId, const bytes_t &signature)
 {
     auto hash = bh.hash();
+    if (signature.size() != crypto_sign_BYTES)
+    {
+        throw std::runtime_error("Signature has unexpected length: " + std::to_string(signature.size()));
+    }
     if (crypto_sign_verify_detached(signature.data(), hash.data(), hash.size(), bh.generatorPublicKey.data()) != 0) {
         std::cout << "Height: " << dbId << std::endl;
         std::cout << "Pubkey: " << bytes2Hex(bh.generatorPublicKey) << std::endl;
