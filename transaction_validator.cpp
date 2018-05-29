@@ -45,53 +45,47 @@ void validate_amount(const TransactionRow &row, const Exceptions &exceptions)
 
 void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
 {
-    const auto t = row.transaction;
-    const auto id = row.id;
-
-    if (exceptions.transactionFees.count(id)) {
-        auto expected = exceptions.transactionFees.at(id);
-        if (t.fee != expected) {
-            throw std::runtime_error("Transaction " + std::to_string(id) +
-                                     " has different fee than expected by exception: " + std::to_string(t.fee));
-        }
-        return;
-    }
+    const auto &t = row.transaction;
 
     std::uint64_t expected;
 
-    // https://github.com/LiskHQ/lisk-elements/blob/development/src/transactions/constants.js
-    switch (t.type) {
-    case 0:
-        expected = t.assetData.empty() ? 10000000 : 20000000;
-        break;
-    case 1:
-        expected = 500000000;
-        break;
-    case 2:
-        expected = 2500000000;
-        break;
-    case 3:
-        expected = 100000000;
-        break;
-    case 4:
-        expected = 500000000 * (row.transaction.type4Pubkeys.size() + 1);
-        break;
-    case 5:
-        expected = 2500000000;
-        break;
-    case 6:
-        expected = 10000000;
-        break;
-    case 7:
-        expected = 10000000;
-        break;
-    default:
-        throw std::runtime_error("Unknown transaction type");
-        break;
+    if (row.blockId == exceptions.freeTransactionsBlockId) {
+        expected = 0;
+    } else {
+        // https://github.com/LiskHQ/lisk-elements/blob/development/src/transactions/constants.js
+        switch (t.type) {
+        case 0:
+            expected = t.assetData.empty() ? 10000000 : 20000000;
+            break;
+        case 1:
+            expected = 500000000;
+            break;
+        case 2:
+            expected = 2500000000;
+            break;
+        case 3:
+            expected = 100000000;
+            break;
+        case 4:
+            expected = 500000000 * (row.transaction.type4Pubkeys.size() + 1);
+            break;
+        case 5:
+            expected = 2500000000;
+            break;
+        case 6:
+            expected = 10000000;
+            break;
+        case 7:
+            expected = 10000000;
+            break;
+        default:
+            throw std::runtime_error("Unknown transaction type");
+            break;
+        }
     }
 
     if (t.fee != expected) {
-        throw std::runtime_error("Transaction " + std::to_string(id) + " type " + std::to_string(t.type) +
+        throw std::runtime_error("Transaction " + std::to_string(row.id) + " type " + std::to_string(t.type) +
                                  " has invalid fee: " + std::to_string(t.fee) +
                                  " expected: "  + std::to_string(expected));
     }

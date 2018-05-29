@@ -21,12 +21,12 @@ inline Network networkFromName(std::string name) {
 }
 
 struct Exceptions {
+    std::uint64_t freeTransactionsBlockId; // i.e. genesis block
     std::set<std::uint64_t> invalidTransactionSignature;
     std::set<std::uint64_t> inertTransactions;
     std::set<std::uint64_t> transactionsContainingInvalidRecipientAddress;
     std::set<std::string> invalidAddresses;
     std::set<std::uint64_t> payloadHashMismatch;
-    std::unordered_map<std::uint64_t, std::int64_t> transactionFees;
     std::unordered_map<std::uint64_t, std::int64_t> balanceAdjustments;
     std::unordered_map<height_t, std::uint64_t> blockRewards;
 };
