@@ -373,9 +373,10 @@ int run(std::vector<std::string> args)
                     auto feePerDelegate = roundFees/101;
                     auto feeRemaining = roundFees - (101*feePerDelegate);
 
-                    for (int i = 0; i < 101; ++i) {
-                        auto reward = roundRewards[i];
-                        blockchainState.addressSummaries[roundDelegates[i]].balance += (reward + feePerDelegate);
+                    for (int i = 0; i < 101; ++i)
+                    {
+                        blockchainState.addressSummaries[roundDelegates[i]].balance += roundRewards[i];
+                        blockchainState.addressSummaries[roundDelegates[i]].balance += feePerDelegate;
                     }
 
                     if (feeRemaining > 0) {
