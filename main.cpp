@@ -370,6 +370,21 @@ int run(std::vector<std::string> args)
 
 
                 if (isLast) {
+                    auto roundNumber = roundFromHeight(dbHeight);
+                    if (settings.exceptions.rewardsFactor.count(roundNumber)) {
+                        int rewardsFactor = settings.exceptions.rewardsFactor.at(roundNumber);
+                        for (int i = 0; i < 101; ++i)
+                        {
+                            roundRewards[i] *= rewardsFactor;
+                        }
+                    }
+                    if (settings.exceptions.feesFactor.count(roundNumber)) {
+                        roundFees *= settings.exceptions.feesFactor.at(roundNumber);
+                    }
+                    if (settings.exceptions.feesBonus.count(roundNumber)) {
+                        roundFees += settings.exceptions.feesBonus.at(roundNumber);
+                    }
+
                     auto feePerDelegate = roundFees/101;
                     auto feeRemaining = roundFees - (101*feePerDelegate);
 

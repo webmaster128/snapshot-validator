@@ -159,6 +159,9 @@ Settings::Settings(Network network)
             2008892961948134898ul,
             7937493560646705550ul,
         };
+        exceptions.rewardsFactor[27040] = 2;
+        exceptions.feesFactor[27040] = 2;
+        exceptions.feesBonus[27040] = 10000000;
         break;
     case Network::Testnet:
         negativeBalanceAddress = 16009998050678037905ul;

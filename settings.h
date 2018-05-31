@@ -29,6 +29,9 @@ struct Exceptions {
     std::set<std::uint64_t> payloadHashMismatch;
     std::unordered_map<std::uint64_t, std::int64_t> balanceAdjustments;
     std::unordered_map<height_t, std::uint64_t> blockRewards;
+    std::unordered_map<std::uint64_t, int> rewardsFactor;
+    std::unordered_map<std::uint64_t, int> feesFactor;
+    std::unordered_map<std::uint64_t, int> feesBonus;
 };
 
 struct Settings {
