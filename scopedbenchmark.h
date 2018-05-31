@@ -4,6 +4,8 @@
 #include <iostream>
 #include <string>
 
+#include "log.h"
+
 class ScopedBenchmark {
 public:
     ScopedBenchmark(std::string title)
@@ -12,8 +14,10 @@ public:
     {}
 
     ~ScopedBenchmark() {
-        auto diff = std::chrono::steady_clock::now() - start_;
-        std::cout << title_ << " finished in " << std::chrono::duration<double, std::milli>(diff).count() << " ms" << std::endl;
+        auto diffMs = std::chrono::duration_cast<std::chrono::milliseconds>(std::chrono::steady_clock::now() - start_);
+        NumberLog().out() << title_ << " finished in "
+                          << diffMs.count() << " ms"
+                          << std::endl;
     }
 
 private:
