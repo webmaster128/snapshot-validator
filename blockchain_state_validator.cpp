@@ -3,17 +3,20 @@
 
 namespace BlockchainStateValidator {
 
-void validate(const BlockchainState &state, const Settings &settings)
+void validate(BlockchainState &state, const Settings &settings)
 {
-    for (const auto &keyValue : state.addressSummaries) {
-        const auto address = keyValue.first;
-        const auto summary = keyValue.second;
+    for (const auto &address : state.addressSummaries.dirtyKeys())
+    {
+        const auto summary = state.addressSummaries.at(address);
+
         if (summary.balance < 0 && address != settings.negativeBalanceAddress) {
             throw std::runtime_error(
                         "Negative balance for address " + std::to_string(address) +
                         ": " + std::to_string(summary.balance));
         }
     }
+
+    state.addressSummaries.resetDirtyKeys();
 }
 
 }

@@ -5,6 +5,6 @@
 
 namespace BlockchainStateValidator {
 
-void validate(const BlockchainState &state, const Settings &settings);
+void validate(BlockchainState &state, const Settings &settings);
 
 }
