@@ -15,6 +15,7 @@ Settings::Settings(Network network)
             9352922026980330230ul, // 925165
         };
         exceptions.transactionsContainingInvalidRecipientAddress = {
+            // out of uint64 range
             4808146167169807212ul,
             8662249085950135942ul,
             3512842658681414759ul,
@@ -61,8 +62,25 @@ Settings::Settings(Network network)
             17599831349987747578ul,
             16887688753571112156ul,
             11215230856097582828ul,
+
+            // leading 0
+            // select "id" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
+            12466861689592168447ul,
+            14828166242732404834ul,
+            7881241259922057838ul,
+            15335820464138247723ul,
+            10790881043084628952ul,
+            8222472670929877652ul,
+            321301056789688144ul,
+            17221198586575098918ul,
+            8985252027779519944ul,
+            16386368722107610263ul,
+            8809409684590273069ul,
+            6407377315551276342ul,
+            16457701476824471729ul,
         };
         exceptions.invalidAddresses = {
+            // out of uint64 range
             "88888888888888888888L",
             "111291927890909688453L",
             "45552822168800676881L",
@@ -109,9 +127,25 @@ Settings::Settings(Network network)
             "172751402580997820397L",
             "134870701874274944551L",
             "33882703892445210381L",
+
+            // leading 0 addresses
+            // select "recipientId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
+            "07280969963593626387L",
+            "03708552248146906277L",
+            "000000133700000L",
+            "00000000000000000000L",
+            "00000000000000L",
+            "0644846081578550031L",
+            "00702085012798728072L",
+            "0670887445780012928L",
+            "0461359979913215833L",
+            "0918279345171678541L",
+            "017643479995130895701L",
+            "0605255118852574422L",
+            "011359068057580646659L",
         };
         exceptions.payloadHashMismatch = {
-            // transactions that cannot be serialized
+            // transactions that cannot be serialized (recipient address exceeding uint64 range)
             2324835914503631349ul,
             4697902217642625397ul,
             8978496973888459347ul,
@@ -158,6 +192,22 @@ Settings::Settings(Network network)
             676747092111944213ul,
             2008892961948134898ul,
             7937493560646705550ul,
+
+            // transactions that cannot be serialized (trailing 0s in recipient address)
+            // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
+            14432800562034667268ul,
+            17442740313087375072ul,
+            12832958688013564378ul,
+            15299120174069709992ul,
+            15124210853377088910ul,
+            10289453077379053142ul,
+            4375405149970605729ul,
+            2525432370937483187ul,
+            15141196187573062254ul,
+            15475784852310402086ul,
+            6543807808453317489ul,
+            16894219033681021958ul,
+            3076891028787755764ul,
         };
         exceptions.rewardsFactor[27040] = 2;
         exceptions.feesFactor[27040] = 2;
