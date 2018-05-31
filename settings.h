@@ -37,6 +37,7 @@ struct Exceptions {
 struct Settings {
     Settings(Network network);
 
+    std::uint64_t genesisBlock;
     std::uint64_t negativeBalanceAddress;
     height_t rewardOffset;
     height_t rewardDistance;

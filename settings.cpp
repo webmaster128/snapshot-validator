@@ -4,11 +4,12 @@ Settings::Settings(Network network)
 {
     switch (network) {
     case Network::Mainnet:
+        genesisBlock = 13658550407518916215ul;
         negativeBalanceAddress = 6566229458323231555ul;
         rewardOffset = 1451520;
         rewardDistance = 3000000;
         v100Compatible = false;
-        exceptions.freeTransactionsBlockId = 13658550407518916215ul;
+        exceptions.freeTransactionsBlockId = genesisBlock;
         exceptions.invalidTransactionSignature = {
             5676385569187187158ul, // 868797
             5384302058030309746ul, // 869890
@@ -214,11 +215,12 @@ Settings::Settings(Network network)
         exceptions.feesBonus[27040] = 10000000;
         break;
     case Network::Testnet:
+        genesisBlock = 7807109686729042739ul;
         negativeBalanceAddress = 16009998050678037905ul;
         rewardOffset = 2160;
         rewardDistance = 3000000;
         v100Compatible = false;
-        exceptions.freeTransactionsBlockId = 7807109686729042739ul;
+        exceptions.freeTransactionsBlockId = genesisBlock;
         exceptions.invalidTransactionSignature = {
             3274071402587084244ul,  // 595491
             10403141873189588012ul, // 624550
@@ -243,11 +245,12 @@ Settings::Settings(Network network)
         exceptions.blockRewards[2162] = 1*100000000;
         break;
     case Network::Betanet:
+        genesisBlock = 12584524832111619342ul;
         negativeBalanceAddress = 9594788837974552645ul;
         rewardOffset = 2160;
         rewardDistance = 3000000;
         v100Compatible = true;
-        exceptions.freeTransactionsBlockId = 12584524832111619342ul;
+        exceptions.freeTransactionsBlockId = genesisBlock;
         break;
     }
 }

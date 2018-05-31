@@ -9,10 +9,12 @@
 #include "types.h"
 
 struct AddressSummary {
+    static std::uint64_t defaultLastBlockId;
+
     std::int64_t balance = 0;
     bytes_t secondPubkey;
     std::string delegateName;
-    std::uint64_t lastBlockId = 0;
+    std::uint64_t lastBlockId = AddressSummary::defaultLastBlockId;
 };
 
 struct BlockchainState {

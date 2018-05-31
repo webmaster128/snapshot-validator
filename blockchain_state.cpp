@@ -4,6 +4,8 @@
 
 #include "lisk.h"
 
+std::uint64_t AddressSummary::defaultLastBlockId = 0; // reset to genesis block in the main method
+
 void BlockchainState::applyTransaction(const TransactionRow &transactionRow)
 {
     const auto &t = transactionRow.transaction;

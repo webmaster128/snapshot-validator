@@ -73,6 +73,8 @@ int run(std::vector<std::string> args)
 
         Settings settings(networkFromName(networkName));
 
+        AddressSummary::defaultLastBlockId = settings.genesisBlock;
+
         Assets::peersEmpty(db);
         if (!settings.v100Compatible)
         {
