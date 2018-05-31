@@ -90,8 +90,8 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
     }
 
     if (memAccounts.lastBlockId != blockchainLastBlockIds) {
-        bool keysMatch = compareKeys(memAccounts.lastBlockId, blockchainLastBlockIds, true);
-        if (keysMatch) compareValues(memAccounts.lastBlockId, blockchainLastBlockIds, true);
+        bool keysMatch = compareKeys(memAccounts.lastBlockId, blockchainLastBlockIds, true, "mem_accounts.blockId", "blockchainLastBlockIds");
+        if (keysMatch) compareValues(memAccounts.lastBlockId, blockchainLastBlockIds, true, "mem_accounts.blockId", "blockchainLastBlockIds");
         throw std::runtime_error("Block IDs in mem_accounts do not match blockchain state");
     }
 
