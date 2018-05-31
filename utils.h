@@ -44,12 +44,18 @@ inline std::vector<unsigned char> asVector(const std::string &str) {
 }
 
 template<typename T>
-bool compareKeys(std::unordered_map<std::uint64_t, T> a, std::unordered_map<std::uint64_t, T> b, bool logging = false) {
+bool compareKeys(
+        const std::unordered_map<std::uint64_t, T> a,
+        const std::unordered_map<std::uint64_t, T> b,
+        const bool logging = false,
+        const std::string aName = "a",
+        const std::string bName = "b")
+{
     bool ok = true;
     for (auto iter = a.begin(); iter != a.end(); ++iter) {
         auto key = iter->first;
         if (b.count(key) != 1) {
-            if (logging) std::cout << "key " << key << " not in map b" << std::endl;
+            if (logging) std::cout << "key " << key << " not in map " << bName << std::endl;
             ok = false;
         }
     }
@@ -57,7 +63,7 @@ bool compareKeys(std::unordered_map<std::uint64_t, T> a, std::unordered_map<std:
     for (auto iter = b.begin(); iter != b.end(); ++iter) {
         auto key = iter->first;
         if (a.count(key) != 1) {
-            if (logging) std::cout << "key " << key << " not in map a" << std::endl;
+            if (logging) std::cout << "key " << key << " not in map " << aName << std::endl;
             ok = false;
         }
     }
@@ -66,15 +72,24 @@ bool compareKeys(std::unordered_map<std::uint64_t, T> a, std::unordered_map<std:
 }
 
 template<typename T>
-bool compareValues(std::unordered_map<std::uint64_t, T> a, std::unordered_map<std::uint64_t, T> b, bool logging = false) {
+bool compareValues(
+        const std::unordered_map<std::uint64_t, T> a,
+        const std::unordered_map<std::uint64_t, T> b,
+        const bool logging = false,
+        const std::string aName = "a",
+        const std::string bName = "b")
+{
     bool ok = true;
     for (auto iter = a.cbegin(); iter != a.cend(); ++iter) {
         const auto key = iter->first;
         const auto aValue = iter->second;
-        const auto bValue = b[key];
+        const auto bValue = b.at(key);
 
         if (bValue != aValue) {
-            if (logging) std::cout << "a[" << key << "] = " << aValue << "; b[" << key << "] = " << bValue << std::endl;
+            if (logging) {
+                std::cout << aName << "[" << key << "] = " << aValue << "; "
+                          << bName << "[" << key << "] = " << bValue << std::endl;
+            }
             ok = false;
         }
     }
