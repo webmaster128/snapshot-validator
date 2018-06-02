@@ -63,6 +63,7 @@ Settings::Settings(Network network)
             17599831349987747578ul,
             16887688753571112156ul,
             11215230856097582828ul,
+            14140283825150563894ul,
 
             // leading 0
             // select "id" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -128,6 +129,7 @@ Settings::Settings(Network network)
             "172751402580997820397L",
             "134870701874274944551L",
             "33882703892445210381L",
+            "161348288408228933736L",
 
             // leading 0 addresses
             // select "recipientId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -193,6 +195,7 @@ Settings::Settings(Network network)
             676747092111944213ul,
             2008892961948134898ul,
             7937493560646705550ul,
+            14140283825150563894ul,
 
             // transactions that cannot be serialized (trailing 0s in recipient address)
             // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
