@@ -195,7 +195,7 @@ Settings::Settings(Network network)
             676747092111944213ul,
             2008892961948134898ul,
             7937493560646705550ul,
-            14140283825150563894ul,
+            4715062299837042610ul,
 
             // transactions that cannot be serialized (trailing 0s in recipient address)
             // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
