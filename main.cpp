@@ -47,7 +47,7 @@ int run(std::vector<std::string> args)
         return 1;
     }
 
-    const std::string networkName = args[1];
+    const Network network = networkFromName(args[1]);
     const std::string dbname = args[2];
 
     try
@@ -71,7 +71,7 @@ int run(std::vector<std::string> args)
             for (auto row : R) std::cout << "Height: " << row[0].c_str() << std::endl;
         }
 
-        Settings settings(networkFromName(networkName));
+        Settings settings(network);
 
         AddressSummary::defaultLastBlockId = settings.genesisBlock;
 
