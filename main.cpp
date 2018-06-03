@@ -73,7 +73,10 @@ int run(std::vector<std::string> args)
 
         Settings settings(network);
 
-        AddressSummary::defaultLastBlockId = settings.genesisBlock;
+        if (network == Network::Mainnet) {
+            // Why is this exception required? Old broken data?
+            AddressSummary::defaultLastBlockId = settings.genesisBlock;
+        }
 
         Assets::peersEmpty(db);
         if (!settings.v100Compatible)
