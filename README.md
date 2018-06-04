@@ -41,3 +41,7 @@ providers wisely.
 * Temporary databases are not dropped when validation fails. Use a Postgres management tool
   like e.g. pgAdmin to clean up from time to time.
 * Mainnet validation consumes 4.5 GiB of memory on Linux because all transactions are kept in memory
+
+## License
+
+MIT
