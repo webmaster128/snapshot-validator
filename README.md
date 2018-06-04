@@ -22,7 +22,7 @@ providers wisely.
 
 ## How to install/compile
 
-* Install libpq-dev, libsodium-dev, pkg-config, cmake, a C++ compiler, and Python 2.7 using your favourite package manager.
+* Install libpq-dev, libsodium-dev, pkg-config, cmake, a C++ compiler, and Python, using your favourite package manager.
 * `git clone --recursive https://github.com/prolina-foundation/snapshot-validator.git`
 * `cd snapshot-validator/external/libpqxx`
 * `./configure --disable-documentation --prefix=$PWD/../libpqxx-installation && make -j 4 install`
