@@ -11,6 +11,8 @@ include_directories(${PQ_INCLUDE_DIRS} ${PQXX_INCLUDE_DIRS} ${SODIUM_INCLUDE_DIR
 
 message(${PQ_LIBRARIES} ${PQXX_LIBRARIES})
 
+set(CMAKE_CXX_STANDARD 14)
+
 add_executable(${PROJECT_NAME}
     assets.cpp
     blockchain_state.cpp
