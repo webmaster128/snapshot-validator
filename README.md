@@ -3,7 +3,7 @@ Snapshot validator for Lisk
 
 Double check your snapshots!
 
-A tool to validate the data integrety of a Lisk snapshot.
+A tool to validate the data integrity of a Lisk snapshot.
 
 **Security note**: even though this tool checks a lot of data consistency, it is far from perfect.
 Thus a validated snapshot can still contain corrupted data. Thus keep choosing snapshot
@@ -22,7 +22,7 @@ providers wisely.
 
 ## How to install/compile
 
-* Install libpq-dev, libsodium-dev, a C++ compiler and cmake using your favourite package manager
+* Install libpq-dev, libsodium-dev, a C++ compiler, Python 2.7, and cmake using your favourite package manager
 * `git clone --recursive https://github.com/prolina-foundation/snapshot-validator.git`
 * `cd snapshot-validator/external/libpqxx`
 * `./configure --disable-documentation --prefix=$PWD/../libpqxx-installation && make -j 4 install`
