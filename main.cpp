@@ -2,6 +2,8 @@
 #include <iostream>
 #include <unordered_map>
 
+// with c++14 enabled, std::experimental::optional is always available
+#define PQXX_HAVE_EXP_OPTIONAL 1
 #include <pqxx/pqxx>
 #include <sodium.h>
 
