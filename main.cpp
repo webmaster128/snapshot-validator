@@ -1,8 +1,9 @@
 #include <chrono>
 #include <iostream>
+#include <unordered_map>
+
 #include <pqxx/pqxx>
 #include <sodium.h>
-#include <unordered_map>
 
 #include "assets.h"
 #include "blockchain_state.h"
