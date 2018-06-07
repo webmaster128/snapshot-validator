@@ -19,6 +19,7 @@ struct AddressSummary {
 
 struct BlockchainState {
     tracking_unordered_map<address_t, AddressSummary> addressSummaries;
+    std::unordered_map<std::uint64_t, address_t> dappOwners;
 
     void applyTransaction(const TransactionRow &transactionRow);
     void applyBlock(const BlockHeader &bh, std::uint64_t blockId);

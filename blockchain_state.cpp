@@ -37,6 +37,24 @@ void BlockchainState::applyTransaction(const TransactionRow &transactionRow)
         }
         break;
     }
+    case 5: {
+        addressSummaries[t.senderAddress].balance -= t.fee;
+        addressSummaries[t.senderAddress].lastBlockId = transactionRow.blockId;
+
+        auto dappId = transactionRow.id;
+        dappOwners[dappId] = t.senderAddress;
+        break;
+    }
+    case 6: {
+        // into sidechain, i.e. to sidechain owner
+        auto ownerAddress = dappOwners[t.dappId];
+
+        addressSummaries[t.senderAddress].balance -= (t.amount + t.fee);
+        addressSummaries[ownerAddress].balance += t.amount;
+        addressSummaries[t.senderAddress].lastBlockId = transactionRow.blockId;
+        addressSummaries[ownerAddress].lastBlockId = transactionRow.blockId;
+        break;
+    }
     case 7:
         addressSummaries[t.senderAddress].balance -= (t.amount + t.fee);
         addressSummaries[t.recipientAddress].balance += t.amount;

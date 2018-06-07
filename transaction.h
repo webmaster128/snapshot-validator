@@ -13,7 +13,8 @@ struct Transaction {
         std::uint64_t recipientId,
         std::uint64_t amount,
         std::uint64_t fee,
-        std::vector<unsigned char> assetData
+        std::vector<unsigned char> assetData,
+        std::uint64_t dappId
     );
 
     const std::uint8_t type;
@@ -24,6 +25,7 @@ struct Transaction {
     const std::uint64_t amount;
     const std::uint64_t fee; // not signed
     const std::vector<unsigned char> assetData;
+    const std::uint64_t dappId; // not signed
 
     // derived data
     const std::vector<std::vector<unsigned char>> type4Pubkeys;

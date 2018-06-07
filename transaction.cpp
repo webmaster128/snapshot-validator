@@ -12,7 +12,8 @@ Transaction::Transaction(
         std::uint64_t _recipientId,
         std::uint64_t _amount,
         std::uint64_t _fee,
-        std::vector<unsigned char> _assetData
+        std::vector<unsigned char> _assetData,
+        std::uint64_t _dappId
         )
     : type(_type)
     , timestamp(_timestamp)
@@ -22,6 +23,7 @@ Transaction::Transaction(
     , amount(_amount)
     , fee(_fee)
     , assetData(_assetData)
+    , dappId(_dappId)
     , type4Pubkeys(_type == 4
                    ? Transaction::parseType4Pubkeys(std::string(_assetData.begin(), _assetData.end()))
                    : std::vector<std::vector<unsigned char>>())

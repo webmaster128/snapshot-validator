@@ -115,8 +115,9 @@ int run(std::vector<std::string> args)
                     replace(multisignatures.keysgroup, ',', '') AS type4_asset_keys,
                     (coalesce(dapps.name, '') || coalesce(dapps.description, '') || coalesce(dapps.tags, '') || coalesce(dapps.link, '') || coalesce(dapps.icon, '')) AS type5_asset_texts,
                     coalesce(dapps.type, 0) AS type5_asset_type, coalesce(dapps.category, 0) AS type5_asset_category,
-                    coalesce(intransfer."dappId", '') AS type6_asset,
-                    (coalesce(outtransfer."dappId", '') || coalesce(outtransfer."outTransactionId", '')) AS type7_asset
+                    coalesce(intransfer."dappId", '0') AS type6_asset,
+                    coalesce(outtransfer."dappId", '0') AS type7_asset_dappid,
+                    coalesce(outtransfer."outTransactionId", '0') AS type7_asset_outtransactionId
                 FROM trs
                 )SQL" + std::string(settings.v100Compatible ? "LEFT JOIN transfer ON trs.id = transfer.\"transactionId\"" : "") + R"SQL(
                 LEFT JOIN signatures ON trs.id = signatures."transactionId"
@@ -158,14 +159,16 @@ int run(std::vector<std::string> args)
                     const auto dbType5AssetText = row[index++].get<std::string>();
                     const auto dbType5AssetType = row[index++].as<std::uint32_t>();
                     const auto dbType5AssetCategory = row[index++].as<std::uint32_t>();
-                    const auto dbType6Asset = row[index++].as<std::string>();
-                    const auto dbType7Asset = row[index++].as<std::string>();
+                    const auto dbType6AssetDappId = row[index++].as<std::uint64_t>();
+                    const auto dbType7AssetDappId = row[index++].as<std::uint64_t>();
+                    const auto dbType7AssetDappOutTransferId = row[index++].as<std::uint64_t>();
 
                     // Parse fields in row
                     const auto senderPublicKey = asVector(dbSenderPublicKey);
                     const auto signature = asVector(dbSignature);
                     const auto secondSignature = asVector(dbSecondSignature);
 
+                    std::uint64_t dappId = 0;
                     std::vector<unsigned char> assetData = {};
                     switch (dbType) {
                     case 0:
@@ -199,10 +202,12 @@ int run(std::vector<std::string> args)
                         assetData.push_back((dbType5AssetCategory >> 3*8) & 0xff);
                         break;
                     case 6:
-                        assetData = asVector(dbType6Asset);
+                        assetData = asVector(std::to_string(dbType6AssetDappId));
+                        dappId = dbType6AssetDappId;
                         break;
                     case 7:
-                        assetData = asVector(dbType7Asset);
+                        assetData = asVector(std::to_string(dbType7AssetDappId) + std::to_string(dbType7AssetDappOutTransferId));
+                        dappId = dbType7AssetDappId;
                         break;
                     }
 
@@ -213,7 +218,8 @@ int run(std::vector<std::string> args)
                         dbRecipientId,
                         dbAmount,
                         dbFee,
-                        assetData
+                        assetData,
+                        dappId
                     );
                     blockToTransactions[dbBockId].emplace_back(t, signature, secondSignature, dbId, dbBockId);
                 }
