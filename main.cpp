@@ -60,18 +60,18 @@ int run(std::vector<std::string> args)
         pqxx::read_transaction db(dbConnection);
 
         {
-            pqxx::result R = db.exec("SELECT COUNT(*) as number FROM trs");
-            for (auto row : R) std::cout << "Transaction count " << row[0].c_str() << std::endl;
+            auto row = db.exec1("SELECT COUNT(*) AS number FROM trs");
+            std::cout << "Transaction count " << row[0].c_str() << std::endl;
         }
 
         {
-            pqxx::result R = db.exec("SELECT COUNT(*) as number FROM blocks");
-            for (auto row : R) std::cout << "Blocks count " << row[0].c_str() << std::endl;
+            auto row = db.exec1("SELECT COUNT(*) AS number FROM blocks");
+            std::cout << "Blocks count " << row[0].c_str() << std::endl;
         }
 
         {
-            pqxx::result R = db.exec("SELECT MAX(height) FROM blocks");
-            for (auto row : R) std::cout << "Height: " << row[0].c_str() << std::endl;
+            auto row = db.exec1("SELECT MAX(height) AS height FROM blocks");
+            std::cout << "Height: " << row[0].c_str() << std::endl;
         }
 
         Settings settings(network);
