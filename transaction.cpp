@@ -24,6 +24,9 @@ Transaction::Transaction(
     , fee(_fee)
     , assetData(_assetData)
     , dappId(_dappId)
+    , type3Votes(_type == 3
+                 ? Transaction::parseType3Votes(std::string(_assetData.begin(), _assetData.end()))
+                 : VotesUpdate())
     , type4Pubkeys(_type == 4
                    ? Transaction::parseType4Pubkeys(std::string(_assetData.begin(), _assetData.end()))
                    : std::vector<std::vector<unsigned char>>())
@@ -84,6 +87,29 @@ std::vector<unsigned char> Transaction::hash(std::vector<unsigned char> signatur
 std::uint64_t Transaction::id(std::vector<unsigned char> signature, std::vector<unsigned char> secondSignature) const
 {
     return idFromEightBytes(firstEightBytesReversed(hash(signature, secondSignature)));
+}
+
+VotesUpdate Transaction::parseType3Votes(const std::string transactionAsset)
+{
+    VotesUpdate out;
+
+    auto iterator = transactionAsset.cbegin();
+    while (iterator != transactionAsset.cend()) {
+        if (*iterator == ',') ++iterator;
+        auto prefix = *iterator;
+        ++iterator;
+        auto pubkey = hex2Bytes(std::string(iterator, iterator+64));
+        iterator += 64;
+        if (prefix == '+') {
+            out.added.push_back(pubkey);
+        } else if (prefix == '-') {
+            out.removed.push_back(pubkey);
+        } else {
+            throw std::runtime_error("Invalid prefix found in votes attset data: " + std::string(1, prefix));
+        }
+    }
+
+    return out;
 }
 
 std::vector<std::vector<unsigned char>> Transaction::parseType4Pubkeys(const std::string transactionAsset)

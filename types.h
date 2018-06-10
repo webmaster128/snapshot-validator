@@ -9,6 +9,12 @@ using bytes_t = std::vector<unsigned char>;
 using address_t = std::uint64_t;
 using height_t = std::uint64_t;
 
+struct VotesUpdate {
+    // lists of pubkeys
+    std::vector<bytes_t> added;
+    std::vector<bytes_t> removed;
+};
+
 template<typename type_of_key, typename type_of_value>
 class tracking_unordered_map : public std::unordered_map<type_of_key, type_of_value>
 {

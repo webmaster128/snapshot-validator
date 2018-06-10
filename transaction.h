@@ -5,6 +5,8 @@
 #include <ostream>
 #include <vector>
 
+#include "types.h"
+
 struct Transaction {
     Transaction(
         std::uint8_t type,
@@ -28,6 +30,7 @@ struct Transaction {
     const std::uint64_t dappId; // not signed
 
     // derived data
+    const VotesUpdate type3Votes;
     const std::vector<std::vector<unsigned char>> type4Pubkeys;
 
     std::vector<unsigned char> serialize() const;
@@ -35,6 +38,7 @@ struct Transaction {
     std::uint64_t id(std::vector<unsigned char> signature, std::vector<unsigned char> secondSignature) const;
 
 private:
+    static VotesUpdate parseType3Votes(const std::string transactionAsset);
     static std::vector<std::vector<unsigned char>> parseType4Pubkeys(const std::string transactionAsset);
 
     friend std::ostream& operator<<(std::ostream& os, const Transaction& transaction);
