@@ -7,6 +7,6 @@
 
 namespace Summaries {
 
-void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockchainState, const Exceptions &exceptions);
+void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockchainState, const Settings &settings);
 
 }

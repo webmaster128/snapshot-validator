@@ -439,7 +439,7 @@ int run(std::vector<std::string> args)
         BlockchainStateValidator::validate(blockchainState, settings);
 
         blockchainState.addressSummaries.erase(TRASH);
-        Summaries::checkMemAccounts(db, blockchainState, settings.exceptions);
+        Summaries::checkMemAccounts(db, blockchainState, settings);
 
         db.commit();
     }
