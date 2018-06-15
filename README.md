@@ -14,6 +14,7 @@ providers wisely.
 * Read-only (does not produce or change snapshots)
 * Fast runtime (validates 10k blocks/second on a 4 year old laptop)
 * Independent development (to avoid copying bugs)
+* Return code is king: 0 for success, everything else for error (output text is debugging only)
 
 ## Prerequirements
 
