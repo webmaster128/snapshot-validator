@@ -32,6 +32,7 @@ struct Exceptions {
     std::unordered_map<std::uint64_t, int> rewardsFactor;
     std::unordered_map<std::uint64_t, int> feesFactor;
     std::unordered_map<std::uint64_t, int> feesBonus;
+    std::unordered_map<std::uint64_t, std::uint64_t> transactionFee;
 };
 
 struct Settings {

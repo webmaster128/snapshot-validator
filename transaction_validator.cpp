@@ -51,11 +51,13 @@ void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
 
     if (row.blockId == exceptions.freeTransactionsBlockId) {
         expected = 0;
+    } else if (exceptions.transactionFee.count(row.id)) {
+        expected = exceptions.transactionFee.at(row.id);
     } else {
         // https://github.com/LiskHQ/lisk-elements/blob/development/src/transactions/constants.js
         switch (t.type) {
         case 0:
-            expected = t.assetData.empty() ? 10000000 : 20000000;
+            expected = 10000000;
             break;
         case 1:
             expected = 500000000;

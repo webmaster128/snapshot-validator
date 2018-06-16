@@ -254,6 +254,11 @@ Settings::Settings(Network network)
         rewardDistance = 3000000;
         v100Compatible = true;
         exceptions.freeTransactionsBlockId = genesisBlock;
+        exceptions.transactionFee[15429910859603286865ul] = 0.2 * 100000000; // 79349
+        exceptions.transactionFee[14352150066958672690ul] = 0.2 * 100000000; // 95527
+        exceptions.transactionFee[13937635495177593105ul] = 0.2 * 100000000; // 309109
+        exceptions.transactionFee[12218027223346052530ul] = 0.2 * 100000000; // 316636
+        exceptions.transactionFee[15330085901178121679ul] = 0.2 * 100000000; // 440756
         break;
     }
 }
