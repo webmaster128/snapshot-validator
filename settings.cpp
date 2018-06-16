@@ -1,5 +1,9 @@
 #include "settings.h"
 
+namespace {
+const auto BPL = 100000000; // Beddows per Lisk
+}
+
 Settings::Settings(Network network)
 {
     switch (network) {
@@ -243,9 +247,9 @@ Settings::Settings(Network network)
             // transaction 393955899193580559 cannot be serialized
             2748170801018258119ul, // 2511672
         };
-        exceptions.balanceAdjustments[15449731671927352923ul] = -1*100000000; // Burned 1 LSK as `amount` in a delegate vote
-        exceptions.blockRewards[2161] = 2*100000000;
-        exceptions.blockRewards[2162] = 1*100000000;
+        exceptions.balanceAdjustments[15449731671927352923ul] = -1 * BPL; // Burned 1 LSK as `amount` in a delegate vote
+        exceptions.blockRewards[2161] = 2 * BPL;
+        exceptions.blockRewards[2162] = 1 * BPL;
         break;
     case Network::Betanet:
         genesisBlock = 12584524832111619342ul;
@@ -254,11 +258,11 @@ Settings::Settings(Network network)
         rewardDistance = 3000000;
         v100Compatible = true;
         exceptions.freeTransactionsBlockId = genesisBlock;
-        exceptions.transactionFee[15429910859603286865ul] = 0.2 * 100000000; // 79349
-        exceptions.transactionFee[14352150066958672690ul] = 0.2 * 100000000; // 95527
-        exceptions.transactionFee[13937635495177593105ul] = 0.2 * 100000000; // 309109
-        exceptions.transactionFee[12218027223346052530ul] = 0.2 * 100000000; // 316636
-        exceptions.transactionFee[15330085901178121679ul] = 0.2 * 100000000; // 440756
+        exceptions.transactionFee[15429910859603286865ul] = 0.2 * BPL; // 79349
+        exceptions.transactionFee[14352150066958672690ul] = 0.2 * BPL; // 95527
+        exceptions.transactionFee[13937635495177593105ul] = 0.2 * BPL; // 309109
+        exceptions.transactionFee[12218027223346052530ul] = 0.2 * BPL; // 316636
+        exceptions.transactionFee[15330085901178121679ul] = 0.2 * BPL; // 440756
         break;
     }
 }
