@@ -28,7 +28,7 @@ providers wisely.
 * Install libpq-dev, libsodium-dev, pkg-config, cmake, a C++ compiler, and Python, using your favourite package manager.
 * `git clone --recursive https://github.com/prolina-foundation/snapshot-validator.git`
 * `cd snapshot-validator/external/libpqxx`
-* `./configure --disable-documentation --prefix=$PWD/../libpqxx-installation && make -j 4 install`
+* `./configure --disable-documentation --prefix="$PWD/../libpqxx-installation" && make -j 4 install`
 * `cd ../..`
 * `mkdir build && cd build`
 * `cmake -DCMAKE_BUILD_TYPE=Release .. && make -j 4`
