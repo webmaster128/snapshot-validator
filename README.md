@@ -1,6 +1,8 @@
 Snapshot validator for Lisk
 ===========================
 
+[![Build Status](https://travis-ci.com/prolina-foundation/snapshot-validator.svg?branch=master)](https://travis-ci.com/prolina-foundation/snapshot-validator)
+
 Double check your snapshots!
 
 A tool to validate the data integrity of a Lisk snapshot.
