@@ -4,7 +4,7 @@ dist: trusty
 sudo: required
 
 addons:
-  postgresql: "9.5" # Default on Ubuntu 16.04
+  postgresql: "9.6" # Min. version required by Lisk
 
 install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
