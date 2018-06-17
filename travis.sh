@@ -19,6 +19,6 @@ which shellcheck > /dev/null && shellcheck "$0"
 )
 
 (
-    export PATH="$(pwd)/build:$PATH"
+    PATH="$(pwd)/build:$PATH"
     ./validate_snapshot.sh betanet snapshots/lisk_beta_backup-482679.gz
 )
