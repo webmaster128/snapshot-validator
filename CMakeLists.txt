@@ -31,5 +31,8 @@ add_executable(${PROJECT_NAME}
 target_link_libraries(${PROJECT_NAME}
     ${PQXX_LDFLAGS}
     ${PQ_LDFLAGS}
-    ${SODIUM_LDFLAGS}
+
+    # Shared library: ${SODIUM_LDFLAGS}
+    # Static library: ${SODIUM_LIBDIR}/libsodium.a
+    ${SODIUM_LIBDIR}/libsodium.a
 )

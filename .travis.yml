@@ -3,6 +3,9 @@ language: cpp
 dist: trusty
 sudo: required
 
+addons:
+  postgresql: "9.6" # Min. version required by Lisk
+
 install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
   - sudo apt-get update -q
