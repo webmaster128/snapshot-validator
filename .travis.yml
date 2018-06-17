@@ -1,0 +1,34 @@
+language: cpp
+
+dist: trusty
+sudo: required
+
+install:
+  - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
+  - sudo apt-get update -q
+  - sudo apt-get install g++-5
+  - sudo update-alternatives --install /usr/bin/gcc gcc /usr/bin/gcc-5 90
+  - sudo update-alternatives --install /usr/bin/g++ g++ /usr/bin/g++-5 90
+  - g++ --version
+  - gcc --version
+  - c++ --version
+  - cc --version
+  - |
+    (
+      wget https://download.libsodium.org/libsodium/releases/LATEST.tar.gz
+      tar -xzf LATEST.tar.gz
+      cd libsodium-stable
+      ./configure && make -j 2
+      sudo make install
+    )
+
+script:
+  - ./travis.sh
+
+# whitelist long living branches to avoid testing feature branches twice (as branch and as pull request)
+branches:
+  only:
+  - master
+
+notifications:
+  email: false
