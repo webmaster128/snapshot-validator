@@ -201,7 +201,7 @@ Settings::Settings(Network network)
             7937493560646705550ul,
             4715062299837042610ul,
 
-            // transactions that cannot be serialized (trailing 0s in recipient address)
+            // transactions that cannot be serialized (leading 0s in recipient address)
             // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
             14432800562034667268ul,
             17442740313087375072ul,
@@ -238,14 +238,31 @@ Settings::Settings(Network network)
             12298100805070303137ul, // 3057955
         };
         exceptions.transactionsContainingInvalidRecipientAddress = {
+            // out of uint64 range
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             393955899193580559ul, // 2511672
+
+            // leading 0
+            // select "id" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
+            12710869213547423905ul,
         };
         exceptions.invalidAddresses = {
+            // out of uint64 range
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             "19961131544040416558L",
+
+            // leading 0 addresses
+            // select "recipientId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
+            "000123L",
         };
         exceptions.payloadHashMismatch = {
-            // transaction 393955899193580559 cannot be serialized
+            // transactions that cannot be serialized (recipient address exceeding uint64 range)
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             2748170801018258119ul, // 2511672
+
+            // transactions that cannot be serialized (leading 0s in recipient address)
+            // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
+            7394590590101043180ul,
         };
         exceptions.balanceAdjustments[15449731671927352923ul] = -1 * BPL; // Burned 1 LSK as `amount` in a delegate vote
         exceptions.blockRewards[2161] = 2 * BPL;

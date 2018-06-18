@@ -3,8 +3,20 @@ language: cpp
 dist: trusty
 sudo: required
 
-addons:
-  postgresql: "9.6" # Min. version required by Lisk
+before_install:
+  - df -h
+  - sudo service postgresql stop # Stop default postgres server
+  - pg_lsclusters
+  - sudo mkdir /db
+  - sudo chown -R postgres:postgres /db
+  - |
+    (
+      cd /db
+      sudo -u postgres /usr/lib/postgresql/9.6/bin/pg_ctl init -D /db/diskcluster
+      sudo -u postgres /usr/lib/postgresql/9.6/bin/pg_ctl start -D /db/diskcluster -l /db/postgres.log
+      sudo -u postgres createuser --superuser travis
+      sudo -u postgres createdb --owner=travis travis
+    )
 
 install:
   - sudo add-apt-repository ppa:ubuntu-toolchain-r/test -y
