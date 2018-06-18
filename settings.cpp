@@ -238,13 +238,18 @@ Settings::Settings(Network network)
             12298100805070303137ul, // 3057955
         };
         exceptions.transactionsContainingInvalidRecipientAddress = {
+            // out of uint64 range
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             393955899193580559ul, // 2511672
         };
         exceptions.invalidAddresses = {
+            // out of uint64 range
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             "19961131544040416558L",
         };
         exceptions.payloadHashMismatch = {
-            // transaction 393955899193580559 cannot be serialized
+            // transactions that cannot be serialized (recipient address exceeding uint64 range)
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             2748170801018258119ul, // 2511672
         };
         exceptions.balanceAdjustments[15449731671927352923ul] = -1 * BPL; // Burned 1 LSK as `amount` in a delegate vote
