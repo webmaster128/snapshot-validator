@@ -16,8 +16,8 @@ which shellcheck > /dev/null && shellcheck "$0"
     mkdir snapshots && cd snapshots
 
     # Betanet snapshot
-    wget http://lisk.prolina.org/snapshots/betanet/lisk_beta_backup-482679.gz
-    sha256sum lisk_beta_backup-482679.gz | grep "5916434690d506c31cb9637b9477185d9707e2fd5c6939d9c9e56a263bdb1019"
+    wget -O lisk_beta_backup.gz "http://lisk.prolina.org/snapshots/betanet/lisk_beta_backup-501768.gz"
+    sha256sum lisk_beta_backup.gz | grep "0e49769bf6dc68c8b59c9ef9296dd674114c5abd0e2be27623c90d6f71aa47d7"
 
     # Testnet snapshot
     wget https://testnet-snapshot.lisknode.io/blockchain.db.gz
@@ -25,6 +25,6 @@ which shellcheck > /dev/null && shellcheck "$0"
 
 (
     PATH="$(pwd)/build:$PATH"
-    ./validate_snapshot.sh betanet snapshots/lisk_beta_backup-482679.gz
+    ./validate_snapshot.sh betanet snapshots/lisk_beta_backup.gz
     ./validate_snapshot.sh testnet snapshots/blockchain.db.gz
 )
