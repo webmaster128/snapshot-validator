@@ -13,7 +13,7 @@ message(${PQ_LIBRARIES} ${PQXX_LIBRARIES})
 
 set(CMAKE_CXX_STANDARD 14)
 
-set(MAIN_EXECUTABLE "${PROJECT_NAME}")
+set(MAIN_EXECUTABLE "validate-snapshot-database")
 
 add_executable(${MAIN_EXECUTABLE}
     assets.cpp

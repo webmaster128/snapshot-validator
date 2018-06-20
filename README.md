@@ -32,11 +32,11 @@ providers wisely.
 * `cd ../..`
 * `mkdir build && cd build`
 * `cmake -DCMAKE_BUILD_TYPE=Release .. && make -j 4`
-* Now move the resulting binary `snapshot-validator` into PATH, e.g. `sudo mv snapshot-validator /usr/local/bin`
+* Now move the resulting binary `validate-snapshot-database` into PATH, e.g. `sudo mv validate-snapshot-database /usr/local/bin`
 
 ## How to use
 
-* Ensure `snapshot-validator` is in PATH: `snapshot-validator --help`
+* Ensure `validate-snapshot-database` is in PATH: `validate-snapshot-database --help`
 * Run `./validate_snapshot.sh testnet <testnet snapshot file>`
 
 ## Further notes

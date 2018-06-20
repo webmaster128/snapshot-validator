@@ -9,6 +9,6 @@
     "preinstall": "./npm_install.sh"
   },
   "bin": {
-    "snapshot-validator": "bin/snapshot-validator"
+    "validate-snapshot-database": "bin/validate-snapshot-database"
   }
 }
