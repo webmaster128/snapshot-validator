@@ -6,9 +6,9 @@
   "author": "Simon Warta <simon@kullo.net>",
   "license": "MIT",
   "scripts": {
-    "preinstall": "./npm_install.sh"
+    "preinstall": "./npm/npm_install.sh"
   },
   "bin": {
-    "validate-snapshot-database": "bin/validate-snapshot-database"
+    "validate-snapshot-database": "npm/validate-snapshot-database.exists_at_link_time.sh"
   }
 }
