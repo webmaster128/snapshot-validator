@@ -20,7 +20,7 @@ echo "Restoring snapshot to database …"
 gunzip -fcq "$SNAPSHOT_FILE" | psql --quiet --dbname "$RESTORE_DB_NAME"
 
 echo "Restoring validating snapshot database …"
-snapshot-validator "$NETWORK" "$RESTORE_DB_NAME"
+validate-snapshot-database "$NETWORK" "$RESTORE_DB_NAME"
 
 echo "Removing temporary database $RESTORE_DB_NAME …"
 dropdb "$RESTORE_DB_NAME"

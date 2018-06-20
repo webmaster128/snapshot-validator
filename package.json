@@ -1,0 +1,14 @@
+{
+  "name": "snapshot-validator",
+  "version": "0.0.2",
+  "main": "index.js",
+  "repository": "git@github.com:prolina-foundation/snapshot-validator.git",
+  "author": "Simon Warta <simon@kullo.net>",
+  "license": "MIT",
+  "scripts": {
+    "preinstall": "./npm/npm_install.sh"
+  },
+  "bin": {
+    "validate-snapshot-database": "npm/validate-snapshot-database.exists_at_link_time.sh"
+  }
+}
