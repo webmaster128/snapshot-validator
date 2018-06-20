@@ -13,7 +13,9 @@ message(${PQ_LIBRARIES} ${PQXX_LIBRARIES})
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(${PROJECT_NAME}
+set(MAIN_EXECUTABLE "${PROJECT_NAME}")
+
+add_executable(${MAIN_EXECUTABLE}
     assets.cpp
     blockchain_state.cpp
     blockchain_state_validator.cpp
@@ -28,11 +30,14 @@ add_executable(${PROJECT_NAME}
     transaction.cpp
     transaction_validator.cpp
 )
-target_link_libraries(${PROJECT_NAME}
+target_link_libraries(${MAIN_EXECUTABLE}
     ${PQXX_LDFLAGS}
     ${PQ_LDFLAGS}
 
     # Shared library: ${SODIUM_LDFLAGS}
     # Static library: ${SODIUM_LIBDIR}/libsodium.a
     ${SODIUM_LIBDIR}/libsodium.a
+)
+install(TARGETS ${MAIN_EXECUTABLE}
+    RUNTIME DESTINATION bin
 )
