@@ -16,19 +16,19 @@ set(CMAKE_CXX_STANDARD 14)
 set(MAIN_EXECUTABLE "validate-snapshot-database")
 
 add_executable(${MAIN_EXECUTABLE}
-    assets.cpp
-    blockchain_state.cpp
-    blockchain_state_validator.cpp
-    block.cpp
-    block_validator.cpp
-    lisk.cpp
-    log.cpp
-    main.cpp
-    payload.cpp
-    summaries.cpp
-    settings.cpp
-    transaction.cpp
-    transaction_validator.cpp
+    src/assets.cpp
+    src/blockchain_state.cpp
+    src/blockchain_state_validator.cpp
+    src/block.cpp
+    src/block_validator.cpp
+    src/lisk.cpp
+    src/log.cpp
+    src/main.cpp
+    src/payload.cpp
+    src/summaries.cpp
+    src/settings.cpp
+    src/transaction.cpp
+    src/transaction_validator.cpp
 )
 target_link_libraries(${MAIN_EXECUTABLE}
     ${PQXX_LDFLAGS}
