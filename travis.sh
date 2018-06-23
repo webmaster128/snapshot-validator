@@ -2,6 +2,8 @@
 set -o errexit -o nounset -o pipefail
 which shellcheck > /dev/null && shellcheck "$0"
 
+WORKSPACE="$PWD"
+
 (
     cd external/libpqxx
     ./configure --disable-documentation --prefix="$PWD/../libpqxx-installation" && make -j 4 install
@@ -24,7 +26,18 @@ which shellcheck > /dev/null && shellcheck "$0"
 )
 
 (
+    # shellcheck disable=SC2030
     PATH="$(pwd)/build:$PATH"
     ./validate_snapshot.sh betanet snapshots/lisk_beta_backup.gz
     ./validate_snapshot.sh testnet snapshots/blockchain.db.gz
+)
+
+(
+    mkdir "$HOME/custom_dir" && cd "$HOME/custom_dir"
+    npm init --yes
+    npm install "$WORKSPACE"
+
+    # shellcheck disable=SC2031
+    PATH="$(npm bin):$PATH"
+    validate-snapshot-database --help
 )
