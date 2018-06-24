@@ -31,8 +31,8 @@ BETANET_SNAPSHOT_SHA256="99669b247595642d8a9d5699142b158fe4177e00e3a322c51005453
 (
     # shellcheck disable=SC2030
     PATH="$(pwd)/build:$PATH"
-    ./validate_snapshot.sh betanet snapshots/lisk_beta_backup.gz
-    ./validate_snapshot.sh testnet snapshots/blockchain.db.gz
+    ./validate-snapshot-file betanet snapshots/lisk_beta_backup.gz
+    ./validate-snapshot-file testnet snapshots/blockchain.db.gz
 )
 
 (
