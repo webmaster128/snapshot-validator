@@ -4,6 +4,9 @@ which shellcheck > /dev/null && shellcheck "$0"
 
 WORKSPACE="$PWD"
 
+BETANET_SNAPSHOT_URL="http://lisk.prolina.org/snapshots/betanet/lisk_beta_backup-551460.gz"
+BETANET_SNAPSHOT_SHA256="99669b247595642d8a9d5699142b158fe4177e00e3a322c51005453b0784bf17"
+
 (
     cd external/libpqxx
     ./configure --disable-documentation --prefix="$PWD/../libpqxx-installation" && make -j 4 install
@@ -18,8 +21,8 @@ WORKSPACE="$PWD"
     mkdir snapshots && cd snapshots
 
     # Betanet snapshot
-    wget -O lisk_beta_backup.gz "http://lisk.prolina.org/snapshots/betanet/lisk_beta_backup-501768.gz"
-    sha256sum lisk_beta_backup.gz | grep "0e49769bf6dc68c8b59c9ef9296dd674114c5abd0e2be27623c90d6f71aa47d7"
+    wget -O lisk_beta_backup.gz "$BETANET_SNAPSHOT_URL"
+    sha256sum lisk_beta_backup.gz | grep "$BETANET_SNAPSHOT_SHA256"
 
     # Testnet snapshot
     wget https://testnet-snapshot.lisknode.io/blockchain.db.gz
