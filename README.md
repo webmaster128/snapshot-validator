@@ -37,7 +37,7 @@ providers wisely.
 ## How to use
 
 * Ensure `validate-snapshot-database` is in PATH: `validate-snapshot-database --help`
-* Run `./validate_snapshot.sh testnet <testnet snapshot file>`
+* Run `./validate-snapshot-file testnet <testnet snapshot file>`
 
 ## Further notes
 

@@ -9,6 +9,7 @@
     "preinstall": "./npm/npm_install.sh"
   },
   "bin": {
-    "validate-snapshot-database": "npm/validate-snapshot-database.exists_at_link_time.sh"
+    "validate-snapshot-database": "npm/validate-snapshot-database.exists_at_link_time.sh",
+    "validate-snapshot-file": "validate-snapshot-file"
   }
 }
