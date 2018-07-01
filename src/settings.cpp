@@ -226,7 +226,7 @@ Settings::Settings(Network network)
         negativeBalanceAddress = 16009998050678037905ul;
         rewardOffset = 2160;
         rewardDistance = 3000000;
-        v100Compatible = false;
+        v100Compatible = true;
         exceptions.freeTransactionsBlockId = genesisBlock;
         exceptions.invalidTransactionSignature = {
             3274071402587084244ul,  // 595491
