@@ -268,18 +268,5 @@ Settings::Settings(Network network)
         exceptions.blockRewards[2161] = 2 * BPL;
         exceptions.blockRewards[2162] = 1 * BPL;
         break;
-    case Network::Betanet:
-        genesisBlock = 12584524832111619342ul;
-        negativeBalanceAddress = 9594788837974552645ul;
-        rewardOffset = 2160;
-        rewardDistance = 3000000;
-        v100Compatible = true;
-        exceptions.freeTransactionsBlockId = genesisBlock;
-        exceptions.transactionFee[15429910859603286865ul] = 0.2 * BPL; // 79349
-        exceptions.transactionFee[14352150066958672690ul] = 0.2 * BPL; // 95527
-        exceptions.transactionFee[13937635495177593105ul] = 0.2 * BPL; // 309109
-        exceptions.transactionFee[12218027223346052530ul] = 0.2 * BPL; // 316636
-        exceptions.transactionFee[15330085901178121679ul] = 0.2 * BPL; // 440756
-        break;
     }
 }
