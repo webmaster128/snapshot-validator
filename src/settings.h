@@ -10,13 +10,11 @@
 enum class Network {
     Mainnet,
     Testnet,
-    Betanet,
 };
 
 inline Network networkFromName(std::string name) {
     if (name == "mainnet") return Network::Mainnet;
     if (name == "testnet") return Network::Testnet;
-    if (name == "betanet") return Network::Betanet;
     throw std::runtime_error("Unknown network name: '" + name + "'");
 }
 
@@ -32,7 +30,6 @@ struct Exceptions {
     std::unordered_map<std::uint64_t, int> rewardsFactor;
     std::unordered_map<std::uint64_t, int> feesFactor;
     std::unordered_map<std::uint64_t, int> feesBonus;
-    std::unordered_map<std::uint64_t, std::uint64_t> transactionFee;
 };
 
 struct Settings {

@@ -27,7 +27,7 @@ address_t TRASH = 12125591683379294247ul; // random address that is hopefully no
 
 void printHelp()
 {
-    std::cout << "usage: validate-snapshot-database mainnet|testnet|betanet database_name" << std::endl;
+    std::cout << "usage: validate-snapshot-database mainnet|testnet database_name" << std::endl;
 }
 
 int run(std::vector<std::string> args)
