@@ -6,6 +6,10 @@ node_js:
 dist: trusty
 sudo: required
 
+env:
+  - NETWORK=testnet
+  - NETWORK=mainnet
+
 before_install:
   - df -h
   - sudo service postgresql stop # Stop default postgres server

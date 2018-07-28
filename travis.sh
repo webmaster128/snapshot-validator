@@ -18,13 +18,17 @@ WORKSPACE="$PWD"
     mkdir snapshots && cd snapshots
 
     # Testnet snapshot
-    wget https://testnet-snapshot.lisknode.io/blockchain.db.gz
+    if [[ "$NETWORK" == "testnet" ]]; then
+        wget https://testnet-snapshot.lisknode.io/blockchain.db.gz
+    else
+        wget https://snapshot.lisknode.io/blockchain.db.gz
+    fi
 )
 
 (
     # shellcheck disable=SC2030
     PATH="$(pwd)/build:$PATH"
-    ./validate-snapshot-file testnet snapshots/blockchain.db.gz
+    ./validate-snapshot-file "$NETWORK" snapshots/blockchain.db.gz
 )
 
 (
