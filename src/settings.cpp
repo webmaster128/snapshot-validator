@@ -21,6 +21,7 @@ Settings::Settings(Network network)
         };
         exceptions.transactionsContainingInvalidRecipientAddress = {
             // out of uint64 range
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             4808146167169807212ul,
             8662249085950135942ul,
             3512842658681414759ul,
@@ -87,6 +88,7 @@ Settings::Settings(Network network)
         };
         exceptions.invalidAddresses = {
             // out of uint64 range
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             "88888888888888888888L",
             "111291927890909688453L",
             "45552822168800676881L",
@@ -153,6 +155,7 @@ Settings::Settings(Network network)
         };
         exceptions.payloadHashMismatch = {
             // transactions that cannot be serialized (recipient address exceeding uint64 range)
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             2324835914503631349ul,
             4697902217642625397ul,
             8978496973888459347ul,
