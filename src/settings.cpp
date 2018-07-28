@@ -245,6 +245,7 @@ Settings::Settings(Network network)
             // leading 0
             // select "id" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
             12710869213547423905ul,
+            4595252596856199985ul,
         };
         exceptions.invalidAddresses = {
             // out of uint64 range
@@ -263,6 +264,7 @@ Settings::Settings(Network network)
             // transactions that cannot be serialized (leading 0s in recipient address)
             // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
             7394590590101043180ul,
+            7230686330098219506ul,
         };
         exceptions.balanceAdjustments[15449731671927352923ul] = -1 * BPL; // Burned 1 LSK as `amount` in a delegate vote
         exceptions.blockRewards[2161] = 2 * BPL;
