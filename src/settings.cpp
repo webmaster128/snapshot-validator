@@ -21,6 +21,7 @@ Settings::Settings(Network network)
         };
         exceptions.transactionsContainingInvalidRecipientAddress = {
             // out of uint64 range
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             4808146167169807212ul,
             8662249085950135942ul,
             3512842658681414759ul,
@@ -68,6 +69,7 @@ Settings::Settings(Network network)
             16887688753571112156ul,
             11215230856097582828ul,
             14140283825150563894ul,
+            10531191392368229062ul,
 
             // leading 0
             // select "id" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -87,6 +89,7 @@ Settings::Settings(Network network)
         };
         exceptions.invalidAddresses = {
             // out of uint64 range
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             "88888888888888888888L",
             "111291927890909688453L",
             "45552822168800676881L",
@@ -134,6 +137,7 @@ Settings::Settings(Network network)
             "134870701874274944551L",
             "33882703892445210381L",
             "161348288408228933736L",
+            "57178850733351210759L",
 
             // leading 0 addresses
             // select "recipientId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -153,6 +157,7 @@ Settings::Settings(Network network)
         };
         exceptions.payloadHashMismatch = {
             // transactions that cannot be serialized (recipient address exceeding uint64 range)
+            // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             2324835914503631349ul,
             4697902217642625397ul,
             8978496973888459347ul,
@@ -200,6 +205,7 @@ Settings::Settings(Network network)
             2008892961948134898ul,
             7937493560646705550ul,
             4715062299837042610ul,
+            15709445422377334274ul,
 
             // transactions that cannot be serialized (leading 0s in recipient address)
             // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
