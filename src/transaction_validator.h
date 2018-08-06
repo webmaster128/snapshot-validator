@@ -2,9 +2,10 @@
 
 #include "settings.h"
 #include "transaction.h"
+#include "types.h"
 
 namespace TransactionValidator {
 
-void validate(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy, const Exceptions &exceptions);
+void validate(const TransactionRow &row, const bytes_t &secondSignatureRequiredBy, const Exceptions &exceptions);
 
 }

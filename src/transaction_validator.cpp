@@ -128,7 +128,7 @@ void validate_signature(const TransactionRow &row, const std::vector<unsigned ch
 
 namespace TransactionValidator {
 
-void validate(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy, const Exceptions &exceptions)
+void validate(const TransactionRow &row, const bytes_t &secondSignatureRequiredBy, const Exceptions &exceptions)
 {
     bool canBeSerialized = (exceptions.transactionsContainingInvalidRecipientAddress.count(row.id) == 0);
     if (canBeSerialized) {
