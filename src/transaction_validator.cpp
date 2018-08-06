@@ -91,14 +91,17 @@ void validate_fee(const TransactionRow &row, const Exceptions &exceptions)
     }
 }
 
-void validate_signature(const TransactionRow &row, const std::vector<unsigned char> &secondSignatureRequiredBy)
+void validate_signature(
+        const TransactionRow &row,
+        const bytes_t &firstSignatureGenerator,
+        const bytes_t &secondSignatureRequiredBy)
 {
     auto hash = row.transaction.hash();
     if (row.signature.size() != crypto_sign_BYTES)
     {
         throw std::runtime_error("Signature has unexpected length: " + std::to_string(row.signature.size()));
     }
-    if (crypto_sign_verify_detached(row.signature.data(), hash.data(), hash.size(), row.transaction.senderPublicKey.data()) != 0) {
+    if (crypto_sign_verify_detached(row.signature.data(), hash.data(), hash.size(), firstSignatureGenerator.data()) != 0) {
         std::cout << "ID: " << row.id << std::endl;
         std::cout << "Transaction: " << row.transaction << std::endl;
         std::cout << "Sender: " << bytes2Hex(row.transaction.senderPublicKey) << std::endl;
@@ -133,7 +136,12 @@ void validate(const TransactionRow &row, const bytes_t &secondSignatureRequiredB
     bool canBeSerialized = (exceptions.transactionsContainingInvalidRecipientAddress.count(row.id) == 0);
     if (canBeSerialized) {
         validate_id(row);
-        validate_signature(row, secondSignatureRequiredBy);
+
+        const auto &primarySigner = (exceptions.transactionsSignedBy.count(row.blockId))
+                ? exceptions.transactionsSignedBy.at(row.blockId)
+                : row.transaction.senderPublicKey;
+
+        validate_signature(row, primarySigner, secondSignatureRequiredBy);
     }
 
     validate_amount(row, exceptions);

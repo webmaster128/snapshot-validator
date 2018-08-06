@@ -20,6 +20,7 @@ inline Network networkFromName(std::string name) {
 
 struct Exceptions {
     std::uint64_t freeTransactionsBlockId; // i.e. genesis block
+    std::unordered_map<std::uint64_t, bytes_t> transactionsSignedBy; // block id -> pubkey
     std::set<std::uint64_t> invalidTransactionSignature;
     std::set<std::uint64_t> inertTransactions;
     std::set<std::uint64_t> transactionsContainingInvalidRecipientAddress;
