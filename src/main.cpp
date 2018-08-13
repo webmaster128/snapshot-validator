@@ -320,6 +320,12 @@ int run(std::vector<std::string> args)
                 if (settings.exceptions.payloadHashMismatch.count(dbId) == 0) {
                     auto calculatedPayloadHash = payload.hash();
                     if (payloadHash != calculatedPayloadHash) {
+                        // payload hash
+                        std::cout << "Payload hash expected " << bytes2Hex(payloadHash) << ", "
+                                  << "calculated " << bytes2Hex(calculatedPayloadHash)
+                                  << std::endl;
+
+                        // debug payload
                         auto payloadSerialized = payload.serialize();
                         std::cout << "Payload length calculated: " << payloadSerialized.size()
                                   << " expected: " << bh.payloadLength << std::endl;
