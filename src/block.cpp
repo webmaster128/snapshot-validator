@@ -20,7 +20,7 @@ bytes_t BlockHeader::serialize() const
             + 32 // generator pubkey
             ;
     auto out = std::vector<unsigned char>(size);
-    int index = 0;
+    std::size_t index = 0;
     out[index++] = (version >> 0*8) & 0xFF;
     out[index++] = (version >> 1*8) & 0xFF;
     out[index++] = (version >> 2*8) & 0xFF;
@@ -69,10 +69,10 @@ bytes_t BlockHeader::serialize() const
     out[index++] = (payloadLength >> 1*8) & 0xFF;
     out[index++] = (payloadLength >> 2*8) & 0xFF;
     out[index++] = (payloadLength >> 3*8) & 0xFF;
-    for (int i = 0; i < payloadHash.size(); ++i) {
+    for (std::size_t i = 0; i < payloadHash.size(); ++i) {
         out[index++] = payloadHash[i];
     }
-    for (int i = 0; i < generatorPublicKey.size(); ++i) {
+    for (std::size_t i = 0; i < generatorPublicKey.size(); ++i) {
         out[index++] = generatorPublicKey[i];
     }
 
