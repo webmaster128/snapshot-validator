@@ -1,4 +1,9 @@
+# npm
+npm-debug.log
+
+# cmake
 CMakeLists.txt.user
+
 build/
 npmbuild/
 bin/
