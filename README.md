@@ -2,6 +2,7 @@ Snapshot validator for Lisk
 ===========================
 
 [![Build Status](https://travis-ci.com/prolina-foundation/snapshot-validator.svg?branch=master)](https://travis-ci.com/prolina-foundation/snapshot-validator)
+[![npm version](https://img.shields.io/npm/v/snapshot-validator.svg)](https://www.npmjs.com/package/snapshot-validator)
 
 Double check your snapshots!
 
