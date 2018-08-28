@@ -14,6 +14,8 @@ Settings::Settings(Network network)
         negativeBalanceAddress = 6566229458323231555ul;
         rewardOffset = 1451520;
         rewardDistance = 3000000;
+        blockVersions[1] = 0;
+        blockVersions[6901027 + 1] = 1;
         v100Compatible = false;
         // https://github.com/LiskHQ/lisk/blob/0.9.16/genesisBlock.json
         exceptions.transactionsSignedBy[genesisBlock] = hex2Bytes("d121d3abf5425fdc0f161d9ddb32f89b7750b4bdb0bff7d18b191d4b4bafa6d4");
@@ -236,6 +238,8 @@ Settings::Settings(Network network)
         negativeBalanceAddress = 16009998050678037905ul;
         rewardOffset = 2160;
         rewardDistance = 3000000;
+        blockVersions[1] = 0;
+        blockVersions[5932033 + 1] = 1;
         v100Compatible = true;
         // https://github.com/LiskHQ/lisk/blob/v1.0.0-rc.1/genesis_block.json#L12
         exceptions.transactionsSignedBy[genesisBlock] = hex2Bytes("73ec4adbd8f99f0d46794aeda3c3d86b245bd9d27be2b282cdd38ad21988556b");
