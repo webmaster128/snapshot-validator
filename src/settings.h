@@ -1,6 +1,7 @@
 #pragma once
 
 #include <cstdint>
+#include <map>
 #include <set>
 #include <string>
 #include <unordered_map>
@@ -40,6 +41,7 @@ struct Settings {
     std::uint64_t negativeBalanceAddress;
     height_t rewardOffset;
     height_t rewardDistance;
+    std::map<height_t, std::uint32_t> blockVersions;
     bool v100Compatible;
     Exceptions exceptions;
 };

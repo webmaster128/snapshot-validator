@@ -75,6 +75,26 @@ void validateReward(const BlockRow &row, const Settings &settings)
     }
 }
 
+void validateVersion(const BlockRow &row, const Settings &settings)
+{
+    std::size_t expectedVersion = 0;
+    for (const auto &heightVersionPair : settings.blockVersions)
+    {
+        if (row.height >= heightVersionPair.first) {
+            expectedVersion = heightVersionPair.second;
+        }
+    }
+
+    if (row.header.version != expectedVersion)
+    {
+        throw std::runtime_error("Block header version does not match the expected version "
+                                 "for block of height " + std::to_string(row.height) + "." +
+                                 " Actual: " + std::to_string(row.header.version) +
+                                 " Expected: " + std::to_string(expectedVersion)
+                                 );
+    }
+}
+
 }
 
 namespace BlockValidator {
@@ -84,6 +104,7 @@ void validate(const BlockRow &row, const Settings &settings)
     validateId(row.header, row.id, row.signature);
     validateSignature(row.header, row.id, row.signature);
     validateReward(row, settings);
+    validateVersion(row, settings);
 }
 
 }
