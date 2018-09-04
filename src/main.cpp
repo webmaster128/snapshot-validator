@@ -82,14 +82,7 @@ int run(std::vector<std::string> args)
         }
 
         Assets::peersEmpty(db);
-        if (!settings.v100Compatible)
-        {
-            Assets::peersDappEmpty(db);
-        }
-        if (settings.v100Compatible)
-        {
-            Assets::validateType0AssetData(db);
-        }
+        Assets::validateType0AssetData(db);
         Assets::validateType1AssetData(db);
         Assets::validateType2AssetData(db);
         Assets::validateType3AssetData(db);
@@ -110,7 +103,7 @@ int run(std::vector<std::string> args)
                 SELECT
                     id, "blockId", trs.type, timestamp, "senderPublicKey", coalesce(left("recipientId", -1), '0') AS recipient_address,
                     amount, fee, signature, "signSignature",
-                    )SQL" + std::string(settings.v100Compatible ? "transfer.data" : "''") + R"SQL( AS type0_asset,
+                    transfer.data AS type0_asset,
                     signatures."publicKey" AS type1_asset,
                     delegates.username AS type2_asset,
                     replace(votes.votes, ',', '') AS type3_asset,
@@ -122,7 +115,7 @@ int run(std::vector<std::string> args)
                     coalesce(outtransfer."dappId", '0') AS type7_asset_dappid,
                     coalesce(outtransfer."outTransactionId", '0') AS type7_asset_outtransactionId
                 FROM trs
-                )SQL" + std::string(settings.v100Compatible ? "LEFT JOIN transfer ON trs.id = transfer.\"transactionId\"" : "") + R"SQL(
+                LEFT JOIN transfer ON trs.id = transfer."transactionId"
                 LEFT JOIN signatures ON trs.id = signatures."transactionId"
                 LEFT JOIN delegates ON trs.id = delegates."transactionId"
                 LEFT JOIN votes ON trs.id = votes."transactionId"
