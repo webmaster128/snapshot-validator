@@ -16,7 +16,7 @@ Settings::Settings(Network network)
         rewardDistance = 3000000;
         blockVersions[1] = 0;
         blockVersions[6901027 + 1] = 1;
-        v100Compatible = false;
+        v100Compatible = true;
         // https://github.com/LiskHQ/lisk/blob/0.9.16/genesisBlock.json
         exceptions.transactionsSignedBy[genesisBlock] = hex2Bytes("d121d3abf5425fdc0f161d9ddb32f89b7750b4bdb0bff7d18b191d4b4bafa6d4");
         exceptions.freeTransactionsBlockId = genesisBlock;
