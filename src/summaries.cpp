@@ -14,7 +14,6 @@ struct MemAccountsData {
     std::unordered_map<address_t, std::int64_t> balances;
     std::unordered_map<address_t, std::vector<unsigned char>> secondPubkeys;
     std::unordered_map<address_t, std::string> delegateNames;
-    std::unordered_map<address_t, std::uint64_t> lastBlockId;
 };
 
 }
@@ -58,7 +57,6 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
       SELECT
           left(address, -1),
           balance,
-          )SQL" + std::string(!settings.v100Compatible ? "coalesce(\"blockId\", '0')," : "") + R"SQL(
           coalesce("secondPublicKey", ''::bytea),
           coalesce(username, '')
       FROM mem_accounts
@@ -68,12 +66,10 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
         int index = 0;
         const auto dbAddress = row[index++].as<std::uint64_t>();
         const auto dbBalance = row[index++].as<std::int64_t>();
-        const auto dbBlockId = !settings.v100Compatible ? row[index++].as<std::uint64_t>() : 0;
         const auto dbSecondPublicKey = pqxx::binarystring(row[index++]);
         const auto dbUsername = row[index++].as<std::string>();
 
         memAccounts.balances[dbAddress] = dbBalance;
-        memAccounts.lastBlockId[dbAddress] = dbBlockId;
         memAccounts.secondPubkeys[dbAddress] = asVector(dbSecondPublicKey);
         memAccounts.delegateNames[dbAddress] = dbUsername;
     }
@@ -87,14 +83,6 @@ void checkMemAccounts(pqxx::read_transaction &db, const BlockchainState &blockch
     if (memAccounts.secondPubkeys != blockchainSecondPubkeys) {
         compareKeys(memAccounts.secondPubkeys, blockchainSecondPubkeys, true);
         throw std::runtime_error("second pubkeys in mem_accounts do not match blockchain state");
-    }
-
-    if (!settings.v100Compatible) {
-        if (memAccounts.lastBlockId != blockchainLastBlockIds) {
-            bool keysMatch = compareKeys(memAccounts.lastBlockId, blockchainLastBlockIds, true, "mem_accounts.blockId", "blockchainLastBlockIds");
-            if (keysMatch) compareValues(memAccounts.lastBlockId, blockchainLastBlockIds, true, "mem_accounts.blockId", "blockchainLastBlockIds");
-            throw std::runtime_error("Block IDs in mem_accounts do not match blockchain state");
-        }
     }
 
     if (memAccounts.delegateNames != blockchainDelegateNames) {

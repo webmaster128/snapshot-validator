@@ -42,6 +42,5 @@ struct Settings {
     height_t rewardOffset;
     height_t rewardDistance;
     std::map<height_t, std::uint32_t> blockVersions;
-    bool v100Compatible;
     Exceptions exceptions;
 };
