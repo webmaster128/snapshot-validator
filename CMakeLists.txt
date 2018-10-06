@@ -7,7 +7,12 @@ find_package(PkgConfig REQUIRED)
 pkg_search_module(PQ REQUIRED libpq)
 pkg_search_module(PQXX REQUIRED libpqxx)
 pkg_search_module(SODIUM REQUIRED libsodium)
-include_directories(${PQ_INCLUDE_DIRS} ${PQXX_INCLUDE_DIRS} ${SODIUM_INCLUDE_DIRS})
+include_directories(
+    ${PQ_INCLUDE_DIRS}
+    ${PQXX_INCLUDE_DIRS}
+    ${SODIUM_INCLUDE_DIRS}
+    ${CMAKE_CURRENT_SOURCE_DIR}/external/utfcpp/source
+)
 
 message(${PQ_LIBRARIES} ${PQXX_LIBRARIES})
 
