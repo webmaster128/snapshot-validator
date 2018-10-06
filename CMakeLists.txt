@@ -21,6 +21,7 @@ add_library(lib
 
     lib/lisk.cpp
     lib/transaction.cpp
+    lib/transaction_validator.cpp
 )
 target_include_directories(lib PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}/lib>)
 install(TARGETS lib
@@ -46,7 +47,6 @@ add_executable(${MAIN_EXECUTABLE}
     src/payload.cpp
     src/summaries.cpp
     src/settings.cpp
-    src/transaction_validator.cpp
 )
 target_link_libraries(${MAIN_EXECUTABLE}
     PUBLIC
