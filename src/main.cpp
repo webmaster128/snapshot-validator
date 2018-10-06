@@ -7,6 +7,8 @@
 #include <pqxx/pqxx>
 #include <sodium.h>
 
+#include <transaction.h>
+
 #include "assets.h"
 #include "blockchain_state.h"
 #include "blockchain_state_validator.h"
@@ -17,7 +19,6 @@
 #include "settings.h"
 #include "scopedbenchmark.h"
 #include "summaries.h"
-#include "transaction.h"
 #include "transaction_validator.h"
 #include "types.h"
 #include "utils.h"
