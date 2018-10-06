@@ -77,3 +77,6 @@ target_link_libraries(${TESTS_EXECUTABLE}
         # Static library: ${SODIUM_LIBDIR}/libsodium.a
         ${SODIUM_LIBDIR}/libsodium.a
 )
+
+enable_testing()
+add_test(all_tests ${TESTS_EXECUTABLE})

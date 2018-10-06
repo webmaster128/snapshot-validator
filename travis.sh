@@ -11,7 +11,9 @@ WORKSPACE="$PWD"
 
 (
     mkdir build && cd build
-    cmake -DCMAKE_BUILD_TYPE=Release .. && make -j 4
+    cmake -DCMAKE_BUILD_TYPE=Release ..
+    make -j 4
+    ctest
 )
 
 (
