@@ -1,6 +1,7 @@
 #include "transaction_validator.h"
 
 #include <iostream>
+#include <utf8.h>
 #include <sodium.h>
 
 #include "utils.h"
@@ -127,6 +128,15 @@ void validate_signature(
     }
 }
 
+void validate_type0_asset(const TransactionRow &row)
+{
+    if (!utf8::is_valid(row.transaction.assetData.cbegin(), row.transaction.assetData.cend())) {
+        std::cout << "ID: " << row.id << std::endl;
+        std::cout << "Transaction: " << row.transaction << std::endl;
+        throw std::runtime_error("Invalid UTF-8 data found: " + bytes2Hex(row.transaction.assetData));
+    }
+}
+
 }
 
 namespace TransactionValidator {
@@ -146,6 +156,14 @@ void validate(const TransactionRow &row, const bytes_t &secondSignatureRequiredB
 
     validate_amount(row, exceptions);
     validate_fee(row, exceptions);
+
+    switch (row.transaction.type) {
+    case 0:
+        validate_type0_asset(row);
+        break;
+    default:
+        break;
+    }
 }
 
 }

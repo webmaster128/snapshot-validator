@@ -1,6 +1,5 @@
 #pragma once
 
-#include "settings.h"
 #include "transaction.h"
 #include "types.h"
 
