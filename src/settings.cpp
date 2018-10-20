@@ -256,6 +256,7 @@ Settings::Settings(Network network)
             // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             393955899193580559ul,
             2595217996098726177ul,
+            2851909953078287800ul,
 
             // leading 0
             // select "id" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -263,24 +264,28 @@ Settings::Settings(Network network)
             4595252596856199985ul,
             4962453608347426857ul,
             14029161570134180080ul,
+            11850546615651855419ul,
         };
         exceptions.invalidAddresses = {
             // out of uint64 range
             // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             "19961131544040416558L",
             "20906309950204158498L",
+            "221360928884514619392L",
 
             // leading 0 addresses
             // select "recipientId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
             "000123L",
             "06076671634347365051L",
             "03333333333333333333L",
+            "0123L",
         };
         exceptions.payloadHashMismatch = {
             // transactions that cannot be serialized (recipient address exceeding uint64 range)
             // select * from (select "blockId", id as "transactionId", "recipientId", CAST(left("recipientId", -1) AS numeric) AS address_number FROM trs ORDER BY "rowId") as converted_table WHERE address_number > 18446744073709551615
             2748170801018258119ul,
             2405379395106279240ul,
+            15690289703032532260ul,
 
             // transactions that cannot be serialized (leading 0s in recipient address)
             // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -288,6 +293,7 @@ Settings::Settings(Network network)
             7230686330098219506ul,
             9005812879250298485ul,
             6121878732024067644ul,
+            10148279880657592281ul,
         };
         exceptions.balanceAdjustments[15449731671927352923ul] = -1 * BPL; // Burned 1 LSK as `amount` in a delegate vote
         exceptions.blockRewards[2161] = 2 * BPL;
