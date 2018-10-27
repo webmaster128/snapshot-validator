@@ -257,6 +257,11 @@ Settings::Settings(Network network)
             393955899193580559ul,
             2595217996098726177ul,
             2851909953078287800ul,
+            7551953192792882354ul,
+            6669246371367929130ul,
+            14879617323763807152ul,
+            3854891010578818255ul,
+            5463681318391195043ul,
 
             // leading 0
             // select "id" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -265,6 +270,8 @@ Settings::Settings(Network network)
             4962453608347426857ul,
             14029161570134180080ul,
             11850546615651855419ul,
+            16785481052094374144ul,
+            1962750879300467095ul,
         };
         exceptions.invalidAddresses = {
             // out of uint64 range
@@ -272,6 +279,11 @@ Settings::Settings(Network network)
             "19961131544040416558L",
             "20906309950204158498L",
             "221360928884514619392L",
+            "442721857769029238784L",
+            "442721857769029238784L",
+            "442721857769029238784L",
+            "424275113695319687168L",
+            "129127208515966861312L",
 
             // leading 0 addresses
             // select "recipientId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -279,6 +291,7 @@ Settings::Settings(Network network)
             "06076671634347365051L",
             "03333333333333333333L",
             "0123L",
+            "014377589660081535605L",
         };
         exceptions.payloadHashMismatch = {
             // transactions that cannot be serialized (recipient address exceeding uint64 range)
@@ -286,6 +299,11 @@ Settings::Settings(Network network)
             2748170801018258119ul,
             2405379395106279240ul,
             15690289703032532260ul,
+            5409093795965135177ul,
+            12003573121512790957ul,
+            1095080218239373748ul,
+            5736590323450158438ul,
+            16253176862602730371ul,
 
             // transactions that cannot be serialized (leading 0s in recipient address)
             // select "blockId" from trs where left("recipientId", 1) = '0' and "recipientId" != '0L' ORDER BY "rowId"
@@ -294,6 +312,8 @@ Settings::Settings(Network network)
             9005812879250298485ul,
             6121878732024067644ul,
             10148279880657592281ul,
+            6477804893919690964ul,
+            13004899008922400972ul,
         };
         exceptions.balanceAdjustments[15449731671927352923ul] = -1 * BPL; // Burned 1 LSK as `amount` in a delegate vote
         exceptions.blockRewards[2161] = 2 * BPL;
